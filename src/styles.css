@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: theme("fontFamily.sans");
+  background: radial-gradient(circle at top, #18181f 0, #050509 55%, #020206 100%);
+  color: #f9fafb;
+}
+
+
+
