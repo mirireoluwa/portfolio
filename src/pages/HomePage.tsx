@@ -7,8 +7,7 @@ const heroPhrases = [
   "an ultra-creative", 
   "an artist", 
   "a producer", 
-  "a designer", 
-  "a genius.",
+  "a designer",
 ];
 
 const greetings = [
