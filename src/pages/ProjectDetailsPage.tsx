@@ -33,9 +33,24 @@ export function ProjectDetailsPage() {
           <p className="text-[11px] text-zinc-400 font-dmMono lowercase tracking-[0.12em]">
             {project.year} • {project.category}
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-zinc-50">
-            {project.title}
-          </h1>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-zinc-50">
+              {project.title}
+            </h1>
+            {project.links && project.links.length > 0 && (
+              <a
+                href={project.links[0].href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative inline-flex items-center justify-between px-4 py-2 w-full sm:w-auto border border-white/40 bg-transparent text-[9px] sm:text-[10px] text-zinc-200 tracking-[0.16em] lowercase font-dmMono transition-colors duration-200 hover:bg-white hover:text-zinc-950"
+              >
+                <span className="font-medium">{project.links[0].label}</span>
+                <span className="ml-2 inline-flex items-center justify-center text-[9px] sm:text-[10px]">
+                  ↗
+                </span>
+              </a>
+            )}
+          </div>
           <p className="text-xs text-zinc-400">{project.role}</p>
         </div>
       </div>
@@ -75,22 +90,6 @@ export function ProjectDetailsPage() {
             </div>
           </div>
 
-          {project.links && project.links.length > 0 && (
-            <div>
-              <h2 className="text-xs font-medium uppercase tracking-[0.25em] text-zinc-400">links</h2>
-              <div className="mt-2 flex flex-col gap-1.5">
-                {project.links.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    className="text-xs text-emerald-300 underline underline-offset-4 decoration-emerald-500/50 hover:text-emerald-200"
-                  >
-                    {link.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
         </aside>
       </div>
     </div>
