@@ -272,7 +272,7 @@ export function HomePage() {
 
         <div className="space-y-6">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-zinc-50 max-w-3xl">
-            i'm open for freelance projects, feel free to  email me to see how can we collaborate
+            i'm open to collaborate and work on paradigm-shifting projects. send me an email or connect with me on linkedin.
           </h2>
 
           <div className="flex flex-row items-center gap-4">
