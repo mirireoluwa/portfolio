@@ -101,94 +101,96 @@ export function HomePage() {
   return (
     <div className="space-y-20">
       {/* Hero */}
-      <section className="space-y-10 pt-0 sm:space-y-5">
+      <section className="space-y-6 sm:space-y-5 pt-0">
         {/* Top meta */}
         <div className="flex items-center justify-between gap-6 text-[11px] text-zinc-400 font-dmMono tracking-[0.12em]">
-          <div className="flex-1 max-w-xs mx-4 ml-0 relative" style={{ minWidth: "48px" }}>
+          <div className="flex-1 max-w-xs mx-4 ml-0 relative" style={{ minWidth: "48px", height: "1.2em" }}>
             <motion.div
               key={greetings[activeGreeting]}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.8, ease: "easeInOut" }}
-              className="absolute left-0 top-0"
+              className="absolute left-0 top-0 whitespace-nowrap"
             >
               {greetings[activeGreeting]}
             </motion.div>
           </div>
-          <p className="text-right">available for new projects</p>
+          <p className="text-right whitespace-nowrap">available for new projects</p>
         </div>
 
-        {/* Hero Heading */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight tracking-tight text-zinc-50 flex items-center gap-2">
-          <span className="flex items-center relative" style={{ width: "max-content" }}>
-            i&apos;m&nbsp;
-            {glitchPhase === "idle" && (
-              <motion.span
-                key="mirireoluwa"
-                initial="initial"
-                animate="initial"
-                exit="initial"
-                variants={fuzzyGlitchVariants}
-                className="relative font-semibold"
-                style={{ color: "#f0f0f0" }}
-              >
-                mirireoluwa
-              </motion.span>
-            )}
-            {glitchPhase === "glitch1" && (
-              <motion.a
-                key="saintted"
-                href="https://saintted.framer.website"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative font-semibold"
-                initial="initial"
-                animate="glitch1"
-                exit="initial"
-                variants={fuzzyGlitchVariants}
-                style={{ display: "inline-block", color: "#FF4B63" }}
-              >
-                saintted
-              </motion.a>
-            )}
-            {glitchPhase === "glitch2" && (
-              <motion.span
-                key="mirireoluwa-glitch"
-                initial="initial"
-                animate="glitch2"
-                exit="initial"
-                variants={fuzzyGlitchVariants}
-                className="relative font-semibold"
-                style={{ color: "#f0f0f0" }}
-              >
-                mirireoluwa
-              </motion.span>
-            )}
-            ,
-          </span>
-        </h1>
+        {/* Hero Heading and Phrases - Grouped together */}
+        <div className="space-y-0 sm:space-y-0">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight tracking-tight text-zinc-50 flex items-center gap-2">
+            <span className="flex items-center relative" style={{ width: "max-content" }}>
+              i&apos;m&nbsp;
+              {glitchPhase === "idle" && (
+                <motion.span
+                  key="mirireoluwa"
+                  initial="initial"
+                  animate="initial"
+                  exit="initial"
+                  variants={fuzzyGlitchVariants}
+                  className="relative font-semibold"
+                  style={{ color: "#f0f0f0" }}
+                >
+                  mirireoluwa
+                </motion.span>
+              )}
+              {glitchPhase === "glitch1" && (
+                <motion.a
+                  key="saintted"
+                  href="https://saintted.framer.website"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative font-semibold"
+                  initial="initial"
+                  animate="glitch1"
+                  exit="initial"
+                  variants={fuzzyGlitchVariants}
+                  style={{ display: "inline-block", color: "#FF4B63" }}
+                >
+                  saintted
+                </motion.a>
+              )}
+              {glitchPhase === "glitch2" && (
+                <motion.span
+                  key="mirireoluwa-glitch"
+                  initial="initial"
+                  animate="glitch2"
+                  exit="initial"
+                  variants={fuzzyGlitchVariants}
+                  className="relative font-semibold"
+                  style={{ color: "#f0f0f0" }}
+                >
+                  mirireoluwa
+                </motion.span>
+              )}
+              ,
+            </span>
+          </h1>
 
-        <div
-          id="phrase-container"
-          ref={phraseContainerRef}
-          className="relative overflow-visible select-none -mt-4 sm:mt-0"
-          style={{ height: phraseHeightRef.current ? `${phraseHeightRef.current * 1.5}px` : '2.4em', width: 'max-content', zIndex: 10 }}
-          aria-live="polite"
-        >
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={activePhrase}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.6 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-zinc-50"
-              style={{ whiteSpace: "nowrap", display: "inline-block" }}
-            >
-              {heroPhrases[activePhrase]}
-            </motion.span>
-          </AnimatePresence>
+          <div
+            id="phrase-container"
+            ref={phraseContainerRef}
+            className="relative overflow-visible select-none -mt-2 sm:mt-0"
+            style={{ height: phraseHeightRef.current ? `${phraseHeightRef.current * 1.5}px` : '2.4em', width: 'max-content', zIndex: 10 }}
+            aria-live="polite"
+          >
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={activePhrase}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.6 }}
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-zinc-50"
+                style={{ whiteSpace: "nowrap", display: "inline-block" }}
+              >
+                {heroPhrases[activePhrase]}
+              </motion.span>
+            </AnimatePresence>
+          </div>
         </div>
       </section>
 
@@ -274,19 +276,38 @@ export function HomePage() {
           </h2>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <button
-            type="button"
-            onClick={() => {
-              window.location.href =
-                "mailto:olukannichristian@gmail.com?subject=Project%20inquiry";
-            }}
-            className="group relative inline-flex items-center justify-between px-6 py-3 w-full sm:w-auto border border-white/40 bg-transparent text-xs sm:text-sm text-zinc-200 tracking-[0.16em] lowercase font-dmMono transition-colors duration-200 hover:bg-white hover:text-zinc-950"
-          >
-            <span className="font-medium">contact me</span>
-            <span className="ml-3 inline-flex h-4 w-4 items-center justify-center origin-center rotate-[-45deg] text-[11px]">
-              ↗
-            </span>
-          </button>
+            <button
+              type="button"
+              onClick={() => {
+                window.location.href =
+                  "mailto:olukannichristian@gmail.com?subject=Project%20inquiry";
+              }}
+              className="group relative inline-flex items-center justify-between px-6 py-3 w-full sm:w-auto border border-white/40 bg-transparent text-xs sm:text-sm text-zinc-200 tracking-[0.16em] lowercase font-dmMono transition-colors duration-200 hover:bg-white hover:text-zinc-950"
+            >
+              <span className="font-medium">contact me</span>
+              <span className="ml-3 inline-flex h-4 w-4 items-center justify-center origin-center rotate-[-45deg] text-[11px]">
+                ↗
+              </span>
+            </button>
+
+            <a
+              href="https://www.linkedin.com/in/mirireoluwaolukanni/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative inline-flex items-center justify-center w-10 h-10 border border-white/40 bg-transparent text-zinc-200 hover:bg-white hover:text-zinc-950 transition-colors duration-200 group"
+              aria-label="LinkedIn profile"
+            >
+              <img
+                src="/linkedin-white.svg"
+                alt="LinkedIn"
+                className="absolute w-5 h-5 transition-opacity duration-200 group-hover:opacity-0"
+              />
+              <img
+                src="/linkedin.svg"
+                alt="LinkedIn"
+                className="absolute w-5 h-5 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+              />
+            </a>
           </div>
         </div>
       </section>
