@@ -275,19 +275,26 @@ export function HomePage() {
             i'm open for freelance projects, feel free to  email me to see how can we collaborate
           </h2>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex flex-row items-center gap-4">
             <button
               type="button"
               onClick={() => {
                 window.location.href =
                   "mailto:olukannichristian@gmail.com?subject=Project%20inquiry";
               }}
-              className="group relative inline-flex items-center justify-between px-6 py-3 w-full sm:w-auto border border-white/40 bg-transparent text-xs sm:text-sm text-zinc-200 tracking-[0.16em] lowercase font-dmMono transition-colors duration-200 hover:bg-white hover:text-zinc-950"
+              className="relative inline-flex items-center justify-center w-10 h-10 border border-white/40 bg-transparent text-zinc-200 hover:bg-white hover:text-zinc-950 transition-colors duration-200 group"
+              aria-label="Contact me via email"
             >
-              <span className="font-medium">contact me</span>
-              <span className="ml-3 inline-flex h-4 w-4 items-center justify-center origin-center rotate-[-45deg] text-[11px]">
-                ↗
-              </span>
+              <img
+                src="/mail-white.svg"
+                alt="Email"
+                className="absolute w-5 h-5 transition-opacity duration-200 group-hover:opacity-0"
+              />
+              <img
+                src="/mail-black.svg"
+                alt="Email"
+                className="absolute w-5 h-5 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+              />
             </button>
 
             <a
