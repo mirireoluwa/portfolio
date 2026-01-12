@@ -274,45 +274,40 @@ export function HomePage() {
             i'm open to collaborate and work on paradigm-shifting projects. send me an email or connect with me on linkedin.
           </h2>
 
-          <div className="flex flex-row items-center gap-4">
+          <div className="flex flex-row items-center gap-3">
             <button
               type="button"
               onClick={() => {
                 window.location.href =
                   "mailto:olukannichristian@gmail.com?subject=Project%20inquiry";
               }}
-              className="relative inline-flex items-center justify-center w-10 h-10 border border-white/40 bg-transparent text-zinc-200 hover:bg-white hover:text-zinc-950 transition-colors duration-200 group"
+              className="relative inline-flex items-center justify-center gap-2 px-4 py-2 border border-white/80 bg-white text-zinc-950 hover:bg-zinc-100 transition-colors duration-200 shadow-sm"
               aria-label="Contact me via email"
             >
-              <img
-                src="/mail-white.svg"
-                alt="Email"
-                className="absolute w-5 h-5 transition-opacity duration-200 group-hover:opacity-0"
-              />
-              <img
-                src="/mail-black.svg"
-                alt="Email"
-                className="absolute w-5 h-5 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-              />
+              <img src="/mail-black.svg" alt="Email" className="w-5 h-5" />
+              <span className="text-sm font-medium">Email</span>
             </button>
 
             <a
               href="https://www.linkedin.com/in/mirireoluwaolukanni/"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative inline-flex items-center justify-center w-10 h-10 border border-white/40 bg-transparent text-zinc-200 hover:bg-white hover:text-zinc-950 transition-colors duration-200 group"
+              className="relative inline-flex items-center justify-center gap-2 px-4 py-2 border border-white/80 bg-white text-zinc-950 hover:bg-zinc-100 transition-colors duration-200 shadow-sm"
               aria-label="LinkedIn profile"
             >
-              <img
-                src="/linkedin-white.svg"
-                alt="LinkedIn"
-                className="absolute w-5 h-5 transition-opacity duration-200 group-hover:opacity-0"
-              />
-              <img
-                src="/linkedin.svg"
-                alt="LinkedIn"
-                className="absolute w-5 h-5 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-              />
+              <img src="/linkedin.svg" alt="LinkedIn" className="w-5 h-5" />
+              <span className="text-sm font-medium">LinkedIn</span>
+            </a>
+
+            <a
+              href="https://github.com/mirireoluwa"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative inline-flex items-center justify-center gap-2 px-4 py-2 border border-white/80 bg-white text-zinc-950 hover:bg-zinc-100 transition-colors duration-200 shadow-sm"
+              aria-label="GitHub profile"
+            >
+              <img src="/github-black.svg" alt="GitHub" className="w-5 h-5" />
+              <span className="text-sm font-medium">GitHub</span>
             </a>
           </div>
         </div>

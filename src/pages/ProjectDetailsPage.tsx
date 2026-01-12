@@ -42,11 +42,11 @@ export function ProjectDetailsPage() {
                 href={project.links[0].href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative inline-flex items-center justify-between px-4 py-2 w-full sm:w-auto border border-white/40 bg-transparent text-[9px] sm:text-[10px] text-zinc-200 tracking-[0.16em] lowercase font-dmMono transition-colors duration-200 hover:bg-white hover:text-zinc-950"
+                className="group relative inline-flex items-center justify-between px-4 py-2 w-full sm:w-auto border border-white/70 bg-white text-[9px] sm:text-[10px] text-zinc-950 tracking-[0.16em] lowercase font-dmMono transition-colors duration-200 shadow-sm hover:bg-white/90"
               >
                 <span className="font-medium">{project.links[0].label}</span>
-                <span className="ml-2 inline-flex items-center justify-center text-[9px] sm:text-[10px]">
-                  ↗
+                <span className="ml-2 inline-flex items-center justify-center text-[9px] sm:text-[10px] text-zinc-950">
+                  ↗︎
                 </span>
               </a>
             )}
@@ -55,14 +55,29 @@ export function ProjectDetailsPage() {
         </div>
       </div>
 
-      <div className="rounded-apple-lg overflow-hidden border border-white/10 bg-surface/80 shadow-soft">
-        <div
-          className="h-56 sm:h-72 md:h-80"
-          style={{ backgroundColor: project.accentColor }}
-        >
-          <div className="h-full w-full bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_55%)] opacity-60 mix-blend-screen" />
-        </div>
-      </div>
+      {project.snapshots && project.snapshots.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
+            <p>.snapshots</p>
+            <div className="flex-1 h-px bg-zinc-800" />
+          </div>
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+            {project.snapshots.map((shot, index) => (
+              <figure
+                key={`${shot.src}-${index}`}
+                className="overflow-hidden rounded-apple-md border border-white/5 bg-zinc-900/60 shadow-soft"
+              >
+                <img
+                  src={shot.src}
+                  alt={shot.alt}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="grid gap-8 md:grid-cols-[minmax(0,1.7fr),minmax(0,1fr)] items-start">
         <section className="space-y-4">

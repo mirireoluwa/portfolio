@@ -12,6 +12,7 @@ export type Project = {
   tags: string[];
   accentColor: string;
   accentTextColor: string;
+  snapshots?: { src: string; alt: string }[];
 };
 
 export const projects: Project[] = [
@@ -35,6 +36,16 @@ export const projects: Project[] = [
     tags: ["ui/ux design", "front-end development"],
     accentColor: "#FF4949",
     accentTextColor: "#FFFFFF",
+    snapshots: [
+      {
+        src: "/airflow-dasboard.jpeg",
+        alt: "Airflow dashboard overview",
+      },
+      {
+        src: "/airflow-splashscreen.jpeg",
+        alt: "Airflow splash screen",
+      },
+    ],
   },
   {
     slug: "chowdie",
@@ -56,6 +67,16 @@ export const projects: Project[] = [
     ],
     accentColor: "#FFA100",
     accentTextColor: "#000000",
+    snapshots: [
+      {
+        src: "/chowdie-hero.png",
+        alt: "Chowdie landing hero",
+      },
+      {
+        src: "/chowdie-checkout.png",
+        alt: "Chowdie checkout flow",
+      },
+    ],
   },
   {
     slug: "saintted",
@@ -77,6 +98,16 @@ export const projects: Project[] = [
     ],
     accentColor: "#2E3538",
     accentTextColor: "#B3FFCB",
+    snapshots: [
+      {
+        src: "/saintted-hero.jpeg",
+        alt: "Saintted hero section",
+      },
+      {
+        src: "/saintted-about-music.jpeg",
+        alt: "Saintted about and music section",
+      },
+    ],
   },
 ];
 
