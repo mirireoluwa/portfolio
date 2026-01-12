@@ -19,15 +19,38 @@ export function ProjectDetailsPage() {
     );
   }
 
+  const currentIndex = projects.findIndex((p) => p.slug === project.slug);
+  const prevProject =
+    projects[(currentIndex - 1 + projects.length) % projects.length];
+  const nextProject = projects[(currentIndex + 1) % projects.length];
+
   return (
     <div className="pt-6 space-y-10">
       <div className="space-y-4">
-        <Link
-          to="/"
-          className="inline-flex items-center text-xs text-zinc-300 underline underline-offset-4 decoration-zinc-600 hover:text-zinc-50"
-        >
-          ←   Back to projects
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link
+            to="/"
+            className="inline-flex items-center text-xs text-zinc-300 underline underline-offset-4 decoration-zinc-600 hover:text-zinc-50"
+          >
+            ←   Back to projects
+          </Link>
+          <div className="flex items-center gap-3 text-xs text-zinc-300">
+            <Link
+              to={`/projects/${prevProject.slug}`}
+              className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-zinc-900/60 hover:bg-zinc-800 transition-colors duration-200"
+              aria-label="Previous project"
+            >
+              ‹
+            </Link>
+            <Link
+              to={`/projects/${nextProject.slug}`}
+              className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-zinc-900/60 hover:bg-zinc-800 transition-colors duration-200"
+              aria-label="Next project"
+            >
+              ›
+            </Link>
+          </div>
+        </div>
 
         <div className="space-y-3">
           <p className="text-[11px] text-zinc-400 font-dmMono lowercase tracking-[0.12em]">
