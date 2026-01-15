@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Manrope", "system-ui", "SF Pro Text", "ui-sans-serif", "sans-serif"],
+        sans: ["Space Grotesk", "system-ui", "ui-sans-serif", "sans-serif"],
+        spaceGrotesk: ["Space Grotesk", "system-ui", "ui-sans-serif", "sans-serif"],
         dmMono: ["DM Mono", "ui-monospace", "SF Mono", "Menlo", "monospace"],
       },
       colors: {

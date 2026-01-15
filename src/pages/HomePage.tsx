@@ -262,6 +262,120 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* Experience */}
+      <section id="experience" className="space-y-8">
+        <div className="flex items-center justify-between gap-4 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
+          <p>.experience</p>
+          <div className="h-px flex-1 bg-zinc-800" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* IT Intern - Airtel Nigeria */}
+          <div className="group h-80 perspective-1000 cursor-pointer">
+            <div className="relative w-full h-full flip-card-inner">
+              {/* Front */}
+              <div
+                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden"
+                style={{ backgroundColor: "#FF4949", color: "#FFFFFF" }}
+              >
+                <div className="flex flex-col">
+                  <h3 className="text-2xl font-semibold mb-2">IT Intern</h3>
+                  <p className="text-sm opacity-90">Airtel Nigeria • 2025</p>
+                </div>
+              </div>
+              {/* Back */}
+              <div
+                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden rotate-y-180"
+                style={{ backgroundColor: "#FF4949", color: "#FFFFFF" }}
+              >
+                <ul className="space-y-2 text-sm leading-relaxed opacity-95 overflow-y-auto">
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Assisted in troubleshooting and resolving issues with USSD services, improving service reliability and customer experience for millions of daily users.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Contributed to the design and implementation of a new USSD service, enabling more efficient connectivity and communication.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Contributed to the development of a python application that organizes raw data dumps into structured files, improving readability and accessibility.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Designed and developed a project & task management application with features for projects, tasks, checklists, and dependencies, enabling potential use across multiple Airtel Nigeria departments.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* UI/UX Design and Frontend Development Intern - Product Studio HQ */}
+          <div className="group h-80 perspective-1000 cursor-pointer">
+            <div className="relative w-full h-full flip-card-inner">
+              {/* Front */}
+              <div
+                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden"
+                style={{ backgroundColor: "#FFFFFF", color: "#000000" }}
+              >
+                <div className="flex flex-col">
+                  <h3 className="text-2xl font-semibold mb-2">UI/UX Design and Frontend Development Intern</h3>
+                  <p className="text-sm opacity-90">Product Studio HQ • 2024</p>
+                </div>
+              </div>
+              {/* Back */}
+              <div
+                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden rotate-y-180"
+                style={{ backgroundColor: "#FFFFFF", color: "#000000" }}
+              >
+                <ul className="space-y-2 text-sm leading-relaxed opacity-95 overflow-y-auto">
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Designed intuitive user interfaces for the website of a non-profit organization, enhancing its online presence and user engagement through Figma prototypes.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Worked on the design team to conceptualize and create user interface designs and interactive prototypes using Figma for a wealth management application tailored to high-net-worth individuals, facilitating efficient management of assets, investments, and liabilities.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Developed and deployed responsive websites using the React framework, JavaScript (TypeScript), and TailwindCSS, ensuring seamless user experiences across devices and platforms via Vercel.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Graphics Design Intern - City Church Lagos */}
+          <div className="group h-80 perspective-1000 cursor-pointer">
+            <div className="relative w-full h-full flip-card-inner">
+              {/* Front */}
+              <div
+                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden"
+                style={{ backgroundColor: "#65DB61", color: "#153314" }}
+              >
+                <div className="flex flex-col">
+                  <h3 className="text-2xl font-semibold mb-2">Graphics Design Intern</h3>
+                  <p className="text-sm opacity-90">City Church Lagos • 2023</p>
+                </div>
+              </div>
+              {/* Back */}
+              <div
+                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden rotate-y-180"
+                style={{ backgroundColor: "#65DB61", color: "#153314" }}
+              >
+                <ul className="space-y-2 text-sm leading-relaxed opacity-95 overflow-y-auto">
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Collaborated with graphic designers to develop promotional vector graphics for the organization's social media platforms, leveraging Adobe Illustrator to create visually engaging and brand-consistent content.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
             {/* Call to action */}
       <section id="contact" className="space-y-6">
         <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-500">

@@ -67,7 +67,7 @@ export function ProjectDetailsPage() {
                 rel="noopener noreferrer"
                 className="group relative inline-flex items-center justify-between px-4 py-2 w-full sm:w-auto border border-white/70 bg-white text-[9px] sm:text-[10px] text-zinc-950 tracking-[0.16em] lowercase font-dmMono transition-colors duration-200 shadow-sm hover:bg-white/90"
               >
-                <span className="font-medium">{project.links[0].label}</span>
+                <span className="font-bold">{project.links[0].label}</span>
                 <span className="ml-2 inline-flex items-center justify-center text-[9px] sm:text-[10px] text-zinc-950">
                   ↗︎
                 </span>
