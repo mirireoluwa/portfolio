@@ -41,8 +41,21 @@ export function HomePage() {
   const [activePhrase, setActivePhrase] = useState(0);
   const [activeGreeting, setActiveGreeting] = useState(0);
   const [glitchPhase, setGlitchPhase] = useState<"idle" | "glitch1" | "glitch2">("idle");
+  const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
   const phraseHeightRef = useRef<number>(0);
   const phraseContainerRef = useRef<HTMLDivElement>(null);
+
+  const toggleCard = (cardId: string) => {
+    setFlippedCards((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(cardId)) {
+        newSet.delete(cardId);
+      } else {
+        newSet.add(cardId);
+      }
+      return newSet;
+    });
+  };
 
   useLayoutEffect(() => {
     if (phraseContainerRef.current) {
@@ -269,9 +282,26 @@ export function HomePage() {
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
+        <div className="flex items-center justify-center gap-2 lg:hidden">
+          <p className="text-xs text-zinc-400">
+            Tap on the cards to view details
+          </p>
+          <div className="tap-icon-animation">
+            <img
+              src="/finger-gesture.svg"
+              alt="Tap icon"
+              className="w-[18px] h-[18px] text-zinc-400"
+              style={{ filter: 'brightness(0) saturate(100%) invert(70%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0.9) contrast(0.9)' }}
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* IT Intern - Airtel Nigeria */}
-          <div className="group h-80 perspective-1000 cursor-pointer">
+          <div 
+            className={`group h-80 perspective-1000 cursor-pointer ${flippedCards.has('airtel') ? 'flipped' : ''}`}
+            onClick={() => toggleCard('airtel')}
+          >
             <div className="relative w-full h-full flip-card-inner">
               {/* Front */}
               <div
@@ -311,7 +341,10 @@ export function HomePage() {
           </div>
 
           {/* UI/UX Design and Frontend Development Intern - Product Studio HQ */}
-          <div className="group h-80 perspective-1000 cursor-pointer">
+          <div 
+            className={`group h-80 perspective-1000 cursor-pointer ${flippedCards.has('product-studio') ? 'flipped' : ''}`}
+            onClick={() => toggleCard('product-studio')}
+          >
             <div className="relative w-full h-full flip-card-inner">
               {/* Front */}
               <div
@@ -347,7 +380,10 @@ export function HomePage() {
           </div>
 
           {/* Graphics Design Intern - City Church Lagos */}
-          <div className="group h-80 perspective-1000 cursor-pointer">
+          <div 
+            className={`group h-80 perspective-1000 cursor-pointer ${flippedCards.has('city-church') ? 'flipped' : ''}`}
+            onClick={() => toggleCard('city-church')}
+          >
             <div className="relative w-full h-full flip-card-inner">
               {/* Front */}
               <div

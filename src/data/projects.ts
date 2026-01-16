@@ -1,4 +1,4 @@
-export type ProjectCategory = "Personal Project" | "Branding and Identity" | "UI/UX";
+export type ProjectCategory = "Personal Project" | "Branding and Identity" | "UI/UX" | "react + tailwind" | "Figma" | "Framer";
 
 export type Project = {
   slug: string;

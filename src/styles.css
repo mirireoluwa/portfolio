@@ -41,8 +41,34 @@ body {
   transition: transform 0.6s;
 }
 
-.group:hover .flip-card-inner {
-  transform: rotateY(180deg);
+/* Desktop: hover to flip */
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+}
+
+/* Mobile: click/tap to flip */
+@media (hover: none) and (pointer: coarse) {
+  .flipped .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+}
+
+/* Tap icon animation */
+.tap-icon-animation {
+  animation: tapPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes tapPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
 }
 
 
