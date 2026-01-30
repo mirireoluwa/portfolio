@@ -54,6 +54,18 @@ export function NowListening() {
             ? ""
             : window.location.origin;
         const res = await fetch(`${base}/api/now-playing`);
+        const contentType = res.headers.get("content-type") || "";
+        if (!contentType.includes("application/json")) {
+          if (!cancelled) {
+            setData({
+              ok: false,
+              nowPlaying: false,
+              track: null,
+              message: "API returned non-JSON (route may not be active)",
+            });
+          }
+          return;
+        }
         const json = (await res.json()) as NowPlayingResponse;
         if (!cancelled) {
           setData(json);
@@ -64,7 +76,7 @@ export function NowListening() {
             ok: false,
             nowPlaying: false,
             track: null,
-            message: "Unavailable",
+            message: "Could not load (fetch failed)",
           });
         }
       } finally {
@@ -124,6 +136,8 @@ export function NowListening() {
             <p>
               No recent tracks yet. Play something and scrobble to Last.fm (e.g. with Marvis Pro or Soor) to see it here.
             </p>
+          ) : data?.message ? (
+            <p>{data.message}</p>
           ) : (
             <p>Nothing to show right now.</p>
           )}

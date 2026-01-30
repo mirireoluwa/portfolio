@@ -33,14 +33,23 @@ export async function GET(_request: Request) {
       error?: number;
       message?: string;
       recenttracks?: {
-        track?: Array<{
-          name: string;
-          artist?: { "#text"?: string; name?: string };
-          album?: { "#text"?: string; name?: string };
-          url?: string;
-          image?: Array<{ size: string; "#text": string }>;
-          "@attr"?: { nowplaying?: string };
-        }>;
+        track?:
+          | Array<{
+              name?: string;
+              artist?: { "#text"?: string; name?: string };
+              album?: { "#text"?: string; name?: string };
+              url?: string;
+              image?: Array<{ size: string; "#text": string }>;
+              "@attr"?: { nowplaying?: string };
+            }>
+          | {
+              name?: string;
+              artist?: { "#text"?: string; name?: string };
+              album?: { "#text"?: string; name?: string };
+              url?: string;
+              image?: Array<{ size: string; "#text": string }>;
+              "@attr"?: { nowplaying?: string };
+            };
       };
     };
 
@@ -58,7 +67,7 @@ export async function GET(_request: Request) {
     // Last.fm returns track as a single object when limit=1, or array when multiple
     const rawTrack = data.recenttracks?.track;
     const track = Array.isArray(rawTrack) ? rawTrack[0] : rawTrack;
-    if (!track) {
+    if (!track || typeof track !== "object" || !track.name) {
       return new Response(
         JSON.stringify({ ok: true, nowPlaying: false, track: null }),
         { status: 200, headers }
