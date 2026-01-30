@@ -15,35 +15,6 @@ interface NowPlayingResponse {
   message?: string;
 }
 
-function CdIcon({ isPlaying, artworkUrl }: { isPlaying: boolean; artworkUrl?: string | null }) {
-  const hasArtwork = Boolean(artworkUrl);
-  return (
-    <div
-      className="relative flex-shrink-0 cd-container"
-      style={{
-        width: 88,
-        height: 88,
-        ...(hasArtwork && { ["--cd-artwork" as string]: `url("${artworkUrl}")` }),
-      }}
-      aria-hidden
-    >
-      {/* Compact disk: ring, optional artwork ambience + label, center hole */}
-      <div
-        className={`absolute inset-0 rounded-full cd-disc ${hasArtwork ? "cd-disc--with-artwork" : ""} ${isPlaying ? "animate-cd-spin" : ""}`}
-      >
-        {/* Ambient tint from artwork on the ring */}
-        {hasArtwork && <div className="cd-ambient" />}
-        {/* Rainbow iridescent overlay (CD reflection) - subtle when artwork present */}
-        <div className="cd-shine" />
-        {/* Center label: album artwork (when available) */}
-        {hasArtwork && <div className="cd-label" />}
-        {/* Center hole */}
-        <div className="cd-hole" />
-      </div>
-    </div>
-  );
-}
-
 export function NowListening() {
   const [data, setData] = useState<NowPlayingResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -104,7 +75,7 @@ export function NowListening() {
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
         <div className="flex items-center gap-6 rounded-lg border border-white/10 bg-zinc-900/60 p-6">
-          <div className="h-20 w-20 flex-shrink-0 animate-pulse rounded-full bg-zinc-800" />
+          <div className="h-20 w-20 flex-shrink-0 animate-pulse rounded-lg bg-zinc-800" />
           <div className="min-w-0 flex-1 space-y-1">
             <div className="h-4 w-32 animate-pulse rounded bg-zinc-700" />
             <div className="h-3 w-24 animate-pulse rounded bg-zinc-800" />
@@ -153,7 +124,15 @@ export function NowListening() {
           rel="noopener noreferrer"
           className="group flex items-center gap-6 rounded-lg border border-white/10 bg-zinc-900/60 p-6 transition-colors hover:bg-zinc-800/60"
         >
-          <CdIcon isPlaying={nowPlaying} artworkUrl={data.track!.image} />
+          {data.track!.image ? (
+            <img
+              src={data.track!.image}
+              alt=""
+              className="h-20 w-20 flex-shrink-0 rounded-lg object-cover shadow-md"
+            />
+          ) : (
+            <div className="h-20 w-20 flex-shrink-0 rounded-lg bg-zinc-700" />
+          )}
           <div className="min-w-0 flex-1">
             <p className="text-[11px] uppercase tracking-[0.2em] text-zinc-500">
               {nowPlaying ? "Now listening" : "Last listened to"}
@@ -166,13 +145,6 @@ export function NowListening() {
               {data.track!.album ? ` · ${data.track!.album}` : ""}
             </p>
           </div>
-          {data.track!.image && (
-            <img
-              src={data.track!.image}
-              alt=""
-              className="h-14 w-14 flex-shrink-0 rounded object-cover"
-            />
-          )}
           <span className="flex-shrink-0 text-zinc-500 transition-colors group-hover:text-zinc-300">
             →
           </span>

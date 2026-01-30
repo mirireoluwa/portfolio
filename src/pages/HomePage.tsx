@@ -249,9 +249,6 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Now Listening */}
-      <NowListening />
-
       {/* About */}
       <section id="about" className="space-y-8">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1.4fr),minmax(0,0.9fr)] items-start">
@@ -416,7 +413,10 @@ export function HomePage() {
         </div>
       </section>
 
-            {/* Call to action */}
+      {/* Now Listening */}
+      <NowListening />
+
+      {/* Call to action */}
       <section id="contact" className="space-y-6">
         <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
           <p>.say hello</p>
