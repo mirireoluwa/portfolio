@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { projects } from "../data/projects";
+import { NowListening } from "../components/NowListening";
 
 const heroPhrases = [
   "an ultra-creative", 
@@ -247,6 +248,9 @@ export function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* Now Listening */}
+      <NowListening />
 
       {/* About */}
       <section id="about" className="space-y-8">

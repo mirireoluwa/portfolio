@@ -71,5 +71,19 @@ body {
   }
 }
 
+/* Slow CD rotation when "now playing" */
+@keyframes cdSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-cd-spin {
+  animation: cdSpin 4s linear infinite;
+}
+
 
 
