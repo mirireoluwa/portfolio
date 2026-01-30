@@ -6,6 +6,8 @@ interface Track {
   album: string;
   url: string | null;
   image: string | null;
+  /** When provided (e.g. from a source that supports it), display live/animated artwork; otherwise use static image */
+  liveArtworkUrl?: string | null;
 }
 
 interface NowPlayingResponse {
@@ -122,32 +124,77 @@ export function NowListening() {
           href={data.track!.url || "#"}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex items-center gap-6 rounded-lg border border-white/10 bg-zinc-900/60 p-6 transition-colors hover:bg-zinc-800/60"
+          className={`group relative overflow-hidden rounded-lg border border-white/10 p-6 transition-colors hover:border-white/20 ${
+            data.track!.image ? "" : "bg-zinc-900/60 hover:bg-zinc-800/60"
+          }`}
         >
-          {data.track!.image ? (
-            <img
-              src={data.track!.image}
-              alt=""
-              className="h-20 w-20 flex-shrink-0 rounded-lg object-cover shadow-md"
-            />
-          ) : (
-            <div className="h-20 w-20 flex-shrink-0 rounded-lg bg-zinc-700" />
+          {/* Ambient background from artwork (static image for blur) */}
+          {(data.track!.image ?? data.track!.liveArtworkUrl) && (
+            <>
+              <div
+                className="absolute inset-0 z-0"
+                style={{
+                  backgroundImage: data.track!.image
+                    ? `url(${data.track!.image})`
+                    : undefined,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  filter: "blur(48px) saturate(1.4) brightness(0.5)",
+                  transform: "scale(1.1)",
+                }}
+                aria-hidden
+              />
+              {data.track!.liveArtworkUrl && !data.track!.image && (
+                <video
+                  src={data.track!.liveArtworkUrl}
+                  className="absolute inset-0 z-0 h-full w-full object-cover opacity-30"
+                  style={{ filter: "blur(48px) saturate(1.4) brightness(0.5)" }}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  aria-hidden
+                />
+              )}
+              <div className="absolute inset-0 z-0 bg-zinc-900/75" aria-hidden />
+            </>
           )}
-          <div className="min-w-0 flex-1">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-zinc-500">
-              {nowPlaying ? "Now listening" : "Last listened to"}
-            </p>
-            <p className="mt-1 truncate text-lg font-medium text-zinc-100 group-hover:text-white">
-              {data.track!.name}
-            </p>
-            <p className="truncate text-sm text-zinc-400">
-              {data.track!.artist}
-              {data.track!.album ? ` · ${data.track!.album}` : ""}
-            </p>
+          <div className="relative z-10 flex items-center gap-6">
+            {data.track!.liveArtworkUrl ? (
+              <video
+                src={data.track!.liveArtworkUrl}
+                className="h-20 w-20 flex-shrink-0 rounded-lg object-cover shadow-lg ring-1 ring-black/20"
+                autoPlay
+                muted
+                loop
+                playsInline
+                aria-hidden
+              />
+            ) : data.track!.image ? (
+              <img
+                src={data.track!.image}
+                alt=""
+                className="h-20 w-20 flex-shrink-0 rounded-lg object-cover shadow-lg ring-1 ring-black/20"
+              />
+            ) : (
+              <div className="h-20 w-20 flex-shrink-0 rounded-lg bg-zinc-700" />
+            )}
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] uppercase tracking-[0.2em] text-zinc-500">
+                {nowPlaying ? "Now listening" : "Last listened to"}
+              </p>
+              <p className="mt-1 truncate text-lg font-medium text-zinc-100 group-hover:text-white">
+                {data.track!.name}
+              </p>
+              <p className="truncate text-sm text-zinc-400">
+                {data.track!.artist}
+                {data.track!.album ? ` · ${data.track!.album}` : ""}
+              </p>
+            </div>
+            <span className="flex-shrink-0 text-zinc-500 transition-colors group-hover:text-zinc-300">
+              →
+            </span>
           </div>
-          <span className="flex-shrink-0 text-zinc-500 transition-colors group-hover:text-zinc-300">
-            →
-          </span>
         </a>
       )}
     </section>
