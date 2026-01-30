@@ -18,23 +18,18 @@ interface NowPlayingResponse {
 function CdIcon({ isPlaying }: { isPlaying: boolean }) {
   return (
     <div
-      className="relative flex-shrink-0"
-      style={{ width: 80, height: 80 }}
+      className="relative flex-shrink-0 cd-container"
+      style={{ width: 88, height: 88 }}
       aria-hidden
     >
-      {/* CD disc - silver ring with dark center (label area) */}
+      {/* Compact disk: reflective surface, center hole */}
       <div
-        className={`absolute inset-0 rounded-full border-[10px] border-zinc-500 shadow-lg ${
-          isPlaying ? "animate-cd-spin" : ""
-        }`}
-        style={{
-          background:
-            "radial-gradient(circle at 50% 50%, #18181b 0%, #18181b 28%, #3f3f46 30%, #52525b 35%, #71717a 50%, #52525b 65%, #3f3f46 70%, #18181b 72%, #18181b 100%)",
-        }}
+        className={`absolute inset-0 rounded-full cd-disc ${isPlaying ? "animate-cd-spin" : ""}`}
       >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-5 w-5 rounded-full border-2 border-zinc-600 bg-zinc-900 shadow-inner" />
-        </div>
+        {/* Rainbow iridescent overlay (CD reflection) */}
+        <div className="cd-shine" />
+        {/* Center hole */}
+        <div className="cd-hole" />
       </div>
     </div>
   );
