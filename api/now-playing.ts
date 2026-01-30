@@ -1,3 +1,9 @@
+/**
+ * Last.fm Now Playing API
+ * Uses LAST_FM_API_KEY and LAST_FM_USER from env.
+ * Scrobble from Apple Music via Last.fm app, Marvis Pro, Soor, etc.
+ */
+
 const LAST_FM_API = "https://ws.audioscrobbler.com/2.0/";
 
 export default async function handler(

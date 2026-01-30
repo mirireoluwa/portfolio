@@ -129,12 +129,12 @@ export function NowListening() {
               <span className="text-xs">
                 Set <code className="rounded bg-zinc-800 px-1">LAST_FM_API_KEY</code> and{" "}
                 <code className="rounded bg-zinc-800 px-1">LAST_FM_USER</code> in your
-                Vercel project, and scrobble from Apple Music via Last.fm.
+                Vercel project; scrobble from Apple Music via Last.fm (see README).
               </span>
             </p>
           ) : data?.ok && !data.track ? (
             <p>
-              No recent tracks yet. Play something and scrobble to Last.fm (e.g. with Marvis Pro or Soor) to see it here.
+              No recent tracks yet. Play something and scrobble to Last.fm to see it here.
             </p>
           ) : data?.message ? (
             <p>{data.message}</p>
