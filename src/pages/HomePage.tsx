@@ -258,7 +258,7 @@ export function HomePage() {
               <div className="flex-1 h-px bg-zinc-800" />
             </div>
             <h3 className="text-sm md:text-base text-zinc-200 leading-relaxed">
-              free like a hummingbird.
+            I’m a Computer Science student with a strong interest in design, music, and building meaningful digital experiences. I work at the intersection of technology, creativity, and problem-solving—exploring UI/UX, product thinking, and emerging technologies. Beyond tech, I create and release music under the name Saintted, where I express ideas around emotion, identity, and growth through sound.
             </h3>
           </div>
 
