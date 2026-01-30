@@ -120,6 +120,10 @@ export function NowListening() {
                 Vercel project, and scrobble from Apple Music via Last.fm.
               </span>
             </p>
+          ) : data?.ok && !data.track ? (
+            <p>
+              No recent tracks yet. Play something and scrobble to Last.fm (e.g. with Marvis Pro or Soor) to see it here.
+            </p>
           ) : (
             <p>Nothing to show right now.</p>
           )}

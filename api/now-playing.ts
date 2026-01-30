@@ -55,7 +55,9 @@ export async function GET(_request: Request) {
       );
     }
 
-    const track = data.recenttracks?.track?.[0];
+    // Last.fm returns track as a single object when limit=1, or array when multiple
+    const rawTrack = data.recenttracks?.track;
+    const track = Array.isArray(rawTrack) ? rawTrack[0] : rawTrack;
     if (!track) {
       return new Response(
         JSON.stringify({ ok: true, nowPlaying: false, track: null }),
