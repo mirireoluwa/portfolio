@@ -15,19 +15,28 @@ interface NowPlayingResponse {
   message?: string;
 }
 
-function CdIcon({ isPlaying }: { isPlaying: boolean }) {
+function CdIcon({ isPlaying, artworkUrl }: { isPlaying: boolean; artworkUrl?: string | null }) {
+  const hasArtwork = Boolean(artworkUrl);
   return (
     <div
       className="relative flex-shrink-0 cd-container"
-      style={{ width: 88, height: 88 }}
+      style={{
+        width: 88,
+        height: 88,
+        ...(hasArtwork && { ["--cd-artwork" as string]: `url("${artworkUrl}")` }),
+      }}
       aria-hidden
     >
-      {/* Compact disk: reflective surface, center hole */}
+      {/* Compact disk: ring, optional artwork ambience + label, center hole */}
       <div
-        className={`absolute inset-0 rounded-full cd-disc ${isPlaying ? "animate-cd-spin" : ""}`}
+        className={`absolute inset-0 rounded-full cd-disc ${hasArtwork ? "cd-disc--with-artwork" : ""} ${isPlaying ? "animate-cd-spin" : ""}`}
       >
-        {/* Rainbow iridescent overlay (CD reflection) */}
+        {/* Ambient tint from artwork on the ring */}
+        {hasArtwork && <div className="cd-ambient" />}
+        {/* Rainbow iridescent overlay (CD reflection) - subtle when artwork present */}
         <div className="cd-shine" />
+        {/* Center label: album artwork (when available) */}
+        {hasArtwork && <div className="cd-label" />}
         {/* Center hole */}
         <div className="cd-hole" />
       </div>
@@ -144,7 +153,7 @@ export function NowListening() {
           rel="noopener noreferrer"
           className="group flex items-center gap-6 rounded-lg border border-white/10 bg-zinc-900/60 p-6 transition-colors hover:bg-zinc-800/60"
         >
-          <CdIcon isPlaying={nowPlaying} />
+          <CdIcon isPlaying={nowPlaying} artworkUrl={data.track!.image} />
           <div className="min-w-0 flex-1">
             <p className="text-[11px] uppercase tracking-[0.2em] text-zinc-500">
               {nowPlaying ? "Now listening" : "Last listened to"}
