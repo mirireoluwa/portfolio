@@ -258,7 +258,17 @@ export function HomePage() {
               <div className="flex-1 h-px bg-zinc-800" />
             </div>
             <h3 className="text-sm md:text-base text-zinc-200 leading-relaxed">
-            I’m a Computer Science student with a strong interest in design, music, and building meaningful digital experiences. I work at the intersection of technology, creativity, and problem-solving—exploring UI/UX, product thinking, and emerging technologies. Beyond tech, I create and release music under the name Saintted, where I express ideas around emotion, identity, and growth through sound.
+            I’m a Computer Science student with a strong interest in design, music, and building meaningful digital experiences. I work at the intersection of technology, creativity, and problem-solving—exploring UI/UX, product thinking, and emerging technologies. Beyond tech, I create and release music under the name{" "}
+              <a
+                href="https://saintted.framer.website"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium hover:underline"
+                style={{ color: "#FF4B63" }}
+              >
+                Saintted
+              </a>
+              , where I express ideas around emotion, identity, and growth through sound.
             </h3>
           </div>
 
