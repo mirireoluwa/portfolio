@@ -274,13 +274,12 @@ export function HomePage() {
 
           <div className="relative w-full max-w-xs md:max-w-sm md:ml-auto rounded-apple-md overflow-hidden border border-white/10 bg-zinc-900">
             <img
-              src="/about-photo.jpg"
+              src="/about-photo-new.png"
               alt="Portrait of Mirireoluwa"
               className="h-full w-full object-cover"
             />
             <div className="pointer-events-none absolute inset-0">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.45),_transparent_55%)] opacity-25" />
-              <div className="absolute -inset-[200%] opacity-5 bg-[url('https://framerusercontent.com/images/rR6HYXBrMmX4cRpXfXUOvpvpB0.png')] bg-repeat animate-noiseFloat" />
             </div>
           </div>
         </div>
