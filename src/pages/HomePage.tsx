@@ -272,11 +272,14 @@ export function HomePage() {
             </h3>
           </div>
 
-          <div className="relative w-full max-w-xs md:max-w-sm md:ml-auto rounded-apple-md overflow-hidden border border-white/10 bg-zinc-900">
+          <div className="relative w-full max-w-xs md:max-w-sm md:ml-auto aspect-[3/4] rounded-apple-md overflow-hidden border border-white/10 bg-zinc-900">
             <img
-              src="/about-photo-new.png"
+              src="/about-photo-new.jpg"
               alt="Portrait of Mirireoluwa"
+              width={768}
+              height={1024}
               className="h-full w-full object-cover"
+              fetchPriority="high"
             />
             <div className="pointer-events-none absolute inset-0">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.45),_transparent_55%)] opacity-25" />
