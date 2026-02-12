@@ -8,6 +8,8 @@ const heroPhrases = [
   "an artist", 
   "a producer", 
   "a designer",
+  "a visionary",
+  "a genius",
 ];
 
 const greetings = [
