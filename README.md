@@ -28,7 +28,16 @@ Snapshot **file upload** uses [Vercel Blob](https://vercel.com/docs/storage/verc
 3. If the token isn’t there: Blob store → **.env.local** tab (or project **Settings → Environment Variables**) and copy **`BLOB_READ_WRITE_TOKEN`** into **Production** (and Preview if needed).
 4. **Redeploy** the project so serverless functions receive the variable.
 
-The upload API checks `process.env.BLOB_READ_WRITE_TOKEN`; without it you’ll see “Vercel Blob not configured”.
+The upload API checks `process.env.BLOB_READ_WRITE_TOKEN`; without it you’ll see “Vercel Blob not configured”. Keep images **under ~2.5MB** — base64 + JSON can exceed Vercel’s **~4.5MB** request limit for serverless functions.
+
+**Public vs private Blob store**
+
+Uploads use **`access: "public"`** so snapshot URLs work in normal `<img>` tags on your public portfolio. If the Blob store is **private-only** (or blocks public objects), uploads can fail or images won’t load for visitors.
+
+- Use a Blob store that **allows public files**, **or** leave the default (not private-only).
+- If you need private storage for other apps, create a **separate** Blob store for the portfolio and connect only that one to this project.
+
+Without a public-friendly store, use **paste URL** instead and host images under `public/` on your domain.
 
 ### 4. Deploy & use
 

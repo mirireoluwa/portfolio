@@ -76,6 +76,20 @@ export default async function handler(
     return res.status(200).json({ ok: true, url: blob.url });
   } catch (e) {
     console.error("blob upload error:", e);
-    return res.status(500).json({ ok: false, message: "Upload failed" });
+    const raw = e instanceof Error ? e.message : String(e);
+    let message =
+      "Blob upload failed. In Vercel: open your Blob store → ensure this project has a read-write token, copy BLOB_READ_WRITE_TOKEN to env, redeploy.";
+    if (/token|unauthori|forbidden|401|403|invalid/i.test(raw)) {
+      message = `Blob auth failed: ${raw.slice(0, 160)}. Regenerate the read-write token in Vercel Storage → Blob → connect env, redeploy.`;
+    } else if (/private|public access|access.*not|must be public|x-vercel-blob-access/i.test(raw)) {
+      message =
+        "This Blob store is set to private (or disallows public files). The CMS uploads snapshots as public so they show on your portfolio. In Vercel → Storage → Blob: use a store that allows public blobs, or turn off private-only mode, then try again.";
+    } else if (/size|large|413|body|payload|length/i.test(raw)) {
+      message =
+        "Request or image too large for the server (Vercel ~4.5MB limit for the whole request). Use an image under ~2MB or paste a URL instead.";
+    } else if (raw && raw.length < 180) {
+      message = raw;
+    }
+    return res.status(500).json({ ok: false, message });
   }
 }

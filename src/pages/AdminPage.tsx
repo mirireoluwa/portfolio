@@ -222,6 +222,14 @@ export function AdminPage() {
   const uploadSnapshot = async (snapshotIndex: number, file: File) => {
     if (activeIndex === null) return;
     setUploadError(null);
+    // Base64 JSON is ~33% larger; Vercel request body limit ~4.5MB — stay safe under ~2.5MB file
+    const maxFileBytes = 2.5 * 1024 * 1024;
+    if (file.size > maxFileBytes) {
+      setUploadError(
+        `This file is ${(file.size / (1024 * 1024)).toFixed(1)}MB. Uploads must be under ~2.5MB (encoding pushes the request over Vercel’s limit). Compress the image or paste an HTTPS URL.`
+      );
+      return;
+    }
     setUploadingIndex(snapshotIndex);
     try {
       const dataUrl = await new Promise<string>((resolve, reject) => {
@@ -236,14 +244,23 @@ export function AdminPage() {
         credentials: "include",
         body: JSON.stringify({ filename: file.name, dataUrl }),
       });
-      const data = (await r.json()) as { ok?: boolean; url?: string; message?: string };
+      const text = await r.text();
+      let data: { ok?: boolean; url?: string; message?: string } = {};
+      try {
+        data = text ? (JSON.parse(text) as typeof data) : {};
+      } catch {
+        setUploadError(
+          `Server returned HTTP ${r.status} (not JSON). Often the request is too large—use a smaller image (~2MB) or paste a URL.`
+        );
+        return;
+      }
       if (!r.ok || !data.ok || !data.url) {
-        setUploadError(data.message || "Upload failed");
+        setUploadError(data.message || `Upload failed (HTTP ${r.status}).`);
         return;
       }
       updateSnapshot(snapshotIndex, { src: data.url });
     } catch {
-      setUploadError("Upload failed (network or server error).");
+      setUploadError("Network error or could not read the file. Check your connection and try again.");
     } finally {
       setUploadingIndex(null);
     }
@@ -593,11 +610,12 @@ export function AdminPage() {
                       Upload blocked
                     </p>
                     <p>{uploadError}</p>
-                    {uploadError.includes("Blob") && (
+                    {/blob|token|vercel|4\.5|encoding|private|public/i.test(uploadError) && (
                       <p className="mt-2 text-[11px] text-zinc-400">
-                        In Vercel: <span className="text-zinc-300">Project → Storage → Blob</span>, connect a store to
-                        this project, ensure <span className="font-dmMono text-zinc-300">BLOB_READ_WRITE_TOKEN</span>{" "}
-                        exists for Production, then redeploy. Or paste a public HTTPS image URL instead.
+                        In Vercel: <span className="text-zinc-300">Storage → Blob</span> — the store must allow{" "}
+                        <span className="text-zinc-300">public</span> files (private-only stores break CMS uploads).
+                        Connect the store, set <span className="font-dmMono text-zinc-300">BLOB_READ_WRITE_TOKEN</span>{" "}
+                        for Production, redeploy. Or paste a public HTTPS image URL.
                       </p>
                     )}
                     <button
