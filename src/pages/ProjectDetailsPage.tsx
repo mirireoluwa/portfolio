@@ -1,8 +1,9 @@
 import { Link, useParams } from "react-router-dom";
-import { projects } from "../data/projects";
+import { useProjects } from "../context/ProjectsContext";
 
 export function ProjectDetailsPage() {
   const { slug } = useParams<{ slug: string }>();
+  const { projects } = useProjects();
   const project = projects.find((p) => p.slug === slug);
 
   if (!project) {

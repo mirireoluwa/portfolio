@@ -1,14 +1,50 @@
-Name: Mirireoluwa Christian Olukanni
+Name: Mirireoluwa Christian Olukanni  
 Matric Number: 22120613038
 
-## Now Listening (Last.fm + Apple Music)
+## Portfolio CMS (`/admin`)
 
-The “Now listening” section shows your current or last-played track. It uses **Last.fm** (Apple Music doesn’t expose a “now playing” API for websites). To use it:
+Edit projects from the browser; the public site reads them from **Upstash Redis** (falls back to bundled `src/data/projects.ts` if Redis is empty).
 
-1. Create a [Last.fm](https://www.last.fm/) account and get an [API key](https://www.last.fm/api/account/create).
-2. Scrobble from Apple Music to Last.fm using an app like [Marvis Pro](https://marvis.app/), [Soor](https://soor.app/), or the [Last.fm app](https://www.last.fm/download).
-3. In your Vercel project, set:
-   - `LAST_FM_API_KEY` – your Last.fm API key  
-   - `LAST_FM_USER` – your Last.fm username  
+### 1. Upstash Redis
 
-When something is playing (and scrobbled as “now playing”), the section shows **Now listening** with a rotating CD. When nothing is playing, it shows **Last listened to** with a static CD.
+1. Create a free database at [Upstash](https://upstash.com/).
+2. Copy **REST URL** and **REST TOKEN**.
+3. In Vercel → Project → Settings → Environment Variables, add:
+   - `UPSTASH_REDIS_REST_URL`
+   - `UPSTASH_REDIS_REST_TOKEN`
+
+### 2. Admin password
+
+- `ADMIN_PASSWORD` — used to sign in at `/admin` (pick a strong password).
+
+### 3. Image uploads (optional)
+
+For “Upload” on snapshot fields, enable [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) and add:
+
+- `BLOB_READ_WRITE_TOKEN`
+
+Without Blob, you can still paste **image URLs** (e.g. from `/public/...` on your domain or any HTTPS URL).
+
+### 4. Deploy & use
+
+Redeploy after setting env vars. Open `https://your-domain.com/admin`, sign in, edit projects, then **Publish to live site**.
+
+**Local development**
+
+1. Install deps (`npm install` runs **`build:api-lib`**, which compiles `api/lib/*.ts` → **`api/lib-js/*.js`** so Node can load them without clashing with the `.ts` sources in `api/lib/`).
+2. Run **`vercel dev`** (not plain `npm run dev`) so `/api/*` and the Vite app work together on one port (e.g. http://localhost:3000).
+3. If you change files in **`api/lib/`**, run **`npm run build:api-lib`** again before or while `vercel dev` is running.
+4. After editing **`.env.local`**, restart **`vercel dev`** so API routes pick up changes (the app also loads `.env.local` from disk for Redis if the CLI doesn’t inject it).
+
+Plain **`npm run dev`** only serves the frontend; `/api/*` will not exist unless you proxy to a running API.
+
+---
+
+## Now Listening (Last.fm + Apple Music) — optional
+
+If you use the Last.fm API route (`/api/now-playing`), set on Vercel:
+
+- `LAST_FM_API_KEY`
+- `LAST_FM_USER`
+
+Scrobble from Apple Music via Marvis Pro, Soor, or the Last.fm app.

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { projects } from "../data/projects";
+import { useProjects } from "../context/ProjectsContext";
 
 const heroPhrases = [
   "an ultra-creative", 
@@ -40,6 +40,7 @@ const fuzzyGlitchVariants: any = {
 };
 
 export function HomePage() {
+  const { projects } = useProjects();
   const [activePhrase, setActivePhrase] = useState(0);
   const [activeGreeting, setActiveGreeting] = useState(0);
   const [glitchPhase, setGlitchPhase] = useState<"idle" | "glitch1" | "glitch2">("idle");

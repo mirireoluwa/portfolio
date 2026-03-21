@@ -140,3 +140,7 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 .vercel
+.env*.local
+
+# Compiled ESM (separate from api/lib/*.ts so Vercel has no .ts/.js name clash)
+api/lib-js/

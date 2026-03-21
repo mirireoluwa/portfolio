@@ -1,21 +1,9 @@
-export type ProjectCategory = "Personal Project" | "Branding and Identity" | "UI/UX" | "react + tailwind" | "Figma" | "Framer";
+import type { Project } from "../types/project";
 
-export type Project = {
-  slug: string;
-  title: string;
-  year: string;
-  category: ProjectCategory;
-  role: string;
-  summary: string;
-  description: string;
-  links?: { label: string; href: string }[];
-  tags: string[];
-  accentColor: string;
-  accentTextColor: string;
-  snapshots?: { src: string; alt: string }[];
-};
+export type { Project, ProjectCategory } from "../types/project";
 
-export const projects: Project[] = [
+/** Bundled fallback when CMS (Redis) has no data — also used to seed the admin “restore defaults” action. */
+export const defaultProjects: Project[] = [
   {
     slug: "finnews",
     title: "finnews",
@@ -143,4 +131,6 @@ export const projects: Project[] = [
   },
 ];
 
+/** @deprecated Use `defaultProjects` or `useProjects()` from context */
+export const projects = defaultProjects;
 
