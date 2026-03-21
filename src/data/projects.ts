@@ -17,6 +17,38 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "finnews",
+    title: "finnews",
+    year: "2026",
+    category: "Personal Project",
+    role: "product, design & development",
+    summary:
+      "Market intelligence for your daily financial briefing—live news from global markets and the Nigerian Stock Exchange, with sentiment, index trends, and a personal watchlist.",
+    description:
+      "FinNews surfaces global market context and Nigerian Exchange (NGX) headlines in a dark, data-forward UI. " +
+      "The dashboard includes market sentiment, story sentiment breakdowns, and index visuals alongside a live news feed. " +
+      "Users sign in to keep a watchlist and follow what matters; sessions use a secure token on the device for a straightforward workflow.",
+    links: [
+      {
+        label: "visit FinNews",
+        href: "https://fin-news.xyz",
+      },
+    ],
+    tags: ["web app", "fintech", "ui/ux", "product"],
+    accentColor: "#4CB3FF",
+    accentTextColor: "#0b1421",
+    snapshots: [
+      {
+        src: "/finnews-landing.png",
+        alt: "FinNews landing — daily financial briefing and market intelligence hero",
+      },
+      {
+        src: "/finnews-dashboard.png",
+        alt: "FinNews dashboard — global markets, sentiment, and news feed",
+      },
+    ],
+  },
+  {
     slug: "airflow",
     title: "airflow",
     year: "2025",
