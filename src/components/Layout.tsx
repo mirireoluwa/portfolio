@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { useLocation } from "react-router-dom";
+import { isAdminHostname } from "../config/site";
 import { AdminHeader } from "./AdminHeader";
 import { Header } from "./Header";
 
@@ -9,7 +10,9 @@ type LayoutProps = {
 
 export function Layout({ children }: LayoutProps) {
   const { pathname } = useLocation();
-  const isAdmin = pathname === "/admin";
+  const onAdminHost =
+    typeof window !== "undefined" && isAdminHostname(window.location.hostname);
+  const isAdmin = onAdminHost || pathname === "/admin";
 
   return (
     <div className="min-h-screen flex flex-col items-center px-4 sm:px-6 lg:px-10 py-6">

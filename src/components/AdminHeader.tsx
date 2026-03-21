@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { getPublicSiteUrl } from "../config/site";
 
 function CmsGlyph() {
   return (
@@ -39,12 +39,12 @@ export function AdminHeader() {
           </p>
         </div>
       </div>
-      <Link
-        to="/"
+      <a
+        href={getPublicSiteUrl()}
         className="shrink-0 rounded-apple-sm border border-white/12 bg-white/5 px-3 py-2 text-[10px] font-dmMono uppercase tracking-[0.14em] text-zinc-300 hover:bg-white/10 hover:text-zinc-100 transition-colors"
       >
         view site
-      </Link>
+      </a>
     </header>
   );
 }

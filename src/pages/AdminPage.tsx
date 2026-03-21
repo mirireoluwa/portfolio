@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { getPublicSiteUrl } from "../config/site";
 import { useProjects } from "../context/ProjectsContext";
 import { defaultProjects } from "../data/projects";
 import type { Project } from "../types/project";
@@ -315,12 +315,12 @@ export function AdminPage() {
           Admin is not configured. Set <span className="font-dmMono text-zinc-200">ADMIN_PASSWORD</span> in
           Vercel environment variables, redeploy, then return here.
         </p>
-        <Link
-          to="/"
+        <a
+          href={getPublicSiteUrl()}
           className="inline-flex text-xs text-zinc-400 underline underline-offset-4 decoration-zinc-600 hover:text-zinc-200"
         >
           ← Back home
-        </Link>
+        </a>
       </div>
     );
   }
@@ -364,12 +364,12 @@ export function AdminPage() {
             </div>
           </form>
         </div>
-        <Link
-          to="/"
+        <a
+          href={getPublicSiteUrl()}
           className="inline-flex text-xs text-zinc-400 underline underline-offset-4 decoration-zinc-600 hover:text-zinc-200"
         >
           ← Back home
-        </Link>
+        </a>
       </div>
     );
   }
@@ -697,12 +697,12 @@ export function AdminPage() {
             )}
           </div>
 
-          <Link
-            to="/"
+          <a
+            href={getPublicSiteUrl()}
             className="inline-flex text-xs text-zinc-400 underline underline-offset-4 decoration-zinc-600 hover:text-zinc-200"
           >
             ← View portfolio
-          </Link>
+          </a>
         </section>
       </div>
     </div>

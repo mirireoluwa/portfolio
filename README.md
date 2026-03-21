@@ -1,9 +1,21 @@
 Name: Mirireoluwa Christian Olukanni  
 Matric Number: 22120613038
 
-## Portfolio CMS (`/admin`)
+## Portfolio CMS (`/admin` or `admin.yourdomain.com`)
 
 Edit projects from the browser; the public site reads them from **Upstash Redis** (falls back to bundled `src/data/projects.ts` if Redis is empty).
+
+### Admin on a subdomain (e.g. `admin.mirireoluwa.com`)
+
+1. **Vercel** → your project → **Settings** → **Domains** → add **`admin.mirireoluwa.com`** (same project as the main site).
+2. **DNS** (Namecheap, etc.): add a **CNAME** for **`admin`** pointing to Vercel’s target (often **`cname.vercel-dns.com`** — use whatever the Vercel UI shows after you add the domain).
+3. Wait for DNS to propagate, then open **`https://admin.mirireoluwa.com`** — the CMS loads at **`/`** on that host.
+4. **`https://mirireoluwa.com/admin`** still works unless you remove that route; both hit the same app.
+
+**Optional env (Vite / build-time)**
+
+- **`VITE_ADMIN_HOSTNAME`** — if set (e.g. `admin.mirireoluwa.com`), only that exact host is treated as the CMS. If unset, any hostname starting with **`admin.`** uses the CMS (handy for previews like `admin.your-preview.vercel.app` only if you use such a host).
+- **`VITE_PUBLIC_SITE_URL`** — set if “view site” / “back home” should go somewhere other than stripping `admin.` (e.g. `https://www.mirireoluwa.com`).
 
 ### 1. Upstash Redis
 
@@ -41,7 +53,7 @@ Without a public-friendly store, use **paste URL** instead and host images under
 
 ### 4. Deploy & use
 
-Redeploy after setting env vars. Open `https://your-domain.com/admin`, sign in, edit projects, then **Publish to live site**.
+Redeploy after setting env vars. Open `https://your-domain.com/admin` or your **admin subdomain**, sign in, edit projects, then **Publish to live site**.
 
 **Local development**
 
