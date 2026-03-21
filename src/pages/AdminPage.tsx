@@ -35,6 +35,56 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
+/** Returns #rrggbb or null if not exactly 6 hex digits (with optional #). */
+function normalizeHex6(raw: string): string | null {
+  const t = raw.trim();
+  const m = t.match(/^#?([0-9A-Fa-f]{6})$/);
+  return m ? `#${m[1].toUpperCase()}` : null;
+}
+
+function ColorHexField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (hex: string) => void;
+}) {
+  const normalized = normalizeHex6(value);
+  const pickerValue = normalized ?? "#3F3F46";
+
+  return (
+    <Field label={label}>
+      <div className="flex items-center gap-2">
+        <input
+          type="color"
+          value={pickerValue}
+          onChange={(e) => onChange(e.target.value.toUpperCase())}
+          className="admin-color-swatch shrink-0"
+          title={
+            normalized
+              ? `${normalized} — click to change`
+              : "Invalid hex — click to pick a color, or type #RRGGBB"
+          }
+          aria-label={`${label} — color preview and picker`}
+        />
+        <input
+          type="text"
+          inputMode="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={inputClass("font-dmMono flex-1 min-w-0")}
+          placeholder="#RRGGBB"
+          spellCheck={false}
+          autoComplete="off"
+          aria-label={`${label} — hex value`}
+        />
+      </div>
+    </Field>
+  );
+}
+
 function IconEye() {
   return (
     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
@@ -542,20 +592,16 @@ export function AdminPage() {
               </Field>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="card background (#hex)">
-                  <input
-                    className={inputClass("font-dmMono")}
-                    value={current.accentColor}
-                    onChange={(e) => updateActive({ accentColor: e.target.value })}
-                  />
-                </Field>
-                <Field label="card text (#hex)">
-                  <input
-                    className={inputClass("font-dmMono")}
-                    value={current.accentTextColor}
-                    onChange={(e) => updateActive({ accentTextColor: e.target.value })}
-                  />
-                </Field>
+                <ColorHexField
+                  label="card background (#hex)"
+                  value={current.accentColor}
+                  onChange={(hex) => updateActive({ accentColor: hex })}
+                />
+                <ColorHexField
+                  label="card text (#hex)"
+                  value={current.accentTextColor}
+                  onChange={(hex) => updateActive({ accentTextColor: hex })}
+                />
               </div>
 
               <Field label="tags (comma-separated)">
@@ -591,12 +637,12 @@ export function AdminPage() {
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center justify-between gap-3 flex-wrap">
                   <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-500">snapshots</p>
                   <button
                     type="button"
                     onClick={addSnapshot}
-                    className="text-[10px] font-dmMono uppercase tracking-[0.12em] text-zinc-400 hover:text-zinc-200"
+                    className="shrink-0 rounded-apple-sm border border-amber-500/40 bg-amber-500/15 px-3 py-2 text-[10px] font-dmMono font-medium uppercase tracking-[0.14em] text-amber-100 shadow-sm hover:border-amber-400/60 hover:bg-amber-500/25 hover:text-white transition-colors"
                   >
                     + add image
                   </button>
