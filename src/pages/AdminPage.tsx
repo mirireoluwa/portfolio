@@ -72,6 +72,7 @@ export function AdminPage() {
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const checkSession = useCallback(async () => {
     try {
@@ -116,6 +117,10 @@ export function AdminPage() {
   useEffect(() => {
     if (authenticated) void loadDraft();
   }, [authenticated, loadDraft]);
+
+  useEffect(() => {
+    setUploadError(null);
+  }, [activeIndex]);
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -216,6 +221,7 @@ export function AdminPage() {
 
   const uploadSnapshot = async (snapshotIndex: number, file: File) => {
     if (activeIndex === null) return;
+    setUploadError(null);
     setUploadingIndex(snapshotIndex);
     try {
       const dataUrl = await new Promise<string>((resolve, reject) => {
@@ -232,12 +238,12 @@ export function AdminPage() {
       });
       const data = (await r.json()) as { ok?: boolean; url?: string; message?: string };
       if (!r.ok || !data.ok || !data.url) {
-        alert(data.message || "Upload failed");
+        setUploadError(data.message || "Upload failed");
         return;
       }
       updateSnapshot(snapshotIndex, { src: data.url });
     } catch {
-      alert("Upload failed");
+      setUploadError("Upload failed (network or server error).");
     } finally {
       setUploadingIndex(null);
     }
@@ -578,6 +584,31 @@ export function AdminPage() {
                     + add image
                   </button>
                 </div>
+                {uploadError && (
+                  <div
+                    role="alert"
+                    className="rounded-apple-sm border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100/95 leading-relaxed"
+                  >
+                    <p className="font-dmMono text-[10px] uppercase tracking-[0.12em] text-amber-400/90 mb-1">
+                      Upload blocked
+                    </p>
+                    <p>{uploadError}</p>
+                    {uploadError.includes("Blob") && (
+                      <p className="mt-2 text-[11px] text-zinc-400">
+                        In Vercel: <span className="text-zinc-300">Project → Storage → Blob</span>, connect a store to
+                        this project, ensure <span className="font-dmMono text-zinc-300">BLOB_READ_WRITE_TOKEN</span>{" "}
+                        exists for Production, then redeploy. Or paste a public HTTPS image URL instead.
+                      </p>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setUploadError(null)}
+                      className="mt-2 text-[10px] font-dmMono uppercase tracking-[0.12em] text-amber-300 hover:text-amber-200"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                )}
                 {(current.snapshots || []).map((snap, si) => (
                   <div
                     key={si}

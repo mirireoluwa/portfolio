@@ -17,13 +17,18 @@ Edit projects from the browser; the public site reads them from **Upstash Redis*
 
 - `ADMIN_PASSWORD` — used to sign in at `/admin` (pick a strong password).
 
-### 3. Image uploads (optional)
+### 3. Image uploads in admin (optional)
 
-For “Upload” on snapshot fields, enable [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) and add:
+Snapshot **file upload** uses [Vercel Blob](https://vercel.com/docs/storage/vercel-blob). Without it, paste a full **HTTPS image URL** in the snapshot field (e.g. `https://yoursite.com/my-screenshot.png` after adding the file to `public/` and deploying).
 
-- `BLOB_READ_WRITE_TOKEN`
+**Enable uploads on production**
 
-Without Blob, you can still paste **image URLs** (e.g. from `/public/...` on your domain or any HTTPS URL).
+1. In [Vercel](https://vercel.com) open your **project** → **Storage** tab → **Create** / **Connect** → choose **Blob**.
+2. Create a store (or pick an existing one) and **connect it to this project** — Vercel usually adds **`BLOB_READ_WRITE_TOKEN`** to the project automatically.
+3. If the token isn’t there: Blob store → **.env.local** tab (or project **Settings → Environment Variables**) and copy **`BLOB_READ_WRITE_TOKEN`** into **Production** (and Preview if needed).
+4. **Redeploy** the project so serverless functions receive the variable.
+
+The upload API checks `process.env.BLOB_READ_WRITE_TOKEN`; without it you’ll see “Vercel Blob not configured”.
 
 ### 4. Deploy & use
 
