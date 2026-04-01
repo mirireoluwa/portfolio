@@ -262,7 +262,7 @@ export function HomePage() {
             <h3 className="text-sm md:text-base text-zinc-200 leading-relaxed">
             I’m a Computer Science student with a strong interest in design, music, and building meaningful digital experiences. I work at the intersection of technology, creativity, and problem-solving—exploring UI/UX, product thinking, and emerging technologies. Beyond tech, I create and release music under the name{" "}
               <a
-                href="https://saintted.framer.website"
+                href="https://saintted.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium hover:underline"
