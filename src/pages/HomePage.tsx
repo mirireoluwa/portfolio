@@ -4,12 +4,10 @@ import { Link } from "react-router-dom";
 import { useProjects } from "../context/ProjectsContext";
 
 const heroPhrases = [
-  "an ultra-creative", 
-  "an artist", 
+  "a designer",  
   "a producer", 
-  "a designer",
   "a visionary",
-  "a genius",
+  "an ultra-creative",
 ];
 
 const greetings = [
@@ -23,27 +21,10 @@ const greetings = [
   "hallo",      // German
 ];
 
-const fuzzyGlitchVariants: any = {
-  initial: { opacity: 1, x: 0, y: 0 },
-  glitch1: {
-    opacity: [1, 0.8, 1, 0.7, 1],
-    x: [0, -2, 2, -1, 0],
-    y: [0, 1, -1, 2, 0],
-    transition: { duration: 0.15, ease: "easeInOut" },
-  },
-  glitch2: {
-    opacity: [1, 0.7, 1, 0.6, 1],
-    x: [0, 3, -3, 1, 0],
-    y: [0, -2, 2, -1, 0],
-    transition: { duration: 0.15, ease: "easeInOut" },
-  },
-};
-
 export function HomePage() {
   const { projects } = useProjects();
   const [activePhrase, setActivePhrase] = useState(0);
   const [activeGreeting, setActiveGreeting] = useState(0);
-  const [glitchPhase, setGlitchPhase] = useState<"idle" | "glitch1" | "glitch2">("idle");
   const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
   const phraseHeightRef = useRef<number>(0);
   const phraseContainerRef = useRef<HTMLDivElement>(null);
@@ -85,34 +66,6 @@ export function HomePage() {
     return () => window.clearInterval(greetingInterval);
   }, []);
 
-  useEffect(() => {
-    let glitchTimeout: ReturnType<typeof setTimeout>;
-    let glitchPhaseTimeout1: ReturnType<typeof setTimeout>;
-    let glitchPhaseTimeout2: ReturnType<typeof setTimeout>;
-
-    const startGlitchCycle = () => {
-      const glitchDelay = 10000 + Math.random() * 10000; // 10-20 seconds
-      glitchTimeout = setTimeout(() => {
-        setGlitchPhase("glitch1");
-        glitchPhaseTimeout1 = setTimeout(() => {
-          setGlitchPhase("glitch2");
-          glitchPhaseTimeout2 = setTimeout(() => {
-            setGlitchPhase("idle");
-            startGlitchCycle();
-          }, 2000); // increased glitch2 duration from 600 to 1000
-        }, 2000); // increased glitch1 duration from 600 to 1000
-      }, glitchDelay);
-    };
-
-    startGlitchCycle();
-
-    return () => {
-      clearTimeout(glitchTimeout);
-      clearTimeout(glitchPhaseTimeout1);
-      clearTimeout(glitchPhaseTimeout2);
-    };
-  }, []);
-
   return (
     <div className="space-y-20">
       {/* Hero */}
@@ -139,48 +92,9 @@ export function HomePage() {
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight tracking-tight text-zinc-50 flex items-center gap-2">
             <span className="flex items-center relative" style={{ width: "max-content" }}>
               i&apos;m&nbsp;
-              {glitchPhase === "idle" && (
-                <motion.span
-                  key="mirireoluwa"
-                  initial="initial"
-                  animate="initial"
-                  exit="initial"
-                  variants={fuzzyGlitchVariants}
-                  className="relative font-semibold"
-                  style={{ color: "#f0f0f0" }}
-                >
-                  mirireoluwa
-                </motion.span>
-              )}
-              {glitchPhase === "glitch1" && (
-                <motion.a
-                  key="saintted"
-                  href="https://saintted.framer.website"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="relative font-semibold"
-                  initial="initial"
-                  animate="glitch1"
-                  exit="initial"
-                  variants={fuzzyGlitchVariants}
-                  style={{ display: "inline-block", color: "#FF4B63" }}
-                >
-                  saintted
-                </motion.a>
-              )}
-              {glitchPhase === "glitch2" && (
-                <motion.span
-                  key="mirireoluwa-glitch"
-                  initial="initial"
-                  animate="glitch2"
-                  exit="initial"
-                  variants={fuzzyGlitchVariants}
-                  className="relative font-semibold"
-                  style={{ color: "#f0f0f0" }}
-                >
-                  mirireoluwa
-                </motion.span>
-              )}
+              <span className="relative font-semibold" style={{ color: "#f0f0f0" }}>
+                mirireoluwa
+              </span>
               ,
             </span>
           </h1>
