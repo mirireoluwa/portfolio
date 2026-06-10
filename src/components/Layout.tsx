@@ -17,7 +17,7 @@ export function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col items-center px-4 sm:px-6 lg:px-10 py-6">
       <div className="w-full max-w-6xl flex flex-col gap-10">
-        <div className="sticky top-0 z-50 mx-auto max-w-5xl w-full">
+        <div className="sticky top-0 z-50 mx-auto max-w-6xl w-full">
           <div
             className={
               isAdmin
