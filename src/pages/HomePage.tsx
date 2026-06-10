@@ -84,8 +84,6 @@ export function HomePage() {
   const [swipeDir, setSwipeDir] = useState(1);
   const isDraggingRef = useRef(false);
   const [openExpCard, setOpenExpCard] = useState<string | null>(null);
-  const swipeTouchStartRef = useRef<{ x: number; y: number } | null>(null);
-  const activeCardRef = useRef<HTMLDivElement>(null);
 
   const toggleCard = (cardId: string) => {
     setFlippedCards((prev) => {
@@ -190,36 +188,7 @@ export function HomePage() {
 
         {/* ── Mobile: swipeable card stack ── */}
         <div className="lg:hidden space-y-5">
-          <div
-            className="relative h-[400px]"
-            onTouchStart={(e) => {
-              swipeTouchStartRef.current = {
-                x: e.touches[0].clientX,
-                y: e.touches[0].clientY,
-              };
-            }}
-            onTouchMove={(e) => {
-              if (!swipeTouchStartRef.current || !activeCardRef.current) return;
-              const dx = Math.abs(e.touches[0].clientX - swipeTouchStartRef.current.x);
-              const dy = Math.abs(e.touches[0].clientY - swipeTouchStartRef.current.y);
-              // Vertical gesture detected — yield to native page scroll
-              if (dy > dx && dy > 6) {
-                activeCardRef.current.style.pointerEvents = "none";
-              }
-            }}
-            onTouchEnd={() => {
-              swipeTouchStartRef.current = null;
-              if (activeCardRef.current) {
-                activeCardRef.current.style.pointerEvents = "";
-              }
-            }}
-            onTouchCancel={() => {
-              swipeTouchStartRef.current = null;
-              if (activeCardRef.current) {
-                activeCardRef.current.style.pointerEvents = "";
-              }
-            }}
-          >
+          <div className="relative h-[400px]">
             {/* Background cards (decorative stack, rendered back→front) */}
             {[2, 1].map((offset) => {
               const idx = mobileStackIndex + offset;
@@ -247,7 +216,6 @@ export function HomePage() {
             {/* Active draggable top card */}
             <AnimatePresence mode="sync" initial={false}>
               <motion.div
-                ref={activeCardRef}
                 key={mobileStackIndex}
                 className="absolute inset-x-0 top-0 bottom-0 rounded-xl overflow-hidden border border-white/10 bg-zinc-900 cursor-grab active:cursor-grabbing"
                 style={{ zIndex: 12, touchAction: "pan-y" }}
