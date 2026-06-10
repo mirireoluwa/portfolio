@@ -146,7 +146,7 @@ export function HomePage() {
                 className="group relative rounded-lg overflow-hidden border border-white/10 bg-zinc-900 shadow-soft hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col"
               >
                 {/* Image — framed by default, full-bleed on hover */}
-                <div className="relative h-52 bg-zinc-900 overflow-hidden flex-shrink-0">
+                <div className="relative h-52 overflow-hidden flex-shrink-0" style={{ backgroundColor: project.accentColor }}>
                   {previewImage ? (
                     <>
                       {/* Inner frame: inset shrinks to 0 and rounding collapses on hover */}
