@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useProjects } from "../context/ProjectsContext";
 
 const heroPhrases = [
@@ -74,6 +74,7 @@ const skills = [
 
 export function HomePage() {
   const { projects } = useProjects();
+  const navigate = useNavigate();
   const [activePhrase, setActivePhrase] = useState(0);
   const [activeGreeting, setActiveGreeting] = useState(0);
   const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
@@ -245,10 +246,9 @@ export function HomePage() {
                   const project = projects[mobileStackIndex];
                   const previewImage = project.snapshots?.[0];
                   return (
-                    <Link
-                      to={`/projects/${project.slug}`}
-                      className="flex flex-col h-full"
-                      onClick={(e) => { if (isDraggingRef.current) e.preventDefault(); }}
+                    <div
+                      className="flex flex-col h-full cursor-pointer"
+                      onClick={() => { if (!isDraggingRef.current) navigate(`/projects/${project.slug}`); }}
                     >
                       <div className="relative flex-1 overflow-hidden" style={{ backgroundColor: project.accentColor }}>
                         {previewImage && (
@@ -272,10 +272,23 @@ export function HomePage() {
                         <div className="mt-3 h-px opacity-30" style={{ backgroundColor: project.accentTextColor }} />
                         <div className="mt-3 flex items-center justify-between gap-3">
                           <h3 className="text-lg font-semibold lowercase">{project.title}</h3>
-                          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">→</span>
+                          {project.links?.[0] ? (
+                            <a
+                              href={project.links[0].href}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center px-3 py-1 rounded text-[9px] uppercase tracking-[0.14em] font-bold text-black flex-shrink-0"
+                              style={{ backgroundColor: "#F5C22A" }}
+                            >
+                              visit
+                            </a>
+                          ) : (
+                            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">→</span>
+                          )}
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   );
                 })()}
               </motion.div>
@@ -308,10 +321,10 @@ export function HomePage() {
           {projects.map((project) => {
             const previewImage = project.snapshots?.[0];
             return (
-              <Link
-                to={`/projects/${project.slug}`}
+              <div
                 key={project.slug}
-                className="group relative rounded-xl overflow-hidden border border-white/10 bg-zinc-900 shadow-soft hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col"
+                className="group relative rounded-xl overflow-hidden border border-white/10 bg-zinc-900 shadow-soft hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col cursor-pointer"
+                onClick={() => navigate(`/projects/${project.slug}`)}
               >
                 <div className="relative h-52 overflow-hidden flex-shrink-0" style={{ backgroundColor: project.accentColor }}>
                   {previewImage ? (
@@ -346,10 +359,23 @@ export function HomePage() {
                   <div className="mt-3 h-px opacity-30" style={{ backgroundColor: project.accentTextColor }} />
                   <div className="mt-3 flex items-center justify-between gap-3">
                     <h3 className="text-lg font-semibold lowercase">{project.title}</h3>
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">→</span>
+                    {project.links?.[0] ? (
+                      <a
+                        href={project.links[0].href}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center px-3 py-1 rounded text-[9px] uppercase tracking-[0.14em] font-bold text-black flex-shrink-0"
+                        style={{ backgroundColor: "#F5C22A" }}
+                      >
+                        visit
+                      </a>
+                    ) : (
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">→</span>
+                    )}
                   </div>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>
