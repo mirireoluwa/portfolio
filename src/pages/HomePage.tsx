@@ -34,6 +34,9 @@ export function HomePage() {
   const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
   const phraseHeightRef = useRef<number>(0);
   const phraseContainerRef = useRef<HTMLDivElement>(null);
+  const [mobileStackIndex, setMobileStackIndex] = useState(0);
+  const [swipeDir, setSwipeDir] = useState(1);
+  const isDraggingRef = useRef(false);
 
   const toggleCard = (cardId: string) => {
     setFlippedCards((prev) => {
@@ -136,7 +139,123 @@ export function HomePage() {
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        {/* ── Mobile: swipeable card stack ── */}
+        <div className="lg:hidden space-y-5">
+          <div className="relative h-[400px]">
+            {/* Background cards (decorative stack, rendered back→front) */}
+            {[2, 1].map((offset) => {
+              const idx = mobileStackIndex + offset;
+              if (idx >= projects.length) return null;
+              const p = projects[idx];
+              const img = p.snapshots?.[0];
+              return (
+                <div
+                  key={`stack-bg-${p.slug}`}
+                  className="absolute inset-x-0 top-0 bottom-0 rounded-xl overflow-hidden border border-white/10 pointer-events-none"
+                  style={{
+                    transform: `scale(${1 - offset * 0.04}) translateY(${offset * 16}px)`,
+                    transformOrigin: "top center",
+                    zIndex: 10 - offset,
+                    backgroundColor: p.accentColor,
+                  }}
+                >
+                  {img && (
+                    <img src={img.src} alt="" className="absolute inset-0 w-full h-full object-cover object-top opacity-20" />
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Active draggable top card */}
+            <AnimatePresence mode="sync" initial={false}>
+              <motion.div
+                key={mobileStackIndex}
+                className="absolute inset-x-0 top-0 bottom-0 rounded-xl overflow-hidden border border-white/10 bg-zinc-900 cursor-grab active:cursor-grabbing"
+                style={{ zIndex: 12 }}
+                initial={{ x: swipeDir * 280, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: swipeDir * -280, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 380, damping: 36 }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.25}
+                whileDrag={{ scale: 0.98 }}
+                onDragStart={() => { isDraggingRef.current = true; }}
+                onDragEnd={(_, info) => {
+                  setTimeout(() => { isDraggingRef.current = false; }, 100);
+                  if (info.offset.x < -70 && mobileStackIndex < projects.length - 1) {
+                    setSwipeDir(1);
+                    setMobileStackIndex((i) => i + 1);
+                  } else if (info.offset.x > 70 && mobileStackIndex > 0) {
+                    setSwipeDir(-1);
+                    setMobileStackIndex((i) => i - 1);
+                  }
+                }}
+              >
+                {(() => {
+                  const project = projects[mobileStackIndex];
+                  const previewImage = project.snapshots?.[0];
+                  return (
+                    <Link
+                      to={`/projects/${project.slug}`}
+                      className="flex flex-col h-full"
+                      onClick={(e) => { if (isDraggingRef.current) e.preventDefault(); }}
+                    >
+                      <div className="relative flex-1 overflow-hidden" style={{ backgroundColor: project.accentColor }}>
+                        {previewImage && (
+                          <div className="absolute inset-3 rounded-xl overflow-hidden">
+                            <img
+                              src={previewImage.src}
+                              alt={previewImage.alt}
+                              className="w-full h-full object-cover object-top opacity-80"
+                            />
+                          </div>
+                        )}
+                      </div>
+                      <div
+                        className="p-4 pb-3 flex-shrink-0"
+                        style={{ backgroundColor: project.accentColor, color: project.accentTextColor }}
+                      >
+                        <div className="flex items-center justify-between text-[10px] font-dmMono lowercase tracking-[0.12em]">
+                          <span>{project.year}</span>
+                          <span>{project.category}</span>
+                        </div>
+                        <div className="mt-3 h-px opacity-30" style={{ backgroundColor: project.accentTextColor }} />
+                        <div className="mt-3 flex items-center justify-between gap-3">
+                          <h3 className="text-lg font-semibold lowercase">{project.title}</h3>
+                          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">→</span>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })()}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Dot indicators */}
+          <div className="flex items-center justify-between px-1">
+            <p className="text-[10px] text-zinc-600 font-dmMono tracking-[0.08em]">swipe to browse</p>
+            <div className="flex items-center gap-2">
+              {projects.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setSwipeDir(i > mobileStackIndex ? 1 : -1);
+                    setMobileStackIndex(i);
+                  }}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i === mobileStackIndex ? "w-6 bg-zinc-200" : "w-1.5 bg-zinc-600 hover:bg-zinc-400"
+                  }`}
+                  aria-label={`Go to project ${i + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Desktop: grid ── */}
+        <div className="hidden lg:grid gap-6 lg:grid-cols-3">
           {projects.map((project) => {
             const previewImage = project.snapshots?.[0];
             return (
@@ -145,11 +264,9 @@ export function HomePage() {
                 key={project.slug}
                 className="group relative rounded-xl overflow-hidden border border-white/10 bg-zinc-900 shadow-soft hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col"
               >
-                {/* Image — framed by default, full-bleed on hover */}
                 <div className="relative h-52 overflow-hidden flex-shrink-0" style={{ backgroundColor: project.accentColor }}>
                   {previewImage ? (
                     <>
-                      {/* Inner frame: inset shrinks to 0 and rounding collapses on hover */}
                       <div className="absolute inset-3 group-hover:inset-0 rounded-xl group-hover:rounded-none overflow-hidden transition-all duration-400 ease-in-out">
                         <img
                           src={previewImage.src}
@@ -158,7 +275,6 @@ export function HomePage() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
-                      {/* Description — appears over image on hover */}
                       <p className="absolute bottom-3 left-3 right-3 text-[10px] text-zinc-200 leading-relaxed line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 z-10">
                         {project.summary.split("\n\n")[0]}
                       </p>
@@ -170,8 +286,6 @@ export function HomePage() {
                     </div>
                   )}
                 </div>
-
-                {/* Details — always at the bottom */}
                 <div
                   className="relative p-4 pb-3 flex-shrink-0"
                   style={{ backgroundColor: project.accentColor, color: project.accentTextColor }}
@@ -180,15 +294,10 @@ export function HomePage() {
                     <span>{project.year}</span>
                     <span>{project.category}</span>
                   </div>
-                  <div
-                    className="mt-3 h-px opacity-30"
-                    style={{ backgroundColor: project.accentTextColor }}
-                  />
+                  <div className="mt-3 h-px opacity-30" style={{ backgroundColor: project.accentTextColor }} />
                   <div className="mt-3 flex items-center justify-between gap-3">
                     <h3 className="text-lg font-semibold lowercase">{project.title}</h3>
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">
-                      →
-                    </span>
+                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">→</span>
                   </div>
                 </div>
               </Link>
@@ -233,38 +342,6 @@ export function HomePage() {
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.45),_transparent_55%)] opacity-25" />
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Skills */}
-      <section id="skills" className="space-y-8">
-        <div className="flex items-center justify-between gap-4 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
-          <p>.skills</p>
-          <div className="h-px flex-1 bg-zinc-800" />
-        </div>
-
-        <div className="grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/5 border border-white/5 rounded-xl overflow-hidden">
-          {skills.map(({ label, items, accent }) => (
-            <div key={label} className="p-5 space-y-4 bg-zinc-950/50">
-              <div className="flex items-center gap-2.5">
-                <span
-                  className="w-2 h-2 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: accent, boxShadow: `0 0 8px ${accent}88` }}
-                />
-                <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-dmMono">{label}</p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {items.map((item) => (
-                  <span
-                    key={item}
-                    className="px-3 py-1 text-[11px] text-zinc-300 border border-white/10 bg-zinc-900/60 rounded-full hover:bg-white/10 hover:text-zinc-100 transition-all duration-200 cursor-default"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -418,6 +495,38 @@ export function HomePage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Skills */}
+      <section id="skills" className="space-y-8">
+        <div className="flex items-center justify-between gap-4 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
+          <p>.skills</p>
+          <div className="h-px flex-1 bg-zinc-800" />
+        </div>
+
+        <div className="grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/5 border border-white/5 rounded-xl overflow-hidden">
+          {skills.map(({ label, items, accent }) => (
+            <div key={label} className="p-5 space-y-4 bg-zinc-950/50">
+              <div className="flex items-center gap-2.5">
+                <span
+                  className="w-2 h-2 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: accent, boxShadow: `0 0 8px ${accent}88` }}
+                />
+                <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-dmMono">{label}</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {items.map((item) => (
+                  <span
+                    key={item}
+                    className="px-3 py-1 text-[11px] text-zinc-300 border border-white/10 bg-zinc-900/60 rounded-full hover:bg-white/10 hover:text-zinc-100 transition-all duration-200 cursor-default"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
