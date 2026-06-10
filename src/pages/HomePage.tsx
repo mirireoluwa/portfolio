@@ -143,7 +143,7 @@ export function HomePage() {
               <Link
                 to={`/projects/${project.slug}`}
                 key={project.slug}
-                className="group relative rounded-lg overflow-hidden border border-white/10 bg-zinc-900 shadow-soft hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col"
+                className="group relative rounded-xl overflow-hidden border border-white/10 bg-zinc-900 shadow-soft hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col"
               >
                 {/* Image — framed by default, full-bleed on hover */}
                 <div className="relative h-52 overflow-hidden flex-shrink-0" style={{ backgroundColor: project.accentColor }}>

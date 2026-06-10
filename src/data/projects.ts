@@ -19,18 +19,18 @@ export const defaultProjects: Project[] = [
       "Signed-in users can maintain a watchlist and track the stories and instruments they care about. Sessions use a secure token stored on the device, keeping the flow lightweight while still supporting a personalized feed.\n\n" +
       "I owned this end to end—product direction, interface design, and implementation—including how information is grouped on screen, how dense the data should feel, and how the experience should read on both desktop and mobile.",
     problem:
-      "Financial information in Nigeria is fragmented. Getting a complete market picture means bouncing between Bloomberg for global context, Nairametrics for NGX data, and Twitter for sentiment—a workflow that's slow, noisy, and exhausting for anyone who just wants to stay informed before their day starts.",
+      "Getting a clear picture of what's happening in markets — especially Nigerian markets — means bouncing between five different apps before your day even starts. Bloomberg for global context, Nairametrics for NGX, Twitter to feel out the sentiment. It's exhausting and I just wanted one thing that told me what was actually going on.",
     process:
-      "I mapped out what a 10-minute morning briefing actually needs: a macro view, relevant local market movement, and a sense of whether sentiment is shifting. From there I audited five existing products—Bloomberg, CNBC Markets, Nairametrics, TradingView, and Robinhood—noting where each one failed the \"calm and scannable\" test.\n\n" +
-      "The layout went through three iterations. The first version separated global and NGX into tabs, which meant context was never visible at the same time. The second put everything on one long scroll—too dense. The final design uses a split-panel dashboard: macro indices and sentiment left, news feed right, with the watchlist tucked behind a user session so it doesn't clutter the default view.",
+      "I started by thinking about what I actually needed in a 10-minute morning scan — macro context, local market movement, a feel for whether things were trending up or down. Then I looked at the tools I was already using and wrote down exactly where each one was failing me.\n\n" +
+      "From there it was just building what I wished existed. The layout went through a few rounds — I tried tabs to separate global and NGX but that hid context I needed to see at the same time. Ended up with a split panel instead: indices and sentiment on the left, news feed on the right, watchlist tucked behind a login so it doesn't clutter the default view.",
     keyDecisions: [
-      "Dark, data-forward aesthetic — financial data reads better against dark backgrounds (reduced eye strain during extended sessions, better contrast for charts). Kept the palette restrained: one accent color per data category.",
-      "Combined global + NGX in a single view — the core insight was that Nigerian investors care about both simultaneously. Separating them into tabs created false isolation between connected markets.",
-      "Story-level sentiment, not just market-wide — aggregate sentiment scores are noise. Tagging sentiment per story lets users quickly identify which specific events are driving mood, not just that mood is negative.",
-      "Watchlist behind auth — keeping it optional and session-gated means the unauthenticated experience is still complete. Users aren't forced to sign up to get value.",
+      "Dark UI — financial data genuinely reads better on dark backgrounds. Less strain, better contrast for the charts. Kept the palette tight so the data itself does the visual work.",
+      "Global and NGX in the same view — separating them into tabs created an artificial wall between two markets that actually move together. Nigerian investors care about both at the same time.",
+      "Sentiment per story, not just overall — a blanket sentiment score doesn't tell you much. Tagging each story lets you see what's actually driving the mood, not just that the mood is negative.",
+      "Watchlist behind a login — the unauthenticated experience is complete on its own. Nobody should have to create an account just to read the news.",
     ],
     outcome:
-      "FinNews is live at fin-news.xyz and in active daily use. It's the only product in my portfolio where I validated the full loop—defined the problem myself, designed the solution, built it, and then used it every day to test whether it actually solved what I set out to fix. It does.",
+      "FinNews is live at fin-news.xyz. It's the one project where I've been my own user from day one — I actually use it every morning, which means it's constantly being tested against the original goal. So far it does what I built it to do.",
     links: [
       {
         label: "visit FinNews",
@@ -66,18 +66,18 @@ export const defaultProjects: Project[] = [
       "On the design side, I focused on hierarchy, spacing, and readable states (pending, in progress, complete) so the app stays scannable at a glance. On the engineering side, I built the front end with React and Tailwind CSS, emphasizing responsive layout and fast interactions.\n\n" +
       "The app is deployed for live use, which pushed me to think about performance, reliable access, and a consistent experience across screen sizes—not just a static mockup.",
     problem:
-      "Most productivity tools fail one of two ways: they're too simple to support real project workflows (basic to-do lists), or so feature-heavy they require significant setup before you can do any actual work (Notion, Linear, Jira). I needed something in between—structured enough to manage multi-step projects, lightweight enough to open and use in under a minute.",
+      "Most task tools either don't have enough structure — basic to-do lists you outgrow in a week — or have so much that you spend more time configuring than actually working. I wanted something in the middle. Something I could open and use immediately, but that could still hold a real project together.",
     process:
-      "I started by writing down my own productivity workflow on paper: how I actually break projects into tasks, how I decide what to work on next, and where I lose track. This gave me a minimal feature set: task creation, status tracking, prioritization, and scheduling—nothing else.\n\n" +
-      "I wireframed three dashboard layouts before landing on the current one. The key decision was making status (not project or due date) the primary visual axis—because the question I ask most often isn't 'what's due?' but 'what am I actually doing right now?'",
+      "I wrote out how I actually manage my own work on paper, no tools. How I break things into tasks, how I decide what to work on first, where I lose the thread. That gave me a short list of things I genuinely needed: create tasks, track status, prioritize, schedule. Everything else was cut.\n\n" +
+      "From there I tried a few different dashboard layouts before landing on one where status is the first thing you see — not due date, not project name. Because the question I ask most often isn't 'what's due today?', it's 'what am I actually doing right now?'",
     keyDecisions: [
-      "Status as the primary visual language — three clear states (pending, in progress, complete) with distinct visual weight mean you can read the dashboard's health in under a second without opening anything.",
-      "Scheduling and prioritization as core, not addons — putting these in the main creation flow rather than burying them in detail views means they actually get used. Friction at capture time kills the habit.",
-      "No workspaces, no teams — keeping Airflow strictly personal removes the overhead of permissions and sharing, which was the biggest source of complexity in tools I tried. A single user's task list needs different design than a team's.",
-      "Built and deployed rather than prototyped — shipping to a real URL forced me to solve problems a mockup wouldn't surface: performance on mobile, persistence across sessions, edge cases with empty states.",
+      "Status as the primary axis — three clear states (pending, in progress, done) front and center. That's the thing I actually needed to see at a glance.",
+      "Scheduling and priority in the creation flow — if it's buried in a detail view, nobody fills it in. Putting it upfront means it actually gets used.",
+      "Single-user only, no teams — adding workspaces and permissions would've made this a different product. A personal task manager has different design needs than a team tool.",
+      "Actually shipped it — deploying to a real URL forced me to solve problems a Figma file never would. Empty states, mobile behavior, data persistence. That's where the real design decisions happened.",
     ],
     outcome:
-      "Airflow is live and in active personal use. Having built and shipped it myself means every design decision I made was immediately testable—I used the app to plan the app. It also became the foundation for a similar internal tool I designed during my Airtel Nigeria internship.",
+      "Live and in daily use. I also ended up applying the same thinking when I built a similar internal tool during my Airtel Nigeria internship, so it had some real-world impact outside just being a personal project.",
     links: [
       {
         label: "visit Airflow",
@@ -113,19 +113,18 @@ export const defaultProjects: Project[] = [
       "A big part of the work was flow design: reducing friction between 'I want food' and 'order placed,' while keeping enough visual feedback so users always know where they are in the journey. I used Figma's prototyping tools to simulate transitions, taps, and state changes stakeholders could click through themselves.\n\n" +
       "Because this is a design-only deliverable, the outcome is a shareable prototype that communicates intent clearly—useful for feedback, iteration, and alignment before engineering starts.",
     problem:
-      "Existing food delivery apps in Nigeria—Bolt Food, Glovo, Chowdeck—pack their home screens with promotions, banners, and categories until the actual ordering task feels buried. When you're hungry, every extra tap is friction. I wanted to explore what the experience looks like when it's designed around the user's job-to-be-done (get food, fast) rather than the platform's marketing goals.",
+      "Food delivery apps in Nigeria are cluttered. You open the app and the first thing you see is promotions and banners — you have to scroll past all of that before you even get to restaurants. When you're hungry, that extra friction is genuinely annoying. I wanted to see what a version that actually prioritized the core job — find food, order it — would look like.",
     process:
-      "I started by mapping the core user journey: hunger → browse → select → add to cart → checkout → confirmation. Then I audited three competitor apps, timing how many taps each required from launch to order placed. The range was 8–14 taps.\n\n" +
-      "From the audit I identified three friction points: (1) too many promotional interruptions before reaching restaurant listings, (2) unclear cart state—users couldn't tell how much they'd added without opening the cart, (3) checkout flows that re-asked for information already saved.\n\n" +
-      "I designed Chowdie's screens to address all three, then wired a prototype in Figma with realistic transitions so stakeholders could experience the difference rather than read about it.",
+      "I started by mapping the core flow: open app → find food → order placed. That's the job. Then I actually timed myself going through that same flow on three different competitor apps to see where the friction was.\n\n" +
+      "Most of it came from two places — the number of screens before you reach a restaurant listing, and a checkout that kept asking for information that should've already been saved. I designed Chowdie around fixing those two things specifically, then wired up a Figma prototype that was realistic enough to actually feel the difference rather than just look at static screens.",
     keyDecisions: [
-      "Warm, appetite-driven color palette — food apps that feel clinical or overly technical fail to trigger appetite. Chowdie's amber and warm-white palette is a deliberate trust signal borrowed from hospitality design, not tech.",
-      "Persistent cart summary in the navigation bar — showing item count and subtotal at all times eliminates the 'did that add correctly?' anxiety that causes users to open and close the cart repeatedly.",
-      "Two-tap checkout for returning users — storing payment and delivery info upfront so the checkout flow is confirm → place, not fill in → fill in → confirm → place. Reduces the most cognitively loaded moment in the flow.",
-      "Discovery before promotions — restaurants and categories appear before any promotional banners. Promotions exist but are contextual (inside a restaurant view) not a gatekeeper to the browsing experience.",
+      "Warm, appetite-driven palette — cold and clinical doesn't make you want to eat. The amber and warm-white tones pull from hospitality design rather than tech, which felt more honest for a food product.",
+      "Cart always visible — showing item count and subtotal in the nav at all times means you never have to open the cart just to check if something added correctly. That's a small thing that removes a lot of low-key anxiety.",
+      "Checkout in two taps for returning users — store the details upfront. The checkout should be confirm → place, not fill everything in again every time.",
+      "Prototype, not just mockup — static screens don't show how something feels to navigate. Wiring up the transitions and state changes in Figma meant the decisions could be tested by actually using them.",
     ],
     outcome:
-      "The prototype is live and clickable on Figma. The audit-to-design process brought the theoretical tap count from competitor averages of 8–14 down to 5 taps from launch to order placed. As a design-only deliverable it demonstrates how prototyping can be used to validate and sell design decisions before a single line of code is written.",
+      "The prototype is live and clickable on Figma. The main thing it demonstrates is how prototyping can be used to validate and sell design decisions before any code gets written — which is something I genuinely believe in as part of how design work should go.",
     tags: ["mobile UX", "interaction design", "user flows", "prototyping", "figma"],
     links: [
       {
@@ -161,18 +160,18 @@ export const defaultProjects: Project[] = [
       "I chose Framer to move fast on visual polish—motion, typography, and responsive behavior—without sacrificing the editorial feel I wanted. That let me iterate on layout and tone until the site felt like the music itself: intentional, minimal, and personal.\n\n" +
       "The result is a portfolio that works as both a creative statement and a practical hub for fans—easy to share, easy to update, and focused on connection rather than clutter.",
     problem:
-      "Independent music producers need a presence that does two things at once: communicate creative identity (who you are, what you sound like, why someone should care) and convert that interest into action (stream this, follow me here). Most producer sites fail at one or both—either they're generic link-in-bio pages with no personality, or they're so visually heavy that the music itself gets buried.",
+      "Most producer sites are either a bare link-in-bio with no personality or an overdesigned portfolio where the music is genuinely hard to find. I needed something that felt like me as an artist but also made it easy to actually get to the music and follow along.",
     process:
-      "I started by defining two user types: someone discovering Saintted for the first time, and someone returning to find new music. Both need to reach the streaming links in under two clicks, but the first-time visitor needs emotional context first.\n\n" +
-      "The site structure became: hero (mood, name, one-line identity) → about (story, just enough) → music (latest releases + streaming platform links). I explored four hero directions in Framer before landing on the current full-bleed image with minimal overlay text—atmosphere first, information second.",
+      "I started by thinking about the two types of people who'd land on the site — someone discovering Saintted for the first time, and someone coming back to find new music. Both needed to reach the streaming links quickly, but the first-time visitor needed some context first. Once I had that, the structure pretty much wrote itself: hero that sets the mood, a short about section, then the music.\n\n" +
+      "I explored a few different hero directions in Framer before landing on full-bleed image with minimal overlay text. Atmosphere first, information second.",
     keyDecisions: [
-      "Atmosphere before information — the hero image is full-bleed with minimal text overlay. Visitors feel the aesthetic before they read anything. This is intentional: music is emotional, and the site needs to trigger an emotional response before the rational brain starts evaluating.",
-      "Two-section structure (story + catalog) — separating the artist narrative from the music catalog gives each section a clear job. The about section doesn't have to sell; it just has to be honest. The music section doesn't have to explain; it just has to make streaming easy.",
-      "Framer over custom code — choosing a tool that let me iterate on motion and layout visually meant I could test ten layout variations in the time it would take to code two. For a brand site where feel matters more than features, that speed of iteration was the right call.",
-      "Minimal copy throughout — every line of text on the site went through multiple rewrites to reduce word count while keeping meaning. Verbose artist bios signal insecurity; short, precise ones signal confidence.",
+      "Atmosphere before information — the hero image takes up the full screen with almost no text. You feel the aesthetic before you read anything. Music is emotional and the site should trigger that before your logical brain kicks in.",
+      "Two sections, two jobs — the about section just has to be honest, it doesn't need to sell. The music section just has to make streaming easy, it doesn't need to explain anything. Keeping them separate let each one do its job without getting in the way.",
+      "Framer over custom code — I wanted to iterate fast on motion, layout, and feel without getting stuck in implementation. For a brand site where feel matters more than features, that speed of iteration was the right call.",
+      "Minimal copy throughout — every line went through multiple rewrites just to cut words without losing meaning. Short, precise copy signals confidence. Long artist bios usually don't.",
     ],
     outcome:
-      "The site is live and serves as the primary hub for the Saintted project. It's a case study in how brand design and content strategy compound each other—the visual identity only works because the copy is precise, and the copy only lands because the visual context is right.",
+      "The site is live at saintted.com. It's also a useful example of how brand design and content strategy work together — the visual identity only holds because the copy is precise, and the copy only lands because the visual context is right.",
     tags: ["brand design", "web design", "visual identity", "content strategy"],
     links: [
       {
