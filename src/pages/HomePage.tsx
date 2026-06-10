@@ -356,14 +356,31 @@ export function HomePage() {
       </section>
 
       {/* About */}
-      <section id="about" className="space-y-8">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,1.4fr),minmax(0,0.9fr)] items-start">
-          <div className="space-y-6">
-            <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
-              <p>.about</p>
-              <div className="flex-1 h-px bg-zinc-800" />
+      <section id="about" className="space-y-6">
+        <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
+          <p>.about</p>
+          <div className="flex-1 h-px bg-zinc-800" />
+        </div>
+
+        <div className="grid gap-6 md:gap-10 md:grid-cols-[minmax(0,1fr),minmax(0,1.6fr)] items-start">
+          {/* Photo — first on mobile via order */}
+          <div className="order-first md:order-first relative w-full max-w-sm mx-auto md:mx-0 aspect-[4/5] rounded-xl overflow-hidden border border-white/10 bg-zinc-900">
+            <img
+              src="/about-photo-new.jpg"
+              alt="Portrait of Mirireoluwa"
+              width={768}
+              height={1024}
+              className="h-full w-full object-cover"
+              fetchPriority="high"
+            />
+            <div className="pointer-events-none absolute inset-0">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.45),_transparent_55%)] opacity-25" />
             </div>
-            <h3 className="text-sm md:text-base text-zinc-200 leading-relaxed">
+          </div>
+
+          {/* Text + metadata */}
+          <div className="space-y-6 md:pt-2">
+            <p className="text-sm md:text-base text-zinc-200 leading-relaxed">
               I'm a product designer who builds the things I design. I work at the intersection of user insight, visual craft, and product thinking—focused on experiences that are clear, considered, and actually useful. My background in Computer Science means I think about feasibility and implementation alongside aesthetics, which makes collaboration with engineering teams more direct. I also produce music as{" "}
               <a
                 href="https://saintted.com"
@@ -375,20 +392,19 @@ export function HomePage() {
                 Saintted
               </a>
               , where I explore similar questions of form, emotion, and clarity—just through sound.
-            </h3>
-          </div>
+            </p>
 
-          <div className="relative w-full max-w-xs md:max-w-sm md:ml-auto aspect-[3/4] rounded-apple-md overflow-hidden border border-white/10 bg-zinc-900">
-            <img
-              src="/about-photo-new.jpg"
-              alt="Portrait of Mirireoluwa"
-              width={768}
-              height={1024}
-              className="h-full w-full object-cover"
-              fetchPriority="high"
-            />
-            <div className="pointer-events-none absolute inset-0">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.45),_transparent_55%)] opacity-25" />
+            <div className="flex flex-wrap gap-2 pt-1 border-t border-white/5">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] text-zinc-400 font-dmMono tracking-[0.08em]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00ff77] flex-shrink-0" />
+                available for work
+              </span>
+              <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] text-zinc-400 font-dmMono tracking-[0.08em]">
+                CS student
+              </span>
+              <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] text-zinc-400 font-dmMono tracking-[0.08em]">
+                Lagos, NG
+              </span>
             </div>
           </div>
         </div>

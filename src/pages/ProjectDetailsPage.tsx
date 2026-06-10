@@ -92,7 +92,7 @@ export function ProjectDetailsPage() {
         <p className="text-[11px] text-zinc-400 font-dmMono lowercase tracking-[0.12em]">
           {project.year} • {project.category}
         </p>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div className="flex items-center justify-between gap-3">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-zinc-50">
             {project.title}
           </h1>
@@ -101,7 +101,7 @@ export function ProjectDetailsPage() {
               href={project.links[0].href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2 w-full sm:w-auto rounded-md text-[10px] uppercase tracking-[0.14em] font-bold transition-opacity duration-150 hover:opacity-80"
+              className="inline-flex items-center flex-shrink-0 px-4 py-2 rounded-md text-[10px] uppercase tracking-[0.14em] font-bold transition-opacity duration-150 hover:opacity-80"
               style={{ backgroundColor: project.accentColor, color: project.accentTextColor }}
             >
               visit
