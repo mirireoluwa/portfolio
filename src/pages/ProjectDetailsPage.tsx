@@ -101,8 +101,8 @@ export function ProjectDetailsPage() {
               href={project.links[0].href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2 w-full sm:w-auto rounded-md text-[10px] uppercase tracking-[0.14em] font-bold text-black transition-opacity duration-150 hover:opacity-80"
-              style={{ backgroundColor: "#F5C22A" }}
+              className="inline-flex items-center px-4 py-2 w-full sm:w-auto rounded-md text-[10px] uppercase tracking-[0.14em] font-bold transition-opacity duration-150 hover:opacity-80"
+              style={{ backgroundColor: project.accentColor, color: project.accentTextColor }}
             >
               visit
             </a>
