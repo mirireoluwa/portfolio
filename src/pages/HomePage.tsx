@@ -376,7 +376,7 @@ export function HomePage() {
                 style={{ backgroundColor: "#65DB61", color: "#153314" }}
               >
                 <div className="flex flex-col">
-                  <h3 className="text-2xl font-semibold mb-2">Graphics Design Intern</h3>
+                  <h3 className="text-2xl font-semibold mb-2">Media & Creative Intern</h3>
                   <p className="text-sm opacity-90">City Church Lagos • 2023</p>
                 </div>
               </div>
@@ -388,7 +388,23 @@ export function HomePage() {
                 <ul className="space-y-2 text-sm leading-relaxed opacity-95 overflow-y-auto">
                   <li className="flex items-start gap-2">
                     <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Collaborated with graphic designers to develop promotional vector graphics for the organization's social media platforms, using Adobe Illustrator to create visually engaging, brand-consistent content.</span>
+                    <span className="flex-1">Designed promotional graphics and visual content for the organization's social media platforms using Adobe Illustrator, maintaining brand consistency across all materials.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Shot and edited photography for events and services, producing polished visual assets for print and digital use.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Edited video content for recaps, highlights, and promotional materials distributed across social channels.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Provided creative direction for media productions, coordinating visual style and ensuring cohesive storytelling across formats.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Managed live streaming operations for services and events, overseeing technical setup and real-time broadcast quality.</span>
                   </li>
                 </ul>
               </div>
