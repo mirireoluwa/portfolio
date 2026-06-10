@@ -22,7 +22,7 @@ export function Layout({ children }: LayoutProps) {
             className={
               isAdmin
                 ? "backdrop-blur-sm border-b border-amber-500/20 bg-zinc-950/50"
-                : "backdrop-blur-sm border-b border-white/10"
+                : ""
             }
           >
             {isAdmin ? <AdminHeader /> : <Header />}
