@@ -591,6 +591,53 @@ export function AdminPage() {
                 />
               </Field>
 
+              {/* Case study fields */}
+              <div className="space-y-4 rounded-apple-sm border border-white/5 bg-zinc-950/40 p-4">
+                <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-500">case study</p>
+
+                <Field label="the problem">
+                  <textarea
+                    className={`${inputClass()} min-h-[80px] resize-y`}
+                    placeholder="What user or business problem were you solving?"
+                    value={current.problem ?? ""}
+                    onChange={(e) => updateActive({ problem: e.target.value || undefined })}
+                  />
+                </Field>
+
+                <Field label="process">
+                  <textarea
+                    className={`${inputClass()} min-h-[100px] resize-y`}
+                    placeholder="How did you approach the design? Research, ideation, iterations…"
+                    value={current.process ?? ""}
+                    onChange={(e) => updateActive({ process: e.target.value || undefined })}
+                  />
+                </Field>
+
+                <Field label="key design decisions (one per line)">
+                  <textarea
+                    className={`${inputClass()} min-h-[100px] resize-y font-dmMono text-xs`}
+                    placeholder={"Decision title — reasoning behind it\nAnother decision — why you made this call"}
+                    value={(current.keyDecisions ?? []).join("\n")}
+                    onChange={(e) => {
+                      const decisions = e.target.value
+                        .split("\n")
+                        .map((d) => d.trim())
+                        .filter(Boolean);
+                      updateActive({ keyDecisions: decisions.length ? decisions : undefined });
+                    }}
+                  />
+                </Field>
+
+                <Field label="outcome">
+                  <textarea
+                    className={`${inputClass()} min-h-[80px] resize-y`}
+                    placeholder="Measurable or qualitative result — what changed?"
+                    value={current.outcome ?? ""}
+                    onChange={(e) => updateActive({ outcome: e.target.value || undefined })}
+                  />
+                </Field>
+              </div>
+
               <div className="grid gap-4 sm:grid-cols-2">
                 <ColorHexField
                   label="card background (#hex)"

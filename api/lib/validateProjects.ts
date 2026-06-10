@@ -1,5 +1,8 @@
 const CATEGORIES = new Set([
   "Personal Project",
+  "Product Design",
+  "UX/Product Design",
+  "Brand + Web Design",
   "Branding and Identity",
   "UI/UX",
   "react + tailwind",
@@ -15,6 +18,10 @@ export type ValidatedProject = {
   role: string;
   summary: string;
   description: string;
+  problem?: string;
+  process?: string;
+  keyDecisions?: string[];
+  outcome?: string;
   links?: { label: string; href: string }[];
   tags: string[];
   accentColor: string;
@@ -117,6 +124,19 @@ export function validateProjectsPayload(
       if (snapshots.length === 0) snapshots = undefined;
     }
 
+    // Optional case study fields
+    const problem = typeof o.problem === "string" && o.problem.trim() ? o.problem.trim() : undefined;
+    const process = typeof o.process === "string" && o.process.trim() ? o.process.trim() : undefined;
+    const outcome = typeof o.outcome === "string" && o.outcome.trim() ? o.outcome.trim() : undefined;
+
+    let keyDecisions: string[] | undefined;
+    if (Array.isArray(o.keyDecisions)) {
+      const decisions = o.keyDecisions
+        .filter((d): d is string => typeof d === "string" && d.trim().length > 0)
+        .map((d) => d.trim());
+      if (decisions.length > 0) keyDecisions = decisions;
+    }
+
     out.push({
       slug,
       title: (o.title as string).trim(),
@@ -125,6 +145,10 @@ export function validateProjectsPayload(
       role: (o.role as string).trim(),
       summary: (o.summary as string).trim(),
       description: (o.description as string).trim(),
+      ...(problem !== undefined && { problem }),
+      ...(process !== undefined && { process }),
+      ...(keyDecisions !== undefined && { keyDecisions }),
+      ...(outcome !== undefined && { outcome }),
       links,
       tags,
       accentColor: o.accentColor.trim(),

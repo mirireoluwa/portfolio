@@ -38,7 +38,19 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
         projects?: Project[] | null;
       };
       if (data.ok && Array.isArray(data.projects) && data.projects.length > 0) {
-        setProjects(data.projects);
+        // Merge case study fields from defaultProjects for any CMS project that
+        // predates those fields being added (CMS data wins if it has its own values).
+        const enriched = data.projects.map((cmsProject) => {
+          const defaults = defaultProjects.find((d) => d.slug === cmsProject.slug);
+          return {
+            problem: defaults?.problem,
+            process: defaults?.process,
+            keyDecisions: defaults?.keyDecisions,
+            outcome: defaults?.outcome,
+            ...cmsProject,
+          };
+        });
+        setProjects(enriched);
         setSource("cms");
       } else {
         setProjects(defaultProjects);
