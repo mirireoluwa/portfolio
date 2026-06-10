@@ -63,11 +63,20 @@ export function Header() {
         <button
           type="button"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden inline-flex items-center justify-center rounded-full border border-white/10 px-3 py-1.5 text-[11px] text-zinc-200 gap-2"
+          className="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-lg border border-white/10 bg-white/5 text-zinc-300 hover:text-white hover:border-white/20 transition-colors duration-150"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         >
-          menu
-          <span className="h-[1px] w-4 bg-zinc-100 relative before:absolute before:-top-1 before:h-[1px] before:w-4 before:bg-zinc-100 after:absolute after:top-1 after:h-[1px] after:w-4 after:bg-zinc-100" />
+          {isMenuOpen ? (
+            /* X icon */
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1.5 1.5L13.5 13.5M13.5 1.5L1.5 13.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          ) : (
+            /* Hamburger icon */
+            <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0.75 1H14.25M0.75 6H14.25M0.75 11H14.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          )}
         </button>
 
         {/* Mobile dropdown */}
