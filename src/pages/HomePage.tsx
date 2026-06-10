@@ -272,20 +272,7 @@ export function HomePage() {
                         <div className="mt-3 h-px opacity-30" style={{ backgroundColor: project.accentTextColor }} />
                         <div className="mt-3 flex items-center justify-between gap-3">
                           <h3 className="text-lg font-semibold lowercase">{project.title}</h3>
-                          {project.links?.[0] ? (
-                            <a
-                              href={project.links[0].href}
-                              target="_blank"
-                              rel="noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              className="inline-flex items-center px-3 py-1 rounded text-[9px] uppercase tracking-[0.14em] font-bold text-black flex-shrink-0"
-                              style={{ backgroundColor: "#F5C22A" }}
-                            >
-                              visit
-                            </a>
-                          ) : (
-                            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">→</span>
-                          )}
+                          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">→</span>
                         </div>
                       </div>
                     </div>

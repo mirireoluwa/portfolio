@@ -101,10 +101,10 @@ export function ProjectDetailsPage() {
               href={project.links[0].href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 w-full sm:w-auto border border-white/20 bg-zinc-900/60 text-[9px] sm:text-[10px] text-zinc-300 tracking-[0.16em] lowercase font-dmMono hover:border-white/50 hover:text-zinc-100 transition-colors duration-200"
+              className="inline-flex items-center px-4 py-2 w-full sm:w-auto rounded-md text-[10px] uppercase tracking-[0.14em] font-bold text-black transition-opacity duration-150 hover:opacity-80"
+              style={{ backgroundColor: "#F5C22A" }}
             >
-              <span>{project.links[0].label}</span>
-              <span className="opacity-60">↗︎</span>
+              visit
             </a>
           )}
         </div>
