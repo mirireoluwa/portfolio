@@ -143,11 +143,37 @@ export function HomePage() {
               <Link
                 to={`/projects/${project.slug}`}
                 key={project.slug}
-                className="group relative rounded-lg overflow-hidden border border-white/10 bg-surface/80 shadow-soft hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col"
+                className="group relative rounded-lg overflow-hidden border border-white/10 bg-zinc-900 shadow-soft hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col"
               >
-                {/* Card header */}
+                {/* Image — framed by default, full-bleed on hover */}
+                <div className="relative h-52 bg-zinc-900 overflow-hidden flex-shrink-0">
+                  {previewImage ? (
+                    <>
+                      {/* Inner frame: inset shrinks to 0 and rounding collapses on hover */}
+                      <div className="absolute inset-3 group-hover:inset-0 rounded-xl group-hover:rounded-none overflow-hidden transition-all duration-400 ease-in-out">
+                        <img
+                          src={previewImage.src}
+                          alt={previewImage.alt}
+                          className="w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </div>
+                      {/* Description — appears over image on hover */}
+                      <p className="absolute bottom-3 left-3 right-3 text-[10px] text-zinc-200 leading-relaxed line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 z-10">
+                        {project.summary.split("\n\n")[0]}
+                      </p>
+                    </>
+                  ) : (
+                    <div className="absolute inset-3 rounded-xl overflow-hidden bg-zinc-800">
+                      <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_55%)]" />
+                      <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(0,0,0,0.18)_25%,_transparent_25%,_transparent_50%,_rgba(0,0,0,0.18)_50%,_rgba(0,0,0,0.18)_75%,_transparent_75%,_transparent)] bg-[length:6px_6px] opacity-30" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Details — always at the bottom */}
                 <div
-                  className="relative p-4 pb-3"
+                  className="relative p-4 pb-3 flex-shrink-0"
                   style={{ backgroundColor: project.accentColor, color: project.accentTextColor }}
                 >
                   <div className="flex items-center justify-between text-[10px] font-dmMono lowercase tracking-[0.12em]">
@@ -163,31 +189,6 @@ export function HomePage() {
                     <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">
                       →
                     </span>
-                  </div>
-                </div>
-
-                {/* Card preview */}
-                <div className="relative flex-1 bg-zinc-900 min-h-[140px] overflow-hidden">
-                  {previewImage ? (
-                    <>
-                      <img
-                        src={previewImage.src}
-                        alt={previewImage.alt}
-                        className="absolute inset-0 w-full h-full object-cover object-top opacity-70 group-hover:opacity-90 transition-opacity duration-300 scale-105 group-hover:scale-100 transition-transform"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-zinc-900/20 to-transparent" />
-                    </>
-                  ) : (
-                    <>
-                      <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_55%)]" />
-                      <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(0,0,0,0.18)_25%,_transparent_25%,_transparent_50%,_rgba(0,0,0,0.18)_50%,_rgba(0,0,0,0.18)_75%,_transparent_75%,_transparent)] bg-[length:6px_6px] opacity-30" />
-                    </>
-                  )}
-                  {/* Summary preview */}
-                  <div className="absolute bottom-0 left-0 right-0 p-3">
-                    <p className="text-[10px] text-zinc-300 leading-relaxed line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      {project.summary.split("\n\n")[0]}
-                    </p>
                   </div>
                 </div>
               </Link>
