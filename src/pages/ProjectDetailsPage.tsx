@@ -86,12 +86,10 @@ export function ProjectDetailsPage() {
               href={project.links[0].href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative inline-flex items-center justify-between px-4 py-2 w-full sm:w-auto border border-white/70 bg-white text-[9px] sm:text-[10px] text-zinc-950 tracking-[0.16em] lowercase font-dmMono transition-colors duration-200 shadow-sm hover:bg-white/90"
+              className="inline-flex items-center gap-2 px-4 py-2 w-full sm:w-auto border border-white/20 bg-zinc-900/60 text-[9px] sm:text-[10px] text-zinc-300 tracking-[0.16em] lowercase font-dmMono hover:border-white/50 hover:text-zinc-100 transition-colors duration-200"
             >
-              <span className="font-bold">{project.links[0].label}</span>
-              <span className="ml-2 inline-flex items-center justify-center text-[9px] sm:text-[10px] text-zinc-950">
-                ↗︎
-              </span>
+              <span>{project.links[0].label}</span>
+              <span className="opacity-60">↗︎</span>
             </a>
           )}
         </div>
@@ -235,13 +233,16 @@ export function ProjectDetailsPage() {
         </div>
       )}
 
-      {/* Additional context */}
+      {/* Additional context / main description for projects without case study */}
       {project.description && (
-        <section className="space-y-4 border-t border-white/5 pt-10">
-          <SectionLabel label="context" />
+        <section className={`space-y-4 ${hasCaseStudy ? "border-t border-white/5 pt-10" : ""}`}>
+          <SectionLabel label={hasCaseStudy ? "context" : "about this project"} />
           <div className="max-w-2xl">
             {toParagraphs(project.description).map((paragraph, index) => (
-              <p key={`desc-${index}`} className="text-sm text-zinc-400 leading-relaxed mb-3 last:mb-0">
+              <p
+                key={`desc-${index}`}
+                className={`text-sm leading-relaxed mb-3 last:mb-0 ${hasCaseStudy ? "text-zinc-400" : "text-zinc-200"}`}
+              >
                 {paragraph}
               </p>
             ))}

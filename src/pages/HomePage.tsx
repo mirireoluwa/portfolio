@@ -21,6 +21,51 @@ const greetings = [
   "hallo",      // German
 ];
 
+const experienceItems = [
+  {
+    id: "airtel",
+    title: "Product Design & IT Intern",
+    company: "Airtel Nigeria",
+    year: "2025",
+    accentColor: "#FF4949",
+    textColor: "#FFFFFF",
+    bullets: [
+      "Designed and developed a project & task management application with features for projects, tasks, checklists, and dependencies, enabling potential use across multiple Airtel Nigeria departments.",
+      "Contributed to the design and implementation of a new USSD service, improving connectivity and user experience for millions of daily users.",
+      "Assisted in troubleshooting USSD service issues, improving service reliability and customer experience.",
+      "Built a Python application that organizes raw data dumps into structured files, improving data readability and accessibility across teams.",
+    ],
+  },
+  {
+    id: "product-studio",
+    title: "UI/UX Design & Frontend Intern",
+    company: "Product Studio HQ",
+    year: "2024",
+    accentColor: "#FFFFFF",
+    textColor: "#000000",
+    bullets: [
+      "Designed intuitive user interfaces for a non-profit organization's website, enhancing its online presence and user engagement through Figma prototypes.",
+      "Conceptualized and created UI designs and interactive prototypes in Figma for a wealth management application tailored to high-net-worth individuals.",
+      "Developed and deployed responsive websites using React, TypeScript, and Tailwind CSS via Vercel, bridging design handoff and implementation.",
+    ],
+  },
+  {
+    id: "city-church",
+    title: "Media & Creative Intern",
+    company: "City Church Lagos",
+    year: "2023",
+    accentColor: "#65DB61",
+    textColor: "#153314",
+    bullets: [
+      "Designed promotional graphics and visual content for the organization's social media platforms using Adobe Illustrator, maintaining brand consistency across all materials.",
+      "Shot and edited photography for events and services, producing polished visual assets for print and digital use.",
+      "Edited video content for recaps, highlights, and promotional materials distributed across social channels.",
+      "Provided creative direction for media productions, coordinating visual style and ensuring cohesive storytelling across formats.",
+      "Managed live streaming operations for services and events, overseeing technical setup and real-time broadcast quality.",
+    ],
+  },
+];
+
 const skills = [
   { label: "Tools", items: ["Figma", "Framer", "Adobe Illustrator"], accent: "#4CB3FF" },
   { label: "Methods", items: ["User research", "Interaction design", "Information architecture", "Prototyping", "Design systems"], accent: "#B3FFCB" },
@@ -37,6 +82,7 @@ export function HomePage() {
   const [mobileStackIndex, setMobileStackIndex] = useState(0);
   const [swipeDir, setSwipeDir] = useState(1);
   const isDraggingRef = useRef(false);
+  const [openExpCard, setOpenExpCard] = useState<string | null>(null);
 
   const toggleCard = (cardId: string) => {
     setFlippedCards((prev) => {
@@ -175,18 +221,21 @@ export function HomePage() {
                 initial={{ x: swipeDir * 280, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: swipeDir * -280, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 380, damping: 36 }}
+                transition={{ type: "spring", stiffness: 200, damping: 26 }}
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.25}
-                whileDrag={{ scale: 0.98 }}
+                dragElastic={0.7}
+                dragMomentum={false}
+                whileDrag={{ scale: 0.97 }}
                 onDragStart={() => { isDraggingRef.current = true; }}
                 onDragEnd={(_, info) => {
                   setTimeout(() => { isDraggingRef.current = false; }, 100);
-                  if (info.offset.x < -70 && mobileStackIndex < projects.length - 1) {
+                  const swipedLeft = info.velocity.x < -400 || info.offset.x < -70;
+                  const swipedRight = info.velocity.x > 400 || info.offset.x > 70;
+                  if (swipedLeft && mobileStackIndex < projects.length - 1) {
                     setSwipeDir(1);
                     setMobileStackIndex((i) => i + 1);
-                  } else if (info.offset.x > 70 && mobileStackIndex > 0) {
+                  } else if (swipedRight && mobileStackIndex > 0) {
                     setSwipeDir(-1);
                     setMobileStackIndex((i) => i - 1);
                   }
@@ -352,149 +401,95 @@ export function HomePage() {
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
-        <div className="flex items-center justify-center gap-2 lg:hidden">
-          <p className="text-xs text-zinc-400">
-            Tap on the cards to view details
-          </p>
-          <div className="tap-icon-animation">
-            <img
-              src="/finger-gesture.svg"
-              alt="Tap icon"
-              className="w-[18px] h-[18px] text-zinc-400"
-              style={{ filter: 'brightness(0) saturate(100%) invert(70%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0.9) contrast(0.9)' }}
-            />
-          </div>
+        {/* ── Mobile: accordion cards ── */}
+        <div className="md:hidden space-y-3">
+          {experienceItems.map((item) => {
+            const isOpen = openExpCard === item.id;
+            return (
+              <div
+                key={item.id}
+                className="rounded-xl overflow-hidden border border-white/10"
+                style={{ backgroundColor: item.accentColor }}
+              >
+                <button
+                  type="button"
+                  className="w-full flex items-center justify-between gap-4 p-4 text-left"
+                  style={{ color: item.textColor }}
+                  onClick={() => setOpenExpCard(isOpen ? null : item.id)}
+                >
+                  <div>
+                    <p className="font-semibold text-base leading-tight">{item.title}</p>
+                    <p className="text-xs opacity-70 mt-0.5">{item.company} · {item.year}</p>
+                  </div>
+                  <motion.span
+                    animate={{ rotate: isOpen ? 45 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex-shrink-0 text-xl leading-none opacity-50"
+                  >
+                    +
+                  </motion.span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      key="content"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-4 pb-4" style={{ color: item.textColor }}>
+                        <div className="h-px bg-current opacity-20 mb-3" />
+                        <ul className="space-y-2.5">
+                          {item.bullets.map((bullet, i) => (
+                            <li key={i} className="flex items-start gap-2 text-sm leading-relaxed opacity-90">
+                              <span className="mt-1.5 flex-shrink-0 text-[10px]">•</span>
+                              <span>{bullet}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Product Design & IT Intern - Airtel Nigeria */}
-          <div
-            className={`group h-80 perspective-1000 cursor-pointer ${flippedCards.has('airtel') ? 'flipped' : ''}`}
-            onClick={() => toggleCard('airtel')}
-          >
-            <div className="relative w-full h-full flip-card-inner">
-              {/* Front */}
-              <div
-                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden"
-                style={{ backgroundColor: "#FF4949", color: "#FFFFFF" }}
-              >
-                <div className="flex flex-col">
-                  <h3 className="text-2xl font-semibold mb-2">Product Design & IT Intern</h3>
-                  <p className="text-sm opacity-90">Airtel Nigeria • 2025</p>
+        {/* ── Desktop: flip cards ── */}
+        <div className="hidden md:grid md:grid-cols-3 gap-6">
+          {experienceItems.map((item) => (
+            <div
+              key={item.id}
+              className={`group h-80 perspective-1000 cursor-pointer ${flippedCards.has(item.id) ? "flipped" : ""}`}
+              onClick={() => toggleCard(item.id)}
+            >
+              <div className="relative w-full h-full flip-card-inner">
+                <div
+                  className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden"
+                  style={{ backgroundColor: item.accentColor, color: item.textColor }}
+                >
+                  <h3 className="text-2xl font-semibold mb-2">{item.title}</h3>
+                  <p className="text-sm opacity-90">{item.company} · {item.year}</p>
+                </div>
+                <div
+                  className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden rotate-y-180"
+                  style={{ backgroundColor: item.accentColor, color: item.textColor }}
+                >
+                  <ul className="space-y-2 text-sm leading-relaxed opacity-95 overflow-y-auto">
+                    {item.bullets.map((bullet, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <span className="mt-1.5 flex-shrink-0">•</span>
+                        <span className="flex-1">{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-              {/* Back */}
-              <div
-                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden rotate-y-180"
-                style={{ backgroundColor: "#FF4949", color: "#FFFFFF" }}
-              >
-                <ul className="space-y-2 text-sm leading-relaxed opacity-95 overflow-y-auto">
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Designed and developed a project & task management application with features for projects, tasks, checklists, and dependencies, enabling potential use across multiple Airtel Nigeria departments.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Contributed to the design and implementation of a new USSD service, improving connectivity and user experience for millions of daily users.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Assisted in troubleshooting USSD service issues, improving service reliability and customer experience.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Built a Python application that organizes raw data dumps into structured files, improving data readability and accessibility across teams.</span>
-                  </li>
-                </ul>
-              </div>
             </div>
-          </div>
-
-          {/* UI/UX Design and Frontend Development Intern - Product Studio HQ */}
-          <div
-            className={`group h-80 perspective-1000 cursor-pointer ${flippedCards.has('product-studio') ? 'flipped' : ''}`}
-            onClick={() => toggleCard('product-studio')}
-          >
-            <div className="relative w-full h-full flip-card-inner">
-              {/* Front */}
-              <div
-                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden"
-                style={{ backgroundColor: "#FFFFFF", color: "#000000" }}
-              >
-                <div className="flex flex-col">
-                  <h3 className="text-2xl font-semibold mb-2">UI/UX Design & Frontend Intern</h3>
-                  <p className="text-sm opacity-90">Product Studio HQ • 2024</p>
-                </div>
-              </div>
-              {/* Back */}
-              <div
-                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden rotate-y-180"
-                style={{ backgroundColor: "#FFFFFF", color: "#000000" }}
-              >
-                <ul className="space-y-2 text-sm leading-relaxed opacity-95 overflow-y-auto">
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Designed intuitive user interfaces for a non-profit organization's website, enhancing its online presence and user engagement through Figma prototypes.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Conceptualized and created UI designs and interactive prototypes in Figma for a wealth management application tailored to high-net-worth individuals.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Developed and deployed responsive websites using React, TypeScript, and Tailwind CSS via Vercel, bridging design handoff and implementation.</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {/* Graphics Design Intern - City Church Lagos */}
-          <div
-            className={`group h-80 perspective-1000 cursor-pointer ${flippedCards.has('city-church') ? 'flipped' : ''}`}
-            onClick={() => toggleCard('city-church')}
-          >
-            <div className="relative w-full h-full flip-card-inner">
-              {/* Front */}
-              <div
-                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden"
-                style={{ backgroundColor: "#65DB61", color: "#153314" }}
-              >
-                <div className="flex flex-col">
-                  <h3 className="text-2xl font-semibold mb-2">Media & Creative Intern</h3>
-                  <p className="text-sm opacity-90">City Church Lagos • 2023</p>
-                </div>
-              </div>
-              {/* Back */}
-              <div
-                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden rotate-y-180"
-                style={{ backgroundColor: "#65DB61", color: "#153314" }}
-              >
-                <ul className="space-y-2 text-sm leading-relaxed opacity-95 overflow-y-auto">
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Designed promotional graphics and visual content for the organization's social media platforms using Adobe Illustrator, maintaining brand consistency across all materials.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Shot and edited photography for events and services, producing polished visual assets for print and digital use.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Edited video content for recaps, highlights, and promotional materials distributed across social channels.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Provided creative direction for media productions, coordinating visual style and ensuring cohesive storytelling across formats.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Managed live streaming operations for services and events, overseeing technical setup and real-time broadcast quality.</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
