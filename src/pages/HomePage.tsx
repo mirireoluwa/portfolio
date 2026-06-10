@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import { useProjects } from "../context/ProjectsContext";
 
 const heroPhrases = [
-  "a designer",  
-  "a producer", 
+  "a product designer",
+  "a producer",
   "a visionary",
   "an ultra-creative",
 ];
@@ -19,6 +19,12 @@ const greetings = [
   "bawo",       // Yoruba
   "olá",        // Portuguese
   "hallo",      // German
+];
+
+const skills = [
+  { label: "Tools", items: ["Figma", "Framer", "Adobe Illustrator"] },
+  { label: "Methods", items: ["User research", "Interaction design", "Information architecture", "Prototyping", "Design systems"] },
+  { label: "Development", items: ["React", "TypeScript", "Tailwind CSS"] },
 ];
 
 export function HomePage() {
@@ -87,7 +93,7 @@ export function HomePage() {
           <p className="text-right whitespace-nowrap">available for new projects</p>
         </div>
 
-        {/* Hero Heading and Phrases - Grouped together */}
+        {/* Hero Heading and Phrases */}
         <div className="space-y-0 sm:space-y-0">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight tracking-tight text-zinc-50 flex items-center gap-2">
             <span className="flex items-center relative" style={{ width: "max-content" }}>
@@ -131,37 +137,62 @@ export function HomePage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
-          {projects.map((project) => (
-            <Link
-              to={`/projects/${project.slug}`}
-              key={project.slug}
-              className="group relative rounded-lg overflow-hidden border border-white/10 bg-surface/80 shadow-soft hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col"
-            >
-              <div
-                className="relative p-4 pb-3"
-                style={{ backgroundColor: project.accentColor, color: project.accentTextColor }}
+          {projects.map((project) => {
+            const previewImage = project.snapshots?.[0];
+            return (
+              <Link
+                to={`/projects/${project.slug}`}
+                key={project.slug}
+                className="group relative rounded-lg overflow-hidden border border-white/10 bg-surface/80 shadow-soft hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col"
               >
-                <div className="flex items-center justify-between text-[10px] font-dmMono lowercase tracking-[0.12em]">
-                  <span>{project.year}</span>
-                  <span>{project.category}</span>
-                </div>
+                {/* Card header */}
                 <div
-                  className="mt-3 h-px opacity-30"
-                  style={{ backgroundColor: project.accentTextColor }}
-                />
-                <div className="mt-3 flex items-center justify-between gap-3">
-                  <h3 className="text-lg font-semibold lowercase">{project.title}</h3>
-                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">
-                    →
-                  </span>
+                  className="relative p-4 pb-3"
+                  style={{ backgroundColor: project.accentColor, color: project.accentTextColor }}
+                >
+                  <div className="flex items-center justify-between text-[10px] font-dmMono lowercase tracking-[0.12em]">
+                    <span>{project.year}</span>
+                    <span>{project.category}</span>
+                  </div>
+                  <div
+                    className="mt-3 h-px opacity-30"
+                    style={{ backgroundColor: project.accentTextColor }}
+                  />
+                  <div className="mt-3 flex items-center justify-between gap-3">
+                    <h3 className="text-lg font-semibold lowercase">{project.title}</h3>
+                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">
+                      →
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className="relative flex-1 bg-zinc-900">
-                <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_55%)]" />
-                <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(0,0,0,0.18)_25%,_transparent_25%,_transparent_50%,_rgba(0,0,0,0.18)_50%,_rgba(0,0,0,0.18)_75%,_transparent_75%,_transparent)] bg-[length:6px_6px] opacity-30" />
-              </div>
-            </Link>
-          ))}
+
+                {/* Card preview */}
+                <div className="relative flex-1 bg-zinc-900 min-h-[140px] overflow-hidden">
+                  {previewImage ? (
+                    <>
+                      <img
+                        src={previewImage.src}
+                        alt={previewImage.alt}
+                        className="absolute inset-0 w-full h-full object-cover object-top opacity-70 group-hover:opacity-90 transition-opacity duration-300 scale-105 group-hover:scale-100 transition-transform"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-zinc-900/20 to-transparent" />
+                    </>
+                  ) : (
+                    <>
+                      <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_55%)]" />
+                      <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(0,0,0,0.18)_25%,_transparent_25%,_transparent_50%,_rgba(0,0,0,0.18)_50%,_rgba(0,0,0,0.18)_75%,_transparent_75%,_transparent)] bg-[length:6px_6px] opacity-30" />
+                    </>
+                  )}
+                  {/* Summary preview */}
+                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <p className="text-[10px] text-zinc-300 leading-relaxed line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      {project.summary.split("\n\n")[0]}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -174,7 +205,7 @@ export function HomePage() {
               <div className="flex-1 h-px bg-zinc-800" />
             </div>
             <h3 className="text-sm md:text-base text-zinc-200 leading-relaxed">
-            I’m a Computer Science student with a strong interest in design, music, and building meaningful digital experiences. I work at the intersection of technology, creativity, and problem-solving—exploring UI/UX, product thinking, and emerging technologies. Beyond tech, I create and release music under the name{" "}
+              I'm a product designer who builds the things I design. I work at the intersection of user insight, visual craft, and product thinking—focused on experiences that are clear, considered, and actually useful. My background in Computer Science means I think about feasibility and implementation alongside aesthetics, which makes collaboration with engineering teams more direct. I also produce music as{" "}
               <a
                 href="https://saintted.com"
                 target="_blank"
@@ -184,7 +215,7 @@ export function HomePage() {
               >
                 Saintted
               </a>
-              , where I express ideas around emotion, identity, and growth through sound.
+              , where I explore similar questions of form, emotion, and clarity—just through sound.
             </h3>
           </div>
 
@@ -201,6 +232,30 @@ export function HomePage() {
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.45),_transparent_55%)] opacity-25" />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Skills */}
+      <section id="skills" className="space-y-8">
+        <div className="flex items-center justify-between gap-4 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
+          <p>.skills</p>
+          <div className="h-px flex-1 bg-zinc-800" />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          {skills.map(({ label, items }) => (
+            <div key={label} className="space-y-3">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-dmMono">{label}</p>
+              <ul className="space-y-1.5">
+                {items.map((item) => (
+                  <li key={item} className="flex items-center gap-2 text-xs text-zinc-300">
+                    <span className="w-1 h-1 rounded-full bg-zinc-600 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -226,8 +281,8 @@ export function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* IT Intern - Airtel Nigeria */}
-          <div 
+          {/* Product Design & IT Intern - Airtel Nigeria */}
+          <div
             className={`group h-80 perspective-1000 cursor-pointer ${flippedCards.has('airtel') ? 'flipped' : ''}`}
             onClick={() => toggleCard('airtel')}
           >
@@ -238,7 +293,7 @@ export function HomePage() {
                 style={{ backgroundColor: "#FF4949", color: "#FFFFFF" }}
               >
                 <div className="flex flex-col">
-                  <h3 className="text-2xl font-semibold mb-2">IT Intern</h3>
+                  <h3 className="text-2xl font-semibold mb-2">Product Design & IT Intern</h3>
                   <p className="text-sm opacity-90">Airtel Nigeria • 2025</p>
                 </div>
               </div>
@@ -250,19 +305,19 @@ export function HomePage() {
                 <ul className="space-y-2 text-sm leading-relaxed opacity-95 overflow-y-auto">
                   <li className="flex items-start gap-2">
                     <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Assisted in troubleshooting and resolving issues with USSD services, improving service reliability and customer experience for millions of daily users.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Contributed to the design and implementation of a new USSD service, enabling more efficient connectivity and communication.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Contributed to the development of a python application that organizes raw data dumps into structured files, improving readability and accessibility.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-1.5 flex-shrink-0">•</span>
                     <span className="flex-1">Designed and developed a project & task management application with features for projects, tasks, checklists, and dependencies, enabling potential use across multiple Airtel Nigeria departments.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Contributed to the design and implementation of a new USSD service, improving connectivity and user experience for millions of daily users.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Assisted in troubleshooting USSD service issues, improving service reliability and customer experience.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-1.5 flex-shrink-0">•</span>
+                    <span className="flex-1">Built a Python application that organizes raw data dumps into structured files, improving data readability and accessibility across teams.</span>
                   </li>
                 </ul>
               </div>
@@ -270,7 +325,7 @@ export function HomePage() {
           </div>
 
           {/* UI/UX Design and Frontend Development Intern - Product Studio HQ */}
-          <div 
+          <div
             className={`group h-80 perspective-1000 cursor-pointer ${flippedCards.has('product-studio') ? 'flipped' : ''}`}
             onClick={() => toggleCard('product-studio')}
           >
@@ -281,7 +336,7 @@ export function HomePage() {
                 style={{ backgroundColor: "#FFFFFF", color: "#000000" }}
               >
                 <div className="flex flex-col">
-                  <h3 className="text-2xl font-semibold mb-2">UI/UX Design and Frontend Development Intern</h3>
+                  <h3 className="text-2xl font-semibold mb-2">UI/UX Design & Frontend Intern</h3>
                   <p className="text-sm opacity-90">Product Studio HQ • 2024</p>
                 </div>
               </div>
@@ -293,15 +348,15 @@ export function HomePage() {
                 <ul className="space-y-2 text-sm leading-relaxed opacity-95 overflow-y-auto">
                   <li className="flex items-start gap-2">
                     <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Designed intuitive user interfaces for the website of a non-profit organization, enhancing its online presence and user engagement through Figma prototypes.</span>
+                    <span className="flex-1">Designed intuitive user interfaces for a non-profit organization's website, enhancing its online presence and user engagement through Figma prototypes.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Worked on the design team to conceptualize and create user interface designs and interactive prototypes using Figma for a wealth management application tailored to high-net-worth individuals, facilitating efficient management of assets, investments, and liabilities.</span>
+                    <span className="flex-1">Conceptualized and created UI designs and interactive prototypes in Figma for a wealth management application tailored to high-net-worth individuals.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Developed and deployed responsive websites using the React framework, JavaScript (TypeScript), and TailwindCSS, ensuring seamless user experiences across devices and platforms via Vercel.</span>
+                    <span className="flex-1">Developed and deployed responsive websites using React, TypeScript, and Tailwind CSS via Vercel, bridging design handoff and implementation.</span>
                   </li>
                 </ul>
               </div>
@@ -309,7 +364,7 @@ export function HomePage() {
           </div>
 
           {/* Graphics Design Intern - City Church Lagos */}
-          <div 
+          <div
             className={`group h-80 perspective-1000 cursor-pointer ${flippedCards.has('city-church') ? 'flipped' : ''}`}
             onClick={() => toggleCard('city-church')}
           >
@@ -332,7 +387,7 @@ export function HomePage() {
                 <ul className="space-y-2 text-sm leading-relaxed opacity-95 overflow-y-auto">
                   <li className="flex items-start gap-2">
                     <span className="mt-1.5 flex-shrink-0">•</span>
-                    <span className="flex-1">Collaborated with graphic designers to develop promotional vector graphics for the organization's social media platforms, leveraging Adobe Illustrator to create visually engaging and brand-consistent content.</span>
+                    <span className="flex-1">Collaborated with graphic designers to develop promotional vector graphics for the organization's social media platforms, using Adobe Illustrator to create visually engaging, brand-consistent content.</span>
                   </li>
                 </ul>
               </div>
@@ -353,7 +408,7 @@ export function HomePage() {
             i'm open to collaborate and work on paradigm-shifting projects. send me an email or connect with me on linkedin.
           </h2>
 
-          <div className="flex flex-row items-center gap-4">
+          <div className="flex flex-row flex-wrap items-center gap-4">
             <button
               type="button"
               onClick={() => {
@@ -420,6 +475,25 @@ export function HomePage() {
                 />
               </div>
               <span className="text-sm font-medium">GitHub</span>
+            </a>
+
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative inline-flex items-center justify-center gap-2 px-4 py-2 border border-white/40 bg-transparent text-zinc-200 hover:bg-white hover:text-zinc-950 transition-colors duration-200 group"
+              aria-label="Download résumé"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="w-4 h-4"
+              >
+                <path d="M10.75 2.75a.75.75 0 0 0-1.5 0v8.614L6.295 8.235a.75.75 0 1 0-1.09 1.03l4.25 4.5a.75.75 0 0 0 1.09 0l4.25-4.5a.75.75 0 0 0-1.09-1.03l-2.955 3.129V2.75Z" />
+                <path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" />
+              </svg>
+              <span className="text-sm font-medium">Résumé</span>
             </a>
           </div>
         </div>

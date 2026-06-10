@@ -1,5 +1,8 @@
 export type ProjectCategory =
   | "Personal Project"
+  | "Product Design"
+  | "UX/Product Design"
+  | "Brand + Web Design"
   | "Branding and Identity"
   | "UI/UX"
   | "react + tailwind"
@@ -14,6 +17,14 @@ export type Project = {
   role: string;
   summary: string;
   description: string;
+  /** The user or business problem this project was solving */
+  problem?: string;
+  /** The design process — research, ideation, decisions */
+  process?: string;
+  /** Specific design decisions made and why */
+  keyDecisions?: string[];
+  /** Measurable or qualitative outcome */
+  outcome?: string;
   links?: { label: string; href: string }[];
   tags: string[];
   accentColor: string;
@@ -23,6 +34,9 @@ export type Project = {
 
 export const PROJECT_CATEGORIES: ProjectCategory[] = [
   "Personal Project",
+  "Product Design",
+  "UX/Product Design",
+  "Brand + Web Design",
   "Branding and Identity",
   "UI/UX",
   "react + tailwind",

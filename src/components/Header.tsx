@@ -6,6 +6,7 @@ const navItems = [
   { label: "projects", href: "#projects", external: false },
   { label: "about", href: "#about", external: false },
   { label: "contact", href: "#contact", external: false },
+  { label: "résumé", href: "/resume.pdf", external: true },
 ];
 
 export function Header() {
