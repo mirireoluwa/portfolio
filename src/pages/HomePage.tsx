@@ -530,7 +530,7 @@ export function HomePage() {
                 {items.map((item) => (
                   <span
                     key={item}
-                    className="px-3 py-1 text-[11px] text-zinc-300 border border-white/10 bg-zinc-900/60 rounded-full hover:bg-white/10 hover:text-zinc-100 transition-all duration-200 cursor-default"
+                    className="px-3 py-1 text-[11px] text-zinc-300 border border-white/10 bg-zinc-900/60 rounded-md hover:bg-white/10 hover:text-zinc-100 transition-all duration-200 cursor-default"
                   >
                     {item}
                   </span>
