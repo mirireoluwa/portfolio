@@ -53,7 +53,7 @@ export function Header() {
           href="/resume.pdf"
           target="_blank"
           rel="noreferrer"
-          className="hidden md:inline-flex items-center rounded-full border border-white/20 px-4 py-1.5 text-[10px] uppercase tracking-[0.14em] text-zinc-300 hover:border-white/50 hover:text-white transition-colors duration-150 whitespace-nowrap"
+          className="hidden md:inline-flex items-center rounded-md border border-white/20 px-4 py-1.5 text-[10px] uppercase tracking-[0.14em] text-zinc-300 hover:border-white/50 hover:text-white transition-colors duration-150 whitespace-nowrap"
         >
           résumé
         </a>
