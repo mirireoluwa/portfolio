@@ -1,3 +1,5 @@
+import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link, useParams } from "react-router-dom";
 import { useProjects } from "../context/ProjectsContext";
 
@@ -21,6 +23,19 @@ export function ProjectDetailsPage() {
   const { slug } = useParams<{ slug: string }>();
   const { projects } = useProjects();
   const project = projects.find((p) => p.slug === slug);
+
+  // Snapshot swiper state — reset when slug changes via key on the section
+  const [snapIndex, setSnapIndex] = useState(0);
+  const [snapDir, setSnapDir] = useState<1 | -1>(1);
+  const isSnapDraggingRef = useRef(false);
+
+  const snapshots = project?.snapshots ?? [];
+  const total = snapshots.length;
+
+  function goToSnap(dir: 1 | -1) {
+    setSnapDir(dir);
+    setSnapIndex((i) => (i + dir + total) % total);
+  }
 
   if (!project) {
     return (
@@ -96,25 +111,103 @@ export function ProjectDetailsPage() {
         <p className="text-xs text-zinc-400">{project.role}</p>
       </div>
 
-      {/* Snapshots */}
-      {project.snapshots && project.snapshots.length > 0 && (
-        <section className="space-y-3">
-          <SectionLabel label="snapshots" />
-          <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
-            {project.snapshots.map((shot, index) => (
-              <figure
-                key={`${shot.src}-${index}`}
-                className="overflow-hidden rounded-apple-md border border-white/5 bg-zinc-900/60 shadow-soft"
-              >
-                <img
-                  src={shot.src}
-                  alt={shot.alt}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </figure>
-            ))}
+      {/* Snapshots — swipeable carousel */}
+      {snapshots.length > 0 && (
+        <section className="space-y-3" key={`${project.slug}-snaps`}>
+          <div className="flex items-center justify-between">
+            <SectionLabel label="snapshots" />
+            {total > 1 && (
+              <p className="text-[10px] font-dmMono text-zinc-500 tracking-[0.12em] lowercase">
+                {snapIndex + 1} / {total}
+              </p>
+            )}
           </div>
+
+          {total === 1 ? (
+            /* Single image — no swiper needed */
+            <figure className="overflow-hidden rounded-xl border border-white/5 bg-zinc-900/60 shadow-soft">
+              <img
+                src={snapshots[0].src}
+                alt={snapshots[0].alt}
+                className="w-full object-cover"
+                loading="lazy"
+              />
+            </figure>
+          ) : (
+            /* Multi-image swiper */
+            <div className="space-y-3">
+              <div className="relative w-full overflow-hidden rounded-xl border border-white/5 bg-zinc-900/60 shadow-soft"
+                style={{ aspectRatio: "16/9" }}
+              >
+                <AnimatePresence mode="sync" initial={false}>
+                  <motion.figure
+                    key={snapIndex}
+                    className="absolute inset-0 cursor-grab active:cursor-grabbing"
+                    initial={{ x: snapDir * 320, opacity: 0.6 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: snapDir * -320, opacity: 0.6 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 26 }}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.7}
+                    dragMomentum={false}
+                    onDragStart={() => { isSnapDraggingRef.current = true; }}
+                    onDragEnd={(_, info) => {
+                      isSnapDraggingRef.current = false;
+                      if (info.velocity.x < -400 || info.offset.x < -70) {
+                        goToSnap(1);
+                      } else if (info.velocity.x > 400 || info.offset.x > 70) {
+                        goToSnap(-1);
+                      }
+                    }}
+                  >
+                    <img
+                      src={snapshots[snapIndex].src}
+                      alt={snapshots[snapIndex].alt}
+                      className="w-full h-full object-cover select-none pointer-events-none"
+                      draggable={false}
+                      loading="lazy"
+                    />
+                  </motion.figure>
+                </AnimatePresence>
+
+                {/* Desktop arrow buttons */}
+                <button
+                  type="button"
+                  onClick={() => goToSnap(-1)}
+                  className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 items-center justify-center rounded-full bg-black/40 border border-white/10 text-zinc-300 hover:bg-black/60 hover:text-white transition-colors duration-150 backdrop-blur-sm"
+                  aria-label="Previous snapshot"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goToSnap(1)}
+                  className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 items-center justify-center rounded-full bg-black/40 border border-white/10 text-zinc-300 hover:bg-black/60 hover:text-white transition-colors duration-150 backdrop-blur-sm"
+                  aria-label="Next snapshot"
+                >
+                  ›
+                </button>
+              </div>
+
+              {/* Dot indicators */}
+              <div className="flex items-center justify-center gap-1.5">
+                {snapshots.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => { setSnapDir(i > snapIndex ? 1 : -1); setSnapIndex(i); }}
+                    className={`transition-all duration-200 rounded-full ${
+                      i === snapIndex
+                        ? "w-4 h-1.5 bg-zinc-300"
+                        : "w-1.5 h-1.5 bg-zinc-600 hover:bg-zinc-400"
+                    }`}
+                    aria-label={`Go to snapshot ${i + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </section>
       )}
 
