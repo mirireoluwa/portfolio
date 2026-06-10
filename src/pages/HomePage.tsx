@@ -22,9 +22,9 @@ const greetings = [
 ];
 
 const skills = [
-  { label: "Tools", items: ["Figma", "Framer", "Adobe Illustrator"] },
-  { label: "Methods", items: ["User research", "Interaction design", "Information architecture", "Prototyping", "Design systems"] },
-  { label: "Development", items: ["React", "TypeScript", "Tailwind CSS"] },
+  { label: "Tools", items: ["Figma", "Framer", "Adobe Illustrator"], accent: "#4CB3FF" },
+  { label: "Methods", items: ["User research", "Interaction design", "Information architecture", "Prototyping", "Design systems"], accent: "#B3FFCB" },
+  { label: "Development", items: ["React", "TypeScript", "Tailwind CSS"], accent: "#FF4949" },
 ];
 
 export function HomePage() {
@@ -243,18 +243,26 @@ export function HomePage() {
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {skills.map(({ label, items }) => (
-            <div key={label} className="space-y-3">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-dmMono">{label}</p>
-              <ul className="space-y-1.5">
+        <div className="grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/5 border border-white/5 rounded-xl overflow-hidden">
+          {skills.map(({ label, items, accent }) => (
+            <div key={label} className="p-5 space-y-4 bg-zinc-950/50">
+              <div className="flex items-center gap-2.5">
+                <span
+                  className="w-2 h-2 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: accent, boxShadow: `0 0 8px ${accent}88` }}
+                />
+                <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-dmMono">{label}</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
                 {items.map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-xs text-zinc-300">
-                    <span className="w-1 h-1 rounded-full bg-zinc-600 flex-shrink-0" />
+                  <span
+                    key={item}
+                    className="px-3 py-1 text-[11px] text-zinc-300 border border-white/10 bg-zinc-900/60 rounded-full hover:bg-white/10 hover:text-zinc-100 transition-all duration-200 cursor-default"
+                  >
                     {item}
-                  </li>
+                  </span>
                 ))}
-              </ul>
+              </div>
             </div>
           ))}
         </div>
