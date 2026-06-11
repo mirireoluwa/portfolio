@@ -29,7 +29,7 @@ export function Layout({ children }: LayoutProps) {
           </div>
         </div>
 
-        <main className="mx-auto max-w-5xl flex-1 pb-16">{children}</main>
+        <main className="mx-auto w-full max-w-5xl flex-1 pb-16">{children}</main>
 
         <footer className="font-dmMono mx-auto max-w-5xl pb-6 text-xs text-zinc-500 flex justify-between gap-4 flex-wrap">
           {isAdmin ? (

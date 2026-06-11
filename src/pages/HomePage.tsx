@@ -73,29 +73,16 @@ const skills = [
 ];
 
 export function HomePage() {
-  const { projects } = useProjects();
+  const { projects, loading: projectsLoading } = useProjects();
   const navigate = useNavigate();
   const [activePhrase, setActivePhrase] = useState(0);
   const [activeGreeting, setActiveGreeting] = useState(0);
-  const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
   const phraseHeightRef = useRef<number>(0);
   const phraseContainerRef = useRef<HTMLDivElement>(null);
   const [mobileStackIndex, setMobileStackIndex] = useState(0);
   const [swipeDir, setSwipeDir] = useState(1);
   const isDraggingRef = useRef(false);
   const [openExpCard, setOpenExpCard] = useState<string | null>(null);
-
-  const toggleCard = (cardId: string) => {
-    setFlippedCards((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(cardId)) {
-        newSet.delete(cardId);
-      } else {
-        newSet.add(cardId);
-      }
-      return newSet;
-    });
-  };
 
   useLayoutEffect(() => {
     if (phraseContainerRef.current) {
@@ -186,7 +173,20 @@ export function HomePage() {
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
+        {/* Loading skeleton — avoids flashing bundled defaults before CMS data arrives */}
+        {projectsLoading && (
+          <>
+            <div className="lg:hidden h-[400px] rounded-xl border border-white/10 bg-zinc-900/60 animate-pulse" />
+            <div className="hidden lg:grid gap-6 lg:grid-cols-3">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="h-72 rounded-xl border border-white/10 bg-zinc-900/60 animate-pulse" />
+              ))}
+            </div>
+          </>
+        )}
+
         {/* ── Mobile: swipeable card stack ── */}
+        {!projectsLoading && (
         <div className="lg:hidden space-y-5">
           <div className="relative h-[400px]">
             {/* Background cards (decorative stack, rendered back→front) */}
@@ -302,8 +302,10 @@ export function HomePage() {
             </div>
           </div>
         </div>
+        )}
 
         {/* ── Desktop: grid ── */}
+        {!projectsLoading && (
         <div className="hidden lg:grid gap-6 lg:grid-cols-3">
           {projects.map((project) => {
             const previewImage = project.snapshots?.[0];
@@ -353,6 +355,7 @@ export function HomePage() {
             );
           })}
         </div>
+        )}
       </section>
 
       {/* About */}
@@ -417,8 +420,8 @@ export function HomePage() {
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
-        {/* ── Mobile: accordion cards ── */}
-        <div className="md:hidden space-y-3">
+        {/* Accordion cards (all breakpoints) */}
+        <div className="space-y-3">
           {experienceItems.map((item) => {
             const isOpen = openExpCard === item.id;
             return (
@@ -474,39 +477,6 @@ export function HomePage() {
           })}
         </div>
 
-        {/* ── Desktop: flip cards ── */}
-        <div className="hidden md:grid md:grid-cols-3 gap-6">
-          {experienceItems.map((item) => (
-            <div
-              key={item.id}
-              className={`group h-80 perspective-1000 cursor-pointer ${flippedCards.has(item.id) ? "flipped" : ""}`}
-              onClick={() => toggleCard(item.id)}
-            >
-              <div className="relative w-full h-full flip-card-inner">
-                <div
-                  className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden"
-                  style={{ backgroundColor: item.accentColor, color: item.textColor }}
-                >
-                  <h3 className="text-2xl font-semibold mb-2">{item.title}</h3>
-                  <p className="text-sm opacity-90">{item.company} · {item.year}</p>
-                </div>
-                <div
-                  className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 shadow-soft flex flex-col p-6 backface-hidden rotate-y-180"
-                  style={{ backgroundColor: item.accentColor, color: item.textColor }}
-                >
-                  <ul className="space-y-2 text-sm leading-relaxed opacity-95 overflow-y-auto">
-                    {item.bullets.map((bullet, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="mt-1.5 flex-shrink-0">•</span>
-                        <span className="flex-1">{bullet}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </section>
 
       {/* Skills */}

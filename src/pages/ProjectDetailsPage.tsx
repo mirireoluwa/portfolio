@@ -21,7 +21,7 @@ function SectionLabel({ label }: { label: string }) {
 
 export function ProjectDetailsPage() {
   const { slug } = useParams<{ slug: string }>();
-  const { projects } = useProjects();
+  const { projects, loading } = useProjects();
   const project = projects.find((p) => p.slug === slug);
 
   const [snapIndex, setSnapIndex] = useState(0);
@@ -44,6 +44,19 @@ export function ProjectDetailsPage() {
   function goToSnap(dir: 1 | -1) {
     setSnapDir(dir);
     setSnapIndex((safeSnapIndex + dir + total) % total);
+  }
+
+  if (!project && loading) {
+    return (
+      <div className="pt-6 space-y-10 animate-pulse">
+        <div className="h-4 w-32 rounded bg-zinc-900/80" />
+        <div className="space-y-3">
+          <div className="h-3 w-40 rounded bg-zinc-900/80" />
+          <div className="h-12 w-2/3 rounded bg-zinc-900/80" />
+        </div>
+        <div className="w-full rounded-xl bg-zinc-900/60" style={{ aspectRatio: "16/9" }} />
+      </div>
+    );
   }
 
   if (!project) {
