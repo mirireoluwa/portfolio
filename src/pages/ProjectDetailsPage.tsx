@@ -359,17 +359,16 @@ export function ProjectDetailsPage() {
             <section className="space-y-5">
               <SectionLabel label="outcome" />
               <div
-                className="relative overflow-hidden rounded-xl border p-6 sm:p-8"
-                style={{
-                  borderColor: `${project.accentColor}33`,
-                  backgroundColor: `${project.accentColor}0d`,
-                }}
+                className="relative overflow-hidden rounded-xl border border-white/5 bg-zinc-900/40 p-6 sm:p-8"
               >
+                {/* Soft accent wash, top-left */}
                 <div
-                  className="absolute left-0 top-0 bottom-0 w-1"
-                  style={{ backgroundColor: project.accentColor }}
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background: `radial-gradient(ellipse 60% 80% at 0% 0%, ${project.accentColor}26, transparent 65%)`,
+                  }}
                 />
-                <div className="max-w-2xl">
+                <div className="relative max-w-2xl">
                   {toParagraphs(project.outcome).map((paragraph, index) => (
                     <p
                       key={index}
