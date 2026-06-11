@@ -289,13 +289,19 @@ export function ProjectDetailsPage() {
 
       {/* Case study sections */}
       {hasCaseStudy && (
-        <div className="space-y-10 border-t border-white/5 pt-10">
+        <div className="space-y-12 border-t border-white/5 pt-10">
           {project.problem && (
-            <section className="space-y-4">
+            <section className="space-y-5">
               <SectionLabel label="the problem" />
-              <div className="max-w-2xl">
+              <div
+                className="max-w-3xl border-l-2 pl-5 sm:pl-6"
+                style={{ borderColor: project.accentColor }}
+              >
                 {toParagraphs(project.problem).map((paragraph, index) => (
-                  <p key={index} className="text-sm text-zinc-300 leading-relaxed mb-3 last:mb-0">
+                  <p
+                    key={index}
+                    className="text-base sm:text-lg text-zinc-200 leading-relaxed mb-4 last:mb-0"
+                  >
                     {paragraph}
                   </p>
                 ))}
@@ -304,11 +310,11 @@ export function ProjectDetailsPage() {
           )}
 
           {project.process && (
-            <section className="space-y-4">
+            <section className="space-y-5">
               <SectionLabel label="process" />
               <div className="max-w-2xl">
                 {toParagraphs(project.process).map((paragraph, index) => (
-                  <p key={index} className="text-sm text-zinc-300 leading-relaxed mb-3 last:mb-0">
+                  <p key={index} className="text-sm text-zinc-300 leading-relaxed mb-4 last:mb-0">
                     {paragraph}
                   </p>
                 ))}
@@ -317,46 +323,62 @@ export function ProjectDetailsPage() {
           )}
 
           {project.keyDecisions && project.keyDecisions.length > 0 && (
-            <section className="space-y-4">
+            <section className="space-y-5">
               <SectionLabel label="key design decisions" />
-              <ul className="space-y-4 max-w-2xl">
+              <div className="grid gap-4 sm:grid-cols-2">
                 {project.keyDecisions.map((decision, index) => {
                   const [title, ...rest] = decision.split(" — ");
                   const body = rest.join(" — ");
                   return (
-                    <li key={index} className="flex gap-4">
+                    <div
+                      key={index}
+                      className="group rounded-xl border border-white/5 bg-zinc-900/40 p-5 transition-colors duration-200 hover:border-white/15 hover:bg-zinc-900/70"
+                    >
                       <span
-                        className="mt-1 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-medium border"
-                        style={{ borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.4)" }}
+                        className="block text-2xl font-dmMono leading-none opacity-80"
+                        style={{ color: project.accentColor }}
                       >
-                        {index + 1}
+                        {String(index + 1).padStart(2, "0")}
                       </span>
-                      <div>
-                        {body ? (
-                          <>
-                            <span className="text-sm text-zinc-200 font-medium">{title}</span>
-                            <span className="text-sm text-zinc-400"> — {body}</span>
-                          </>
-                        ) : (
-                          <span className="text-sm text-zinc-300">{decision}</span>
-                        )}
-                      </div>
-                    </li>
+                      {body ? (
+                        <>
+                          <p className="mt-3 text-sm font-medium text-zinc-100">{title}</p>
+                          <p className="mt-1.5 text-sm text-zinc-400 leading-relaxed">{body}</p>
+                        </>
+                      ) : (
+                        <p className="mt-3 text-sm text-zinc-300 leading-relaxed">{decision}</p>
+                      )}
+                    </div>
                   );
                 })}
-              </ul>
+              </div>
             </section>
           )}
 
           {project.outcome && (
-            <section className="space-y-4">
+            <section className="space-y-5">
               <SectionLabel label="outcome" />
-              <div className="max-w-2xl">
-                {toParagraphs(project.outcome).map((paragraph, index) => (
-                  <p key={index} className="text-sm text-zinc-300 leading-relaxed mb-3 last:mb-0">
-                    {paragraph}
-                  </p>
-                ))}
+              <div
+                className="relative overflow-hidden rounded-xl border p-6 sm:p-8"
+                style={{
+                  borderColor: `${project.accentColor}33`,
+                  backgroundColor: `${project.accentColor}0d`,
+                }}
+              >
+                <div
+                  className="absolute left-0 top-0 bottom-0 w-1"
+                  style={{ backgroundColor: project.accentColor }}
+                />
+                <div className="max-w-2xl">
+                  {toParagraphs(project.outcome).map((paragraph, index) => (
+                    <p
+                      key={index}
+                      className="text-sm sm:text-base text-zinc-200 leading-relaxed mb-4 last:mb-0"
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
               </div>
             </section>
           )}
