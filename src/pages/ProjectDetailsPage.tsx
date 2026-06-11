@@ -10,6 +10,26 @@ function toParagraphs(text: string): string[] {
     .filter(Boolean);
 }
 
+/** Image with a shimmer placeholder until it finishes loading */
+function SnapshotImage({ src, alt }: { src: string; alt: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <>
+      {!loaded && <div className="absolute inset-0 animate-pulse bg-zinc-800/70" />}
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setLoaded(true)}
+        className={`w-full h-full object-cover select-none pointer-events-none transition-opacity duration-300 ${
+          loaded ? "opacity-100" : "opacity-0"
+        }`}
+        draggable={false}
+        loading="eager"
+      />
+    </>
+  );
+}
+
 function SectionLabel({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
@@ -147,13 +167,11 @@ export function ProjectDetailsPage() {
 
           {total === 1 ? (
             /* Single image — no swiper needed */
-            <figure className="overflow-hidden rounded-xl border border-white/5 bg-zinc-900/60 shadow-soft">
-              <img
-                src={snapshots[0].src}
-                alt={snapshots[0].alt}
-                className="w-full object-cover"
-                loading="eager"
-              />
+            <figure
+              className="relative overflow-hidden rounded-xl border border-white/5 bg-zinc-900/60 shadow-soft"
+              style={{ aspectRatio: "16/9" }}
+            >
+              <SnapshotImage src={snapshots[0].src} alt={snapshots[0].alt} />
             </figure>
           ) : (
             /* Multi-image swiper */
@@ -183,12 +201,9 @@ export function ProjectDetailsPage() {
                       }
                     }}
                   >
-                    <img
+                    <SnapshotImage
                       src={snapshots[safeSnapIndex].src}
                       alt={snapshots[safeSnapIndex].alt}
-                      className="w-full h-full object-cover select-none pointer-events-none"
-                      draggable={false}
-                      loading="eager"
                     />
                   </motion.figure>
                 </AnimatePresence>

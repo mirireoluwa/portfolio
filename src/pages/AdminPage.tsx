@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { Spinner } from "../components/Spinner";
 import { getPublicSiteUrl } from "../config/site";
 import { useProjects } from "../context/ProjectsContext";
 import { defaultProjects } from "../data/projects";
@@ -115,6 +116,7 @@ export function AdminPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [loggingIn, setLoggingIn] = useState(false);
 
   const [draft, setDraft] = useState<Project[]>([]);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -177,6 +179,7 @@ export function AdminPage() {
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     setLoginError(null);
+    setLoggingIn(true);
     try {
       const r = await fetch("/api/admin/login", {
         method: "POST",
@@ -193,6 +196,8 @@ export function AdminPage() {
       setPassword("");
     } catch {
       setLoginError("Network error");
+    } finally {
+      setLoggingIn(false);
     }
   };
 
@@ -390,7 +395,8 @@ export function AdminPage() {
 
   if (!sessionChecked) {
     return (
-      <div className="pt-10 flex items-center justify-center text-sm text-zinc-400 font-dmMono">
+      <div className="pt-10 flex items-center justify-center gap-2.5 text-sm text-zinc-400 font-dmMono">
+        <Spinner />
         Checking session…
       </div>
     );
@@ -440,9 +446,11 @@ export function AdminPage() {
             <div className="flex gap-2 items-stretch">
               <button
                 type="submit"
-                className="flex-1 min-w-0 rounded-apple-sm border border-white/70 bg-white px-4 py-2.5 text-[10px] font-dmMono uppercase tracking-[0.16em] text-zinc-950 hover:bg-white/90 transition-colors"
+                disabled={loggingIn}
+                className="flex-1 min-w-0 inline-flex items-center justify-center gap-2 rounded-apple-sm border border-white/70 bg-white px-4 py-2.5 text-[10px] font-dmMono uppercase tracking-[0.16em] text-zinc-950 hover:bg-white/90 transition-colors disabled:opacity-60 disabled:cursor-wait"
               >
-                Sign in
+                {loggingIn && <Spinner />}
+                {loggingIn ? "Signing in…" : "Sign in"}
               </button>
               <button
                 type="button"
@@ -641,8 +649,9 @@ export function AdminPage() {
                     type="button"
                     onClick={() => void generateCaseStudy()}
                     disabled={generatingCaseStudy}
-                    className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[10px] font-dmMono uppercase tracking-[0.14em] text-amber-300 hover:bg-amber-500/20 transition-colors duration-150 disabled:opacity-50 disabled:cursor-wait"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[10px] font-dmMono uppercase tracking-[0.14em] text-amber-300 hover:bg-amber-500/20 transition-colors duration-150 disabled:opacity-50 disabled:cursor-wait"
                   >
+                    {generatingCaseStudy && <Spinner className="h-3 w-3" />}
                     {generatingCaseStudy ? "generating…" : "✦ generate with ai"}
                   </button>
                 </div>
@@ -839,8 +848,9 @@ export function AdminPage() {
               type="button"
               disabled={saving || draft.length === 0}
               onClick={() => void saveToCms()}
-              className="rounded-apple-sm border border-white/70 bg-white px-5 py-2.5 text-[10px] font-dmMono uppercase tracking-[0.16em] text-zinc-950 hover:bg-white/90 disabled:opacity-40 transition-colors"
+              className="inline-flex items-center gap-2 rounded-apple-sm border border-white/70 bg-white px-5 py-2.5 text-[10px] font-dmMono uppercase tracking-[0.16em] text-zinc-950 hover:bg-white/90 disabled:opacity-40 transition-colors"
             >
+              {saving && <Spinner />}
               {saving ? "Saving…" : "Publish to live site"}
             </button>
             {saveStatus && (
