@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useParams } from "react-router-dom";
 import { useProjects } from "../context/ProjectsContext";
@@ -24,17 +24,26 @@ export function ProjectDetailsPage() {
   const { projects } = useProjects();
   const project = projects.find((p) => p.slug === slug);
 
-  // Snapshot swiper state — reset when slug changes via key on the section
   const [snapIndex, setSnapIndex] = useState(0);
   const [snapDir, setSnapDir] = useState<1 | -1>(1);
   const isSnapDraggingRef = useRef(false);
 
+  // React Router reuses this component instance across project navigation,
+  // so swiper state must be reset explicitly when the slug changes.
+  useEffect(() => {
+    setSnapIndex(0);
+    setSnapDir(1);
+    window.scrollTo({ top: 0 });
+  }, [slug]);
+
   const snapshots = project?.snapshots ?? [];
   const total = snapshots.length;
+  // Guard against a stale index from a project with more snapshots
+  const safeSnapIndex = total > 0 ? Math.min(snapIndex, total - 1) : 0;
 
   function goToSnap(dir: 1 | -1) {
     setSnapDir(dir);
-    setSnapIndex((i) => (i + dir + total) % total);
+    setSnapIndex((safeSnapIndex + dir + total) % total);
   }
 
   if (!project) {
@@ -118,7 +127,7 @@ export function ProjectDetailsPage() {
             <SectionLabel label="snapshots" />
             {total > 1 && (
               <p className="text-[10px] font-dmMono text-zinc-500 tracking-[0.12em] lowercase">
-                {snapIndex + 1} / {total}
+                {safeSnapIndex + 1} / {total}
               </p>
             )}
           </div>
@@ -130,7 +139,7 @@ export function ProjectDetailsPage() {
                 src={snapshots[0].src}
                 alt={snapshots[0].alt}
                 className="w-full object-cover"
-                loading="lazy"
+                loading="eager"
               />
             </figure>
           ) : (
@@ -141,7 +150,7 @@ export function ProjectDetailsPage() {
               >
                 <AnimatePresence mode="sync" initial={false}>
                   <motion.figure
-                    key={snapIndex}
+                    key={`${project.slug}-${safeSnapIndex}`}
                     className="absolute inset-0 cursor-grab active:cursor-grabbing"
                     initial={{ x: snapDir * 320, opacity: 0.6 }}
                     animate={{ x: 0, opacity: 1 }}
@@ -162,11 +171,11 @@ export function ProjectDetailsPage() {
                     }}
                   >
                     <img
-                      src={snapshots[snapIndex].src}
-                      alt={snapshots[snapIndex].alt}
+                      src={snapshots[safeSnapIndex].src}
+                      alt={snapshots[safeSnapIndex].alt}
                       className="w-full h-full object-cover select-none pointer-events-none"
                       draggable={false}
-                      loading="lazy"
+                      loading="eager"
                     />
                   </motion.figure>
                 </AnimatePresence>
@@ -196,9 +205,9 @@ export function ProjectDetailsPage() {
                   <button
                     key={i}
                     type="button"
-                    onClick={() => { setSnapDir(i > snapIndex ? 1 : -1); setSnapIndex(i); }}
+                    onClick={() => { setSnapDir(i > safeSnapIndex ? 1 : -1); setSnapIndex(i); }}
                     className={`transition-all duration-200 rounded-full ${
-                      i === snapIndex
+                      i === safeSnapIndex
                         ? "w-4 h-1.5 bg-zinc-300"
                         : "w-1.5 h-1.5 bg-zinc-600 hover:bg-zinc-400"
                     }`}
