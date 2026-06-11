@@ -123,6 +123,8 @@ export function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [generatingCaseStudy, setGeneratingCaseStudy] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
 
   const checkSession = useCallback(async () => {
     try {
@@ -209,6 +211,46 @@ export function AdminPage() {
       next[activeIndex] = { ...next[activeIndex], ...patch };
       return next;
     });
+  };
+
+  const generateCaseStudy = async () => {
+    if (activeIndex === null) return;
+    const p = draft[activeIndex];
+    setGeneratingCaseStudy(true);
+    setGenerateError(null);
+    try {
+      const r = await fetch("/api/admin/generate-case-study", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: p.title,
+          category: p.category,
+          role: p.role,
+          summary: p.summary,
+          description: p.description,
+          tags: p.tags,
+        }),
+      });
+      const data = (await r.json()) as {
+        ok?: boolean;
+        message?: string;
+        caseStudy?: { problem: string; process: string; keyDecisions: string[]; outcome: string };
+      };
+      if (!data.ok || !data.caseStudy) {
+        setGenerateError(data.message ?? "Generation failed. Try again.");
+        return;
+      }
+      updateActive({
+        problem: data.caseStudy.problem,
+        process: data.caseStudy.process,
+        keyDecisions: data.caseStudy.keyDecisions,
+        outcome: data.caseStudy.outcome,
+      });
+    } catch {
+      setGenerateError("Network error — check your connection and try again.");
+    } finally {
+      setGeneratingCaseStudy(false);
+    }
   };
 
   const updateTagsString = (s: string) => {
@@ -593,7 +635,23 @@ export function AdminPage() {
 
               {/* Case study fields */}
               <div className="space-y-4 rounded-apple-sm border border-white/5 bg-zinc-950/40 p-4">
-                <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-500">case study</p>
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-500">case study</p>
+                  <button
+                    type="button"
+                    onClick={() => void generateCaseStudy()}
+                    disabled={generatingCaseStudy}
+                    className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[10px] font-dmMono uppercase tracking-[0.14em] text-amber-300 hover:bg-amber-500/20 transition-colors duration-150 disabled:opacity-50 disabled:cursor-wait"
+                  >
+                    {generatingCaseStudy ? "generating…" : "✦ generate with ai"}
+                  </button>
+                </div>
+                {generateError && (
+                  <p className="text-[11px] text-red-400">{generateError}</p>
+                )}
+                <p className="text-[10px] text-zinc-600">
+                  Drafts all four sections from the title, summary, and description above — then edit to taste before saving.
+                </p>
 
                 <Field label="the problem">
                   <textarea
