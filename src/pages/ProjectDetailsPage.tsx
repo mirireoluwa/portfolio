@@ -120,27 +120,34 @@ export function ProjectDetailsPage() {
   return (
     <div className="pt-6 space-y-10">
       {/* Navigation */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <Link
           to="/"
-          className="inline-flex items-center text-xs text-zinc-300 underline underline-offset-4 decoration-zinc-600 hover:text-zinc-50"
+          className="inline-flex items-center rounded-lg border border-white/15 px-4 py-2.5 text-[10px] font-dmMono uppercase tracking-[0.18em] text-zinc-300 hover:border-white/40 hover:text-white transition-colors duration-200"
         >
-          ←   Back to projects
+          home
         </Link>
-        <div className="flex items-center gap-3 text-xs text-zinc-300">
+
+        {/* Breadcrumb — hidden on small screens */}
+        <p className="hidden md:block truncate text-[11px] font-dmMono tracking-[0.1em] text-zinc-500">
+          projects <span className="mx-1 text-zinc-600">→</span>
+          <span className="text-zinc-300">{project.title}</span>
+        </p>
+
+        <div className="flex items-center gap-2">
           <Link
             to={`/projects/${prevProject.slug}`}
-            className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-zinc-900/60 hover:bg-zinc-800 transition-colors duration-200"
-            aria-label="Previous project"
+            className="inline-flex items-center rounded-lg border border-white/15 px-4 py-2.5 text-[10px] font-dmMono uppercase tracking-[0.18em] text-zinc-400 hover:border-white/40 hover:text-white transition-colors duration-200"
+            aria-label={`Previous project: ${prevProject.title}`}
           >
-            ‹
+            previous
           </Link>
           <Link
             to={`/projects/${nextProject.slug}`}
-            className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-white/10 bg-zinc-900/60 hover:bg-zinc-800 transition-colors duration-200"
-            aria-label="Next project"
+            className="inline-flex items-center rounded-lg border border-white/15 px-4 py-2.5 text-[10px] font-dmMono uppercase tracking-[0.18em] text-zinc-300 hover:border-white/40 hover:text-white transition-colors duration-200"
+            aria-label={`Next project: ${nextProject.title}`}
           >
-            ›
+            next
           </Link>
         </div>
       </div>
