@@ -10,6 +10,22 @@ function toParagraphs(text: string): string[] {
     .filter(Boolean);
 }
 
+function ChevronLeft() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ChevronRight() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 /** Image with a shimmer placeholder until it finishes loading */
 function SnapshotImage({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false);
@@ -176,7 +192,7 @@ export function ProjectDetailsPage() {
           ) : (
             /* Multi-image swiper */
             <div className="space-y-3">
-              <div className="relative w-full overflow-hidden rounded-xl border border-white/5 bg-zinc-900/60 shadow-soft"
+              <div className="group/snap relative w-full overflow-hidden rounded-xl border border-white/5 bg-zinc-900/60 shadow-soft"
                 style={{ aspectRatio: "16/9" }}
               >
                 <AnimatePresence mode="sync" initial={false}>
@@ -208,22 +224,26 @@ export function ProjectDetailsPage() {
                   </motion.figure>
                 </AnimatePresence>
 
+                {/* Edge gradient scrims so the controls stay legible on any image */}
+                <div className="hidden sm:block pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-black/40 to-transparent opacity-0 group-hover/snap:opacity-100 transition-opacity duration-200" />
+                <div className="hidden sm:block pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-black/40 to-transparent opacity-0 group-hover/snap:opacity-100 transition-opacity duration-200" />
+
                 {/* Desktop arrow buttons */}
                 <button
                   type="button"
                   onClick={() => goToSnap(-1)}
-                  className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 items-center justify-center rounded-full bg-black/40 border border-white/10 text-zinc-300 hover:bg-black/60 hover:text-white transition-colors duration-150 backdrop-blur-sm"
+                  className="hidden sm:flex group/arrow absolute left-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/10 border border-white/15 text-white backdrop-blur-md hover:bg-white/20 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
                   aria-label="Previous snapshot"
                 >
-                  ‹
+                  <ChevronLeft />
                 </button>
                 <button
                   type="button"
                   onClick={() => goToSnap(1)}
-                  className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 items-center justify-center rounded-full bg-black/40 border border-white/10 text-zinc-300 hover:bg-black/60 hover:text-white transition-colors duration-150 backdrop-blur-sm"
+                  className="hidden sm:flex group/arrow absolute right-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/10 border border-white/15 text-white backdrop-blur-md hover:bg-white/20 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
                   aria-label="Next snapshot"
                 >
-                  ›
+                  <ChevronRight />
                 </button>
               </div>
 
@@ -234,9 +254,9 @@ export function ProjectDetailsPage() {
                     key={i}
                     type="button"
                     onClick={() => { setSnapDir(i > safeSnapIndex ? 1 : -1); setSnapIndex(i); }}
-                    className={`transition-all duration-200 rounded-full ${
+                    className={`transition-all duration-300 rounded-full ${
                       i === safeSnapIndex
-                        ? "w-4 h-1.5 bg-zinc-300"
+                        ? "w-5 h-1.5 bg-zinc-200"
                         : "w-1.5 h-1.5 bg-zinc-600 hover:bg-zinc-400"
                     }`}
                     aria-label={`Go to snapshot ${i + 1}`}
