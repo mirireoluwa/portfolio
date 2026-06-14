@@ -129,10 +129,23 @@ export function ProjectDetailsPage() {
         </Link>
 
         {/* Breadcrumb — hidden on small screens */}
-        <p className="hidden md:block truncate text-[11px] font-dmMono tracking-[0.1em] text-zinc-500">
-          projects <span className="mx-1 text-zinc-600">→</span>
-          <span className="text-zinc-300">{project.title}</span>
-        </p>
+        <nav
+          aria-label="Breadcrumb"
+          className="hidden md:flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.03] px-4 py-1.5 max-w-[40%]"
+        >
+          <Link
+            to="/#projects"
+            className="text-[11px] font-dmMono lowercase tracking-[0.12em] text-zinc-500 hover:text-zinc-300 transition-colors duration-200"
+          >
+            projects
+          </Link>
+          <span className="text-zinc-600 [&_svg]:h-3 [&_svg]:w-3">
+            <ChevronRight />
+          </span>
+          <span className="truncate text-[11px] font-dmMono lowercase tracking-[0.12em] text-zinc-100">
+            {project.title}
+          </span>
+        </nav>
 
         <div className="flex items-center gap-2">
           <Link
