@@ -16,6 +16,9 @@ body {
   font-family: theme("fontFamily.spaceGrotesk");
   background: radial-gradient(circle at top, #18181f 0, #050509 55%, #020206 100%);
   color: #f9fafb;
+  /* Scale the whole UI up slightly — px-based sizing means a global zoom
+     is more faithful than bumping the root font size. */
+  zoom: 1.1;
 }
 
 /* 3D Flip Card Styles */
