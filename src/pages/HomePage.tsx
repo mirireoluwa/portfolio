@@ -198,16 +198,15 @@ export function HomePage() {
               return (
                 <div
                   key={`stack-bg-${p.slug}`}
-                  className="absolute inset-x-0 top-0 bottom-0 rounded-xl overflow-hidden border border-white/10 pointer-events-none"
+                  className="absolute inset-x-0 top-0 bottom-0 rounded-xl overflow-hidden border border-white/10 bg-zinc-900 pointer-events-none"
                   style={{
                     transform: `scale(${1 - offset * 0.04}) translateY(${offset * 16}px)`,
                     transformOrigin: "top center",
                     zIndex: 10 - offset,
-                    backgroundColor: p.accentColor,
                   }}
                 >
                   {img && (
-                    <img src={img.src} alt="" className="absolute inset-0 w-full h-full object-cover object-top opacity-20" />
+                    <img src={img.src} alt="" className="absolute inset-0 w-full h-full object-cover object-top opacity-10" />
                   )}
                 </div>
               );
@@ -247,32 +246,31 @@ export function HomePage() {
                   const previewImage = project.snapshots?.[0];
                   return (
                     <div
-                      className="flex flex-col h-full cursor-pointer"
+                      className="flex flex-col h-full cursor-pointer bg-zinc-900"
                       onClick={() => { if (!isDraggingRef.current) navigate(`/projects/${project.slug}`); }}
                     >
-                      <div className="relative flex-1 overflow-hidden" style={{ backgroundColor: project.accentColor }}>
-                        {previewImage && (
-                          <div className="absolute inset-3 rounded-xl overflow-hidden">
-                            <img
-                              src={previewImage.src}
-                              alt={previewImage.alt}
-                              className="w-full h-full object-cover object-top opacity-80"
-                            />
-                          </div>
+                      <div className="relative flex-1 overflow-hidden bg-zinc-950">
+                        {previewImage ? (
+                          <img
+                            src={previewImage.src}
+                            alt={previewImage.alt}
+                            className="w-full h-full object-cover object-top"
+                          />
+                        ) : (
+                          <div className="absolute inset-0" style={{ backgroundColor: project.accentColor, opacity: 0.15 }} />
                         )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/10 to-transparent" />
                       </div>
-                      <div
-                        className="p-4 pb-3 flex-shrink-0"
-                        style={{ backgroundColor: project.accentColor, color: project.accentTextColor }}
-                      >
-                        <div className="flex items-center justify-between text-[10px] font-dmMono lowercase tracking-[0.12em]">
-                          <span>{project.year}</span>
+                      <div className="relative p-4 pb-3.5 flex-shrink-0 border-t border-white/5">
+                        <div className="flex items-center gap-2 text-[10px] font-dmMono lowercase tracking-[0.12em] text-zinc-500">
+                          <span className="h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: project.accentColor }} />
                           <span>{project.category}</span>
+                          <span className="text-zinc-700">·</span>
+                          <span>{project.year}</span>
                         </div>
-                        <div className="mt-3 h-px opacity-30" style={{ backgroundColor: project.accentTextColor }} />
-                        <div className="mt-3 flex items-center justify-between gap-3">
-                          <h3 className="text-lg font-semibold lowercase">{project.title}</h3>
-                          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">→</span>
+                        <div className="mt-2.5 flex items-center justify-between gap-3">
+                          <h3 className="text-lg font-medium lowercase text-zinc-50">{project.title}</h3>
+                          <span className="flex-shrink-0 text-zinc-500 text-sm">→</span>
                         </div>
                       </div>
                     </div>
@@ -312,43 +310,38 @@ export function HomePage() {
             return (
               <div
                 key={project.slug}
-                className="group relative rounded-xl overflow-hidden border border-white/10 bg-zinc-900 shadow-soft hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col cursor-pointer"
+                className="group relative rounded-xl overflow-hidden border border-white/10 bg-zinc-900 hover:border-white/20 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-300 flex flex-col cursor-pointer"
                 onClick={() => navigate(`/projects/${project.slug}`)}
               >
-                <div className="relative h-52 overflow-hidden flex-shrink-0" style={{ backgroundColor: project.accentColor }}>
+                <div className="relative h-52 overflow-hidden flex-shrink-0 bg-zinc-950">
                   {previewImage ? (
                     <>
-                      <div className="absolute inset-3 group-hover:inset-0 rounded-xl group-hover:rounded-none overflow-hidden transition-all duration-400 ease-in-out">
-                        <img
-                          src={previewImage.src}
-                          alt={previewImage.alt}
-                          className="w-full h-full object-cover object-top opacity-80 group-hover:opacity-100 transition-opacity duration-300"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      </div>
-                      <p className="absolute bottom-3 left-3 right-3 text-[10px] text-zinc-200 leading-relaxed line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 z-10">
+                      <img
+                        src={previewImage.src}
+                        alt={previewImage.alt}
+                        className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/95 via-zinc-950/10 to-transparent" />
+                      <p className="absolute bottom-3 left-4 right-4 text-[11px] text-zinc-300 leading-relaxed line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 z-10">
                         {project.summary.split("\n\n")[0]}
                       </p>
                     </>
                   ) : (
-                    <div className="absolute inset-3 rounded-xl overflow-hidden bg-zinc-800">
-                      <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_55%)]" />
-                      <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(0,0,0,0.18)_25%,_transparent_25%,_transparent_50%,_rgba(0,0,0,0.18)_50%,_rgba(0,0,0,0.18)_75%,_transparent_75%,_transparent)] bg-[length:6px_6px] opacity-30" />
+                    <div className="absolute inset-0 bg-zinc-900">
+                      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_55%)]" />
                     </div>
                   )}
                 </div>
-                <div
-                  className="relative p-4 pb-3 flex-shrink-0"
-                  style={{ backgroundColor: project.accentColor, color: project.accentTextColor }}
-                >
-                  <div className="flex items-center justify-between text-[10px] font-dmMono lowercase tracking-[0.12em]">
-                    <span>{project.year}</span>
+                <div className="relative p-4 pb-3.5 flex-shrink-0 border-t border-white/5">
+                  <div className="flex items-center gap-2 text-[10px] font-dmMono lowercase tracking-[0.12em] text-zinc-500">
+                    <span className="h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: project.accentColor }} />
                     <span>{project.category}</span>
+                    <span className="text-zinc-700">·</span>
+                    <span>{project.year}</span>
                   </div>
-                  <div className="mt-3 h-px opacity-30" style={{ backgroundColor: project.accentTextColor }} />
-                  <div className="mt-3 flex items-center justify-between gap-3">
-                    <h3 className="text-lg font-semibold lowercase">{project.title}</h3>
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-xs">→</span>
+                  <div className="mt-2.5 flex items-center justify-between gap-3">
+                    <h3 className="text-lg font-medium lowercase text-zinc-50">{project.title}</h3>
+                    <span className="flex-shrink-0 text-zinc-500 text-sm transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-zinc-300">→</span>
                   </div>
                 </div>
               </div>
