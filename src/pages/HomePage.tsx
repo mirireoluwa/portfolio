@@ -420,23 +420,29 @@ export function HomePage() {
             return (
               <div
                 key={item.id}
-                className="rounded-xl overflow-hidden border border-white/10"
-                style={{ backgroundColor: item.accentColor }}
+                className="rounded-xl overflow-hidden border border-white/10 bg-zinc-900 transition-colors duration-200 hover:border-white/20"
               >
                 <button
                   type="button"
                   className="w-full flex items-center justify-between gap-4 p-4 text-left"
-                  style={{ color: item.textColor }}
                   onClick={() => setOpenExpCard(isOpen ? null : item.id)}
                 >
-                  <div>
-                    <p className="font-semibold text-base leading-tight">{item.title}</p>
-                    <p className="text-xs opacity-70 mt-0.5">{item.company} · {item.year}</p>
+                  <div className="flex items-start gap-3">
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: item.accentColor }}
+                    />
+                    <div>
+                      <p className="font-medium text-base leading-tight text-zinc-50">{item.title}</p>
+                      <p className="text-xs text-zinc-500 mt-1 font-dmMono tracking-[0.04em]">
+                        {item.company} · {item.year}
+                      </p>
+                    </div>
                   </div>
                   <motion.span
                     animate={{ rotate: isOpen ? 45 : 0 }}
                     transition={{ duration: 0.2 }}
-                    className="flex-shrink-0 text-xl leading-none opacity-50"
+                    className="flex-shrink-0 text-xl leading-none text-zinc-500"
                   >
                     +
                   </motion.span>
@@ -451,12 +457,12 @@ export function HomePage() {
                       transition={{ duration: 0.25, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
-                      <div className="px-4 pb-4" style={{ color: item.textColor }}>
-                        <div className="h-px bg-current opacity-20 mb-3" />
+                      <div className="px-4 pb-4 pl-[2.125rem]">
+                        <div className="h-px bg-white/5 mb-3" />
                         <ul className="space-y-2.5">
                           {item.bullets.map((bullet, i) => (
-                            <li key={i} className="flex items-start gap-2 text-sm leading-relaxed opacity-90">
-                              <span className="mt-1.5 flex-shrink-0 text-[10px]">•</span>
+                            <li key={i} className="flex items-start gap-2 text-sm leading-relaxed text-zinc-400">
+                              <span className="mt-1.5 flex-shrink-0 text-[10px] text-zinc-600">•</span>
                               <span>{bullet}</span>
                             </li>
                           ))}
