@@ -6,9 +6,7 @@ import { useResume } from "../context/ResumeContext";
 
 const heroPhrases = [
   "a product designer",
-  "a producer",
-  "a visionary",
-  "an ultra-creative",
+  "a sound designer",
 ];
 
 const greetings = [
