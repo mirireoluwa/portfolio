@@ -1,4 +1,4 @@
-import { clearAdminCookieHeader } from "../lib-js/adminAuth.js";
+import { clearAdminCookieHeader } from "../../server/lib-js/adminAuth.js";
 
 export default async function handler(
   req: { method?: string },

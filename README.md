@@ -57,7 +57,7 @@ Redeploy after setting env vars. Open `https://your-domain.com/admin` or your **
 
 **Local development**
 
-1. Install deps (`npm install` runs **`build:api-lib`**, which compiles `api/lib/*.ts` → **`api/lib-js/*.js`** so Node can load them without clashing with the `.ts` sources in `api/lib/`).
+1. Install deps (`npm install` runs **`build:api-lib`**, which compiles `api/lib/*.ts` → **`server/lib-js/*.js`** outside `api/` so Vercel does not treat them as serverless functions).
 2. Run **`vercel dev`** (not plain `npm run dev`) so `/api/*` and the Vite app work together on one port (e.g. http://localhost:3000).
 3. If you change files in **`api/lib/`**, run **`npm run build:api-lib`** again before or while `vercel dev` is running.
 4. After editing **`.env.local`**, restart **`vercel dev`** so API routes pick up changes (the app also loads `.env.local` from disk for Redis if the CLI doesn’t inject it).

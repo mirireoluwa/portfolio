@@ -1,4 +1,4 @@
-import { getExpectedAdminToken, setAdminCookieHeader } from "../lib-js/adminAuth.js";
+import { getExpectedAdminToken, setAdminCookieHeader } from "../../server/lib-js/adminAuth.js";
 
 type ReqWithBody = {
   method?: string;

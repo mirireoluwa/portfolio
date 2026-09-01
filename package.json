@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:api-lib": "esbuild api/lib/adminAuth.ts api/lib/redis.ts api/lib/validateProjects.ts --outdir=api/lib-js --format=esm --platform=node --packages=external",
+    "build:api-lib": "esbuild api/lib/adminAuth.ts api/lib/redis.ts api/lib/validateProjects.ts api/lib/resume.ts --outdir=server/lib-js --format=esm --platform=node --packages=external",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "postinstall": "npm run build:api-lib"

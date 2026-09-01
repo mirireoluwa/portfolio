@@ -1,6 +1,6 @@
-import { verifyAdminCookie } from "../lib-js/adminAuth.js";
-import { getRedis, PROJECTS_KEY } from "../lib-js/redis.js";
-import { validateProjectsPayload } from "../lib-js/validateProjects.js";
+import { verifyAdminCookie } from "../../server/lib-js/adminAuth.js";
+import { getRedis, PROJECTS_KEY } from "../../server/lib-js/redis.js";
+import { validateProjectsPayload } from "../../server/lib-js/validateProjects.js";
 
 type ReqWithBody = {
   method?: string;

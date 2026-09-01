@@ -142,5 +142,5 @@ vite.config.ts.timestamp-*
 .vercel
 .env*.local
 
-# Compiled ESM (separate from api/lib/*.ts so Vercel has no .ts/.js name clash)
-api/lib-js/
+# Compiled ESM (outside api/ so Vercel does not count them as serverless functions)
+server/lib-js/*.js

@@ -31,15 +31,15 @@ export function ResumeProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     try {
-      const r = await fetch("/api/resume", { cache: "no-store" });
+      const r = await fetch("/api/projects", { cache: "no-store" });
       const data = (await r.json()) as {
         ok?: boolean;
-        source?: string;
-        url?: string;
+        resume?: { url?: string; source?: string };
       };
-      if (data.ok && typeof data.url === "string" && data.url.trim()) {
-        setResumeUrl(data.url);
-        setSource(data.source === "cms" ? "cms" : "default");
+      const resume = data.resume;
+      if (data.ok && resume && typeof resume.url === "string" && resume.url.trim()) {
+        setResumeUrl(resume.url);
+        setSource(resume.source === "cms" ? "cms" : "default");
       } else {
         setResumeUrl(DEFAULT_RESUME_URL);
         setSource("default");

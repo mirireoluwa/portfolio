@@ -180,23 +180,22 @@ export function AdminPage() {
   const loadResume = useCallback(async () => {
     setResumeError(null);
     try {
-      const r = await fetch("/api/admin/resume", { credentials: "include", cache: "no-store" });
+      const r = await fetch("/api/projects", { credentials: "include", cache: "no-store" });
       const data = (await r.json()) as {
         ok?: boolean;
-        url?: string;
-        updatedAt?: string | null;
-        source?: "default" | "cms";
+        resume?: { url?: string; updatedAt?: string | null; source?: "default" | "cms" };
         message?: string;
       };
       if (!r.ok || !data.ok) {
         setResumeError(data.message || "Could not load résumé info.");
         return;
       }
-      if (typeof data.url === "string" && data.url.trim()) {
-        setResumeUrl(data.url);
+      const resume = data.resume;
+      if (resume && typeof resume.url === "string" && resume.url.trim()) {
+        setResumeUrl(resume.url);
       }
-      setResumeUpdatedAt(data.updatedAt ?? null);
-      setResumeSource(data.source === "cms" ? "cms" : "default");
+      setResumeUpdatedAt(resume?.updatedAt ?? null);
+      setResumeSource(resume?.source === "cms" ? "cms" : "default");
     } catch {
       setResumeError("Could not load résumé info.");
     }
@@ -423,11 +422,11 @@ export function AdminPage() {
         reader.onerror = () => reject(new Error("read failed"));
         reader.readAsDataURL(file);
       });
-      const r = await fetch("/api/admin/resume", {
+      const r = await fetch("/api/admin/upload", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ filename: file.name, dataUrl }),
+        body: JSON.stringify({ type: "resume", filename: file.name, dataUrl }),
       });
       const text = await r.text();
       let data: { ok?: boolean; url?: string; updatedAt?: string; message?: string } = {};

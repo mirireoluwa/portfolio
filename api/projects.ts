@@ -1,4 +1,5 @@
-import { getRedis, PROJECTS_KEY } from "./lib-js/redis.js";
+import { getRedis, PROJECTS_KEY } from "../server/lib-js/redis.js";
+import { getResumeInfo } from "../server/lib-js/resume.js";
 import type { ValidatedProject } from "./lib/validateProjects";
 
 export default async function handler(
@@ -15,6 +16,8 @@ export default async function handler(
     return res.status(405).json({ ok: false, message: "Method not allowed" });
   }
 
+  const resume = await getResumeInfo();
+
   try {
     const redis = getRedis();
     if (redis) {
@@ -25,7 +28,7 @@ export default async function handler(
             ? (JSON.parse(raw) as ValidatedProject[])
             : (raw as unknown as ValidatedProject[]);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return res.status(200).json({ ok: true, source: "cms", projects: parsed });
+          return res.status(200).json({ ok: true, source: "cms", projects: parsed, resume });
         }
       }
     }
@@ -33,5 +36,5 @@ export default async function handler(
     console.error("GET /api/projects redis error:", e);
   }
 
-  return res.status(200).json({ ok: true, source: "default", projects: null });
+  return res.status(200).json({ ok: true, source: "default", projects: null, resume });
 }

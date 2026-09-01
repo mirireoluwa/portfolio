@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { verifyAdminCookie } from "../lib-js/adminAuth.js";
+import { verifyAdminCookie } from "../../server/lib-js/adminAuth.js";
 
 type ReqWithBody = {
   method?: string;
