@@ -4,6 +4,9 @@ import { resolve } from "node:path";
 import { Redis } from "@upstash/redis";
 
 const PROJECTS_KEY = "portfolio:projects";
+const RESUME_KEY = "portfolio:resume";
+
+export const DEFAULT_RESUME_URL = "/resume.pdf";
 
 /** `vercel dev` often does not inject `.env.local` into serverless `process.env` — load it here for local CMS. */
 function ensureLocalEnvLoaded(): void {
@@ -56,4 +59,4 @@ export function getRedis(): Redis | null {
   return new Redis({ url, token });
 }
 
-export { PROJECTS_KEY };
+export { PROJECTS_KEY, RESUME_KEY };

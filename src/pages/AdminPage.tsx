@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Spinner } from "../components/Spinner";
 import { getPublicSiteUrl } from "../config/site";
 import { useProjects } from "../context/ProjectsContext";
+import { useResume } from "../context/ResumeContext";
 import { defaultProjects } from "../data/projects";
 import type { Project } from "../types/project";
 import { PROJECT_CATEGORIES } from "../types/project";
@@ -110,6 +111,7 @@ function IconEyeOff() {
 
 export function AdminPage() {
   const { refresh: refreshPublicProjects } = useProjects();
+  const { refresh: refreshPublicResume } = useResume();
   const [sessionChecked, setSessionChecked] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [adminConfigured, setAdminConfigured] = useState(true);
@@ -127,6 +129,13 @@ export function AdminPage() {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [generatingCaseStudy, setGeneratingCaseStudy] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
+
+  const [resumeUrl, setResumeUrl] = useState("/resume.pdf");
+  const [resumeUpdatedAt, setResumeUpdatedAt] = useState<string | null>(null);
+  const [resumeSource, setResumeSource] = useState<"default" | "cms">("default");
+  const [uploadingResume, setUploadingResume] = useState(false);
+  const [resumeError, setResumeError] = useState<string | null>(null);
+  const [resumeStatus, setResumeStatus] = useState<string | null>(null);
 
   const checkSession = useCallback(async () => {
     try {
@@ -168,9 +177,38 @@ export function AdminPage() {
     }
   }, []);
 
+  const loadResume = useCallback(async () => {
+    setResumeError(null);
+    try {
+      const r = await fetch("/api/admin/resume", { credentials: "include", cache: "no-store" });
+      const data = (await r.json()) as {
+        ok?: boolean;
+        url?: string;
+        updatedAt?: string | null;
+        source?: "default" | "cms";
+        message?: string;
+      };
+      if (!r.ok || !data.ok) {
+        setResumeError(data.message || "Could not load résumé info.");
+        return;
+      }
+      if (typeof data.url === "string" && data.url.trim()) {
+        setResumeUrl(data.url);
+      }
+      setResumeUpdatedAt(data.updatedAt ?? null);
+      setResumeSource(data.source === "cms" ? "cms" : "default");
+    } catch {
+      setResumeError("Could not load résumé info.");
+    }
+  }, []);
+
   useEffect(() => {
     if (authenticated) void loadDraft();
   }, [authenticated, loadDraft]);
+
+  useEffect(() => {
+    if (authenticated) void loadResume();
+  }, [authenticated, loadResume]);
 
   useEffect(() => {
     setUploadError(null);
@@ -363,6 +401,60 @@ export function AdminPage() {
     }
   };
 
+  const uploadResume = async (file: File) => {
+    setResumeError(null);
+    setResumeStatus(null);
+    const maxFileBytes = 2.5 * 1024 * 1024;
+    if (file.size > maxFileBytes) {
+      setResumeError(
+        `This PDF is ${(file.size / (1024 * 1024)).toFixed(1)}MB. Uploads must be under ~2.5MB. Compress the file and try again.`
+      );
+      return;
+    }
+    if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+      setResumeError("Only PDF files are allowed.");
+      return;
+    }
+    setUploadingResume(true);
+    try {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(new Error("read failed"));
+        reader.readAsDataURL(file);
+      });
+      const r = await fetch("/api/admin/resume", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ filename: file.name, dataUrl }),
+      });
+      const text = await r.text();
+      let data: { ok?: boolean; url?: string; updatedAt?: string; message?: string } = {};
+      try {
+        data = text ? (JSON.parse(text) as typeof data) : {};
+      } catch {
+        setResumeError(
+          `Server returned HTTP ${r.status} (not JSON). The PDF may be too large—use a file under ~2.5MB.`
+        );
+        return;
+      }
+      if (!r.ok || !data.ok || !data.url) {
+        setResumeError(data.message || `Upload failed (HTTP ${r.status}).`);
+        return;
+      }
+      setResumeUrl(data.url);
+      setResumeUpdatedAt(data.updatedAt ?? new Date().toISOString());
+      setResumeSource("cms");
+      setResumeStatus("Résumé updated. The live site will use the new file.");
+      await refreshPublicResume();
+    } catch {
+      setResumeError("Network error or could not read the file. Check your connection and try again.");
+    } finally {
+      setUploadingResume(false);
+    }
+  };
+
   const saveToCms = async () => {
     setSaving(true);
     setSaveStatus(null);
@@ -509,6 +601,58 @@ export function AdminPage() {
       </div>
 
       {loadError && <p className="text-xs text-amber-400 font-dmMono">{loadError}</p>}
+
+      <div className="rounded-apple-lg border border-white/10 bg-surface/80 p-5 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div className="space-y-1">
+            <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-500">résumé</p>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Upload a PDF to update the résumé link in the header and contact section. Saves immediately to{" "}
+              <span className="font-dmMono text-zinc-300">Vercel Blob</span> and{" "}
+              <span className="font-dmMono text-zinc-300">Redis</span>.
+            </p>
+          </div>
+          <a
+            href={resumeUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="shrink-0 text-[10px] font-dmMono uppercase tracking-[0.12em] text-zinc-300 underline underline-offset-4 decoration-zinc-600 hover:text-white"
+          >
+            view current ↗
+          </a>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-apple-sm border border-white/15 bg-zinc-900/60 px-3 py-2 text-[10px] font-dmMono uppercase tracking-[0.12em] text-zinc-200 hover:bg-white/5 transition-colors">
+            {uploadingResume ? "uploading…" : "choose pdf"}
+            <input
+              type="file"
+              accept="application/pdf,.pdf"
+              className="sr-only"
+              disabled={uploadingResume}
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) void uploadResume(f);
+                e.target.value = "";
+              }}
+            />
+          </label>
+          {uploadingResume && <Spinner />}
+          <span className="text-[10px] font-dmMono text-zinc-500">
+            {resumeSource === "cms" ? "live (cms)" : "default (public/resume.pdf)"}
+            {resumeUpdatedAt && (
+              <> · updated {new Date(resumeUpdatedAt).toLocaleString()}</>
+            )}
+          </span>
+        </div>
+
+        {resumeError && (
+          <p className="text-xs text-red-400 font-dmMono whitespace-pre-wrap">{resumeError}</p>
+        )}
+        {resumeStatus && (
+          <p className="text-xs text-emerald-400 font-dmMono whitespace-pre-wrap">{resumeStatus}</p>
+        )}
+      </div>
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,280px),minmax(0,1fr)] items-start">
         <aside className="space-y-3 rounded-apple-lg border border-white/10 bg-surface/80 p-4">
@@ -842,7 +986,7 @@ export function AdminPage() {
               <span className="font-dmMono text-zinc-300">UPSTASH_REDIS_REST_TOKEN</span> in Vercel (or{" "}
               <span className="font-dmMono text-zinc-300">.env.local</span> for <span className="font-dmMono">vercel dev</span>
               ), then redeploy / restart dev. Optional: <span className="font-dmMono text-zinc-300">BLOB_READ_WRITE_TOKEN</span>{" "}
-              for image uploads.
+              for image and résumé uploads.
             </p>
             <button
               type="button"

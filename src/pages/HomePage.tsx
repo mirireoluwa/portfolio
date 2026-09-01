@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useProjects } from "../context/ProjectsContext";
+import { useResume } from "../context/ResumeContext";
 
 const heroPhrases = [
   "a product designer",
@@ -74,6 +75,7 @@ const skills = [
 
 export function HomePage() {
   const { projects, loading: projectsLoading } = useProjects();
+  const { resumeUrl } = useResume();
   const navigate = useNavigate();
   const [activePhrase, setActivePhrase] = useState(0);
   const [activeGreeting, setActiveGreeting] = useState(0);
@@ -592,7 +594,7 @@ export function HomePage() {
             </a>
 
             <a
-              href="/resume.pdf"
+              href={resumeUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="relative inline-flex items-center justify-center gap-2 px-4 py-2 border border-white/40 bg-transparent text-zinc-200 hover:bg-white hover:text-zinc-950 transition-colors duration-200 group"

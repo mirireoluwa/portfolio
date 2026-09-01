@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NavLink } from "react-router-dom";
+import { useResume } from "../context/ResumeContext";
 
 const navItems = [
   { label: "projects", href: "#projects" },
@@ -10,6 +11,7 @@ const navItems = [
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { resumeUrl } = useResume();
 
   const handleAnchorClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     const href = event.currentTarget.getAttribute("href");
@@ -50,7 +52,7 @@ export function Header() {
 
         {/* Résumé CTA — desktop */}
         <a
-          href="/resume.pdf"
+          href={resumeUrl}
           target="_blank"
           rel="noreferrer"
           className="hidden md:inline-flex items-center rounded-md px-4 py-1.5 text-[10px] uppercase tracking-[0.14em] font-bold text-black hover:opacity-80 transition-opacity duration-150 whitespace-nowrap"
@@ -100,7 +102,7 @@ export function Header() {
                 </a>
               ))}
               <a
-                href="/resume.pdf"
+                href={resumeUrl}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => setIsMenuOpen(false)}
