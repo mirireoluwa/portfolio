@@ -451,64 +451,69 @@ export function HomePage() {
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
-        {/* Accordion cards (all breakpoints) */}
-        <div className="space-y-3">
+        {/* Timeline */}
+        <div className="relative space-y-4">
+          {/* Connecting line */}
+          <div className="absolute left-[7px] top-3 bottom-3 w-px bg-gradient-to-b from-white/15 via-white/10 to-transparent" />
+
           {experienceItems.map((item) => {
             const isOpen = openExpCard === item.id;
             return (
-              <div
-                key={item.id}
-                className="rounded-xl overflow-hidden border border-white/10 bg-zinc-900 transition-colors duration-200 hover:border-white/20"
-              >
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-between gap-4 p-4 text-left"
-                  onClick={() => setOpenExpCard(isOpen ? null : item.id)}
-                >
-                  <div className="flex items-start gap-3">
-                    <span
-                      className="mt-1.5 h-1.5 w-1.5 rounded-sm flex-shrink-0"
-                      style={{ backgroundColor: item.accentColor }}
-                    />
+              <div key={item.id} className="relative pl-8">
+                {/* Node marker */}
+                <span
+                  className="absolute left-0 top-[18px] h-3.5 w-3.5 rounded-sm border-2 bg-zinc-950 transition-shadow duration-300"
+                  style={{
+                    borderColor: item.accentColor,
+                    boxShadow: isOpen ? `0 0 0 4px ${item.accentColor}26` : "none",
+                  }}
+                />
+
+                <div className="rounded-2xl overflow-hidden border border-white/10 bg-zinc-900/60 transition-colors duration-200 hover:border-white/20">
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-between gap-4 p-4 text-left"
+                    onClick={() => setOpenExpCard(isOpen ? null : item.id)}
+                  >
                     <div>
                       <p className="font-medium text-base leading-tight text-zinc-50">{item.title}</p>
                       <p className="text-xs text-zinc-500 mt-1 font-dmMono tracking-[0.04em]">
                         {item.company} · {item.year}
                       </p>
                     </div>
-                  </div>
-                  <motion.span
-                    animate={{ rotate: isOpen ? 45 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex-shrink-0 text-xl leading-none text-zinc-500"
-                  >
-                    +
-                  </motion.span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      key="content"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: "easeInOut" }}
-                      className="overflow-hidden"
+                    <motion.span
+                      animate={{ rotate: isOpen ? 45 : 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex-shrink-0 text-xl leading-none text-zinc-500"
                     >
-                      <div className="px-4 pb-4 pl-[2.125rem]">
-                        <div className="h-px bg-white/5 mb-3" />
-                        <ul className="space-y-2.5">
-                          {item.bullets.map((bullet, i) => (
-                            <li key={i} className="flex items-start gap-2 text-sm leading-relaxed text-zinc-400">
-                              <span className="mt-1.5 flex-shrink-0 text-[10px] text-zinc-600">•</span>
-                              <span>{bullet}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      +
+                    </motion.span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        key="content"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-4 pb-4">
+                          <div className="h-px bg-white/5 mb-3" />
+                          <ul className="space-y-2.5">
+                            {item.bullets.map((bullet, i) => (
+                              <li key={i} className="flex items-start gap-2 text-sm leading-relaxed text-zinc-400">
+                                <span className="mt-1.5 flex-shrink-0 text-[10px] text-zinc-600">•</span>
+                                <span>{bullet}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             );
           })}

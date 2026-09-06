@@ -26,6 +26,17 @@ function ChevronRight() {
   );
 }
 
+function IconBriefcase() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <rect x="2" y="5" width="12" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M5.5 5V4a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 10.5 4v1" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M2 9h12" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+
 /** Image with a shimmer placeholder until it finishes loading */
 function SnapshotImage({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false);
@@ -90,7 +101,7 @@ export function ProjectDetailsPage() {
           <div className="h-3 w-40 rounded bg-zinc-900/80" />
           <div className="h-12 w-2/3 rounded bg-zinc-900/80" />
         </div>
-        <div className="w-full rounded-xl bg-zinc-900/60" style={{ aspectRatio: "16/9" }} />
+        <div className="w-full rounded-2xl bg-zinc-900/60" style={{ aspectRatio: "16/9" }} />
       </div>
     );
   }
@@ -166,12 +177,31 @@ export function ProjectDetailsPage() {
       </div>
 
       {/* Title block */}
-      <div className="space-y-3">
-        <p className="text-[11px] text-zinc-400 font-dmMono lowercase tracking-[0.12em]">
-          {project.year} • {project.category}
-        </p>
-        <div className="flex items-center justify-between gap-3">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-zinc-50">
+      <div className="relative space-y-4 overflow-hidden rounded-2xl border border-white/5 p-5 sm:p-7">
+        {/* Ambient accent wash tying the header to the project's identity */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: `radial-gradient(ellipse 80% 100% at 100% 0%, ${project.accentColor}1f, transparent 60%)`,
+          }}
+        />
+        <div className="relative flex items-center gap-2">
+          <span
+            className="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[10px] font-dmMono lowercase tracking-[0.12em]"
+            style={{
+              backgroundColor: `${project.accentColor}1a`,
+              borderColor: `${project.accentColor}40`,
+              color: project.accentColor,
+            }}
+          >
+            <span className="h-1.5 w-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: project.accentColor }} />
+            {project.category}
+          </span>
+          <span className="text-[11px] font-dmMono text-zinc-500">{project.year}</span>
+        </div>
+
+        <div className="relative flex items-start justify-between gap-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-zinc-50 leading-tight">
             {project.title}
           </h1>
           {project.links && project.links.length > 0 && (
@@ -179,14 +209,29 @@ export function ProjectDetailsPage() {
               href={project.links[0].href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center flex-shrink-0 px-4 py-2 rounded-md text-[10px] uppercase tracking-[0.14em] font-bold transition-opacity duration-150 hover:opacity-80"
+              className="inline-flex items-center flex-shrink-0 gap-1.5 px-4 py-2 rounded-md text-[10px] uppercase tracking-[0.14em] font-bold transition-transform duration-150 hover:scale-[1.03] active:scale-[0.98]"
               style={{ backgroundColor: project.accentColor, color: project.accentTextColor }}
             >
               visit
+              <span aria-hidden>↗</span>
             </a>
           )}
         </div>
-        <p className="text-xs text-zinc-400">{project.role}</p>
+
+        <div className="relative flex flex-wrap items-center gap-x-4 gap-y-2">
+          <p className="inline-flex items-center gap-1.5 text-xs text-zinc-400">
+            <IconBriefcase />
+            {project.role}
+          </p>
+          {project.tags.slice(0, 4).map((tag) => (
+            <span
+              key={tag}
+              className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-zinc-400"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Snapshots — swipeable carousel */}
@@ -204,7 +249,7 @@ export function ProjectDetailsPage() {
           {total === 1 ? (
             /* Single image — no swiper needed */
             <figure
-              className="relative overflow-hidden rounded-xl border border-white/5 bg-zinc-900/60 shadow-soft"
+              className="relative overflow-hidden rounded-2xl border border-white/5 bg-zinc-900/60 shadow-soft"
               style={{ aspectRatio: "16/9" }}
             >
               <SnapshotImage src={snapshots[0].src} alt={snapshots[0].alt} />
@@ -212,7 +257,7 @@ export function ProjectDetailsPage() {
           ) : (
             /* Multi-image swiper */
             <div className="space-y-3">
-              <div className="group/snap relative w-full overflow-hidden rounded-xl border border-white/5 bg-zinc-900/60 shadow-soft"
+              <div className="group/snap relative w-full overflow-hidden rounded-2xl border border-white/5 bg-zinc-900/60 shadow-soft"
                 style={{ aspectRatio: "16/9" }}
               >
                 <AnimatePresence mode="sync" initial={false}>
@@ -244,15 +289,11 @@ export function ProjectDetailsPage() {
                   </motion.figure>
                 </AnimatePresence>
 
-                {/* Edge gradient scrims so the controls stay legible on any image */}
-                <div className="hidden sm:block pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-black/40 to-transparent opacity-0 group-hover/snap:opacity-100 transition-opacity duration-200" />
-                <div className="hidden sm:block pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-black/40 to-transparent opacity-0 group-hover/snap:opacity-100 transition-opacity duration-200" />
-
                 {/* Desktop arrow buttons */}
                 <button
                   type="button"
                   onClick={() => goToSnap(-1)}
-                  className="hidden sm:flex group/arrow absolute left-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-lg bg-white/10 border border-white/15 text-white backdrop-blur-md hover:bg-white/20 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
+                  className="hidden sm:flex group/arrow absolute left-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-lg bg-black/70 border border-white/10 text-white hover:bg-black/85 hover:scale-105 active:scale-95 transition-all duration-200"
                   aria-label="Previous snapshot"
                 >
                   <ChevronLeft />
@@ -260,15 +301,35 @@ export function ProjectDetailsPage() {
                 <button
                   type="button"
                   onClick={() => goToSnap(1)}
-                  className="hidden sm:flex group/arrow absolute right-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-lg bg-white/10 border border-white/15 text-white backdrop-blur-md hover:bg-white/20 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
+                  className="hidden sm:flex group/arrow absolute right-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-lg bg-black/70 border border-white/10 text-white hover:bg-black/85 hover:scale-105 active:scale-95 transition-all duration-200"
                   aria-label="Next snapshot"
                 >
                   <ChevronRight />
                 </button>
               </div>
 
-              {/* Dot indicators */}
-              <div className="flex items-center justify-center gap-1.5">
+              {/* Thumbnail rail — desktop */}
+              <div className="hidden sm:flex items-center gap-2.5">
+                {snapshots.map((shot, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => { setSnapDir(i > safeSnapIndex ? 1 : -1); setSnapIndex(i); }}
+                    className={`relative flex-shrink-0 overflow-hidden rounded-lg border transition-all duration-200 ${
+                      i === safeSnapIndex
+                        ? "border-white/60 opacity-100"
+                        : "border-white/10 opacity-50 hover:opacity-80 hover:border-white/30"
+                    }`}
+                    style={{ width: 72, aspectRatio: "16/9" }}
+                    aria-label={`Go to snapshot ${i + 1}`}
+                  >
+                    <img src={shot.src} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+
+              {/* Dot indicators — mobile */}
+              <div className="flex sm:hidden items-center justify-center gap-1.5">
                 {snapshots.map((_, i) => (
                   <button
                     key={i}
@@ -291,39 +352,12 @@ export function ProjectDetailsPage() {
       {/* Summary intro */}
       <section className="space-y-4">
         <SectionLabel label="overview" />
-        <div className="grid gap-8 md:grid-cols-[minmax(0,1.7fr),minmax(0,1fr)] items-start">
-          <div className="space-y-4">
-            {toParagraphs(project.summary).map((paragraph, index) => (
-              <p key={`summary-${index}`} className="text-sm md:text-base text-zinc-200 leading-relaxed">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-
-          {/* Aside — role and tags */}
-          <aside className="space-y-4 rounded-apple-lg border border-white/5 bg-surface/80 p-4">
-            <div>
-              <h2 className="text-xs font-medium uppercase tracking-[0.25em] text-zinc-400">role</h2>
-              <p className="mt-1 text-xs text-zinc-200">{project.role}</p>
-            </div>
-            <div>
-              <h2 className="text-xs font-medium uppercase tracking-[0.25em] text-zinc-400">disciplines</h2>
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-md bg-zinc-900/60 border border-white/5 px-2 py-0.5 text-[10px] text-zinc-300"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h2 className="text-xs font-medium uppercase tracking-[0.25em] text-zinc-400">year</h2>
-              <p className="mt-1 text-xs text-zinc-200">{project.year}</p>
-            </div>
-          </aside>
+        <div className="max-w-3xl space-y-4">
+          {toParagraphs(project.summary).map((paragraph, index) => (
+            <p key={`summary-${index}`} className="text-sm md:text-base text-zinc-200 leading-relaxed">
+              {paragraph}
+            </p>
+          ))}
         </div>
       </section>
 
@@ -372,7 +406,7 @@ export function ProjectDetailsPage() {
                   return (
                     <div
                       key={index}
-                      className="group rounded-xl border border-white/5 bg-zinc-900/40 p-5 transition-colors duration-200 hover:border-white/15 hover:bg-zinc-900/70"
+                      className="group rounded-2xl border border-white/5 bg-zinc-900/40 p-5 transition-colors duration-200 hover:border-white/15 hover:bg-zinc-900/70"
                     >
                       <span
                         className="block text-2xl font-dmMono leading-none opacity-80"
@@ -399,7 +433,7 @@ export function ProjectDetailsPage() {
             <section className="space-y-5">
               <SectionLabel label="outcome" />
               <div
-                className="relative overflow-hidden rounded-xl border border-white/5 bg-zinc-900/40 p-6 sm:p-8"
+                className="relative overflow-hidden rounded-2xl border border-white/5 bg-zinc-900/40 p-6 sm:p-8"
               >
                 {/* Soft accent wash, top-left */}
                 <div
