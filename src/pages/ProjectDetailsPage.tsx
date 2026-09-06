@@ -131,7 +131,7 @@ export function ProjectDetailsPage() {
         {/* Breadcrumb — hidden on small screens */}
         <nav
           aria-label="Breadcrumb"
-          className="hidden md:flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.03] px-4 py-1.5 max-w-[40%]"
+          className="hidden md:flex items-center gap-2.5 rounded-md border border-white/10 bg-white/[0.03] px-4 py-1.5 max-w-[40%]"
         >
           <Link
             to="/#projects"
@@ -252,7 +252,7 @@ export function ProjectDetailsPage() {
                 <button
                   type="button"
                   onClick={() => goToSnap(-1)}
-                  className="hidden sm:flex group/arrow absolute left-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/10 border border-white/15 text-white backdrop-blur-md hover:bg-white/20 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
+                  className="hidden sm:flex group/arrow absolute left-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-lg bg-white/10 border border-white/15 text-white backdrop-blur-md hover:bg-white/20 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
                   aria-label="Previous snapshot"
                 >
                   <ChevronLeft />
@@ -260,7 +260,7 @@ export function ProjectDetailsPage() {
                 <button
                   type="button"
                   onClick={() => goToSnap(1)}
-                  className="hidden sm:flex group/arrow absolute right-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/10 border border-white/15 text-white backdrop-blur-md hover:bg-white/20 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
+                  className="hidden sm:flex group/arrow absolute right-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-lg bg-white/10 border border-white/15 text-white backdrop-blur-md hover:bg-white/20 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
                   aria-label="Next snapshot"
                 >
                   <ChevronRight />
@@ -274,7 +274,7 @@ export function ProjectDetailsPage() {
                     key={i}
                     type="button"
                     onClick={() => { setSnapDir(i > safeSnapIndex ? 1 : -1); setSnapIndex(i); }}
-                    className={`transition-all duration-300 rounded-full ${
+                    className={`transition-all duration-300 rounded-sm ${
                       i === safeSnapIndex
                         ? "w-5 h-1.5 bg-zinc-200"
                         : "w-1.5 h-1.5 bg-zinc-600 hover:bg-zinc-400"
@@ -312,7 +312,7 @@ export function ProjectDetailsPage() {
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full bg-zinc-900/60 border border-white/5 px-2 py-0.5 text-[10px] text-zinc-300"
+                    className="rounded-md bg-zinc-900/60 border border-white/5 px-2 py-0.5 text-[10px] text-zinc-300"
                   >
                     {tag}
                   </span>
