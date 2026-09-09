@@ -1,8 +1,19 @@
-import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { useEffect, useState, useRef, useLayoutEffect, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useProjects } from "../context/ProjectsContext";
 import { useResume } from "../context/ResumeContext";
+import {
+  FigmaIcon,
+  FramerIcon,
+  IllustratorIcon,
+  ReactIcon,
+  TypeScriptIcon,
+  TailwindIcon,
+  SparkleIcon,
+  LightroomIcon,
+  AbletonIcon,
+} from "../components/LogoIcons";
 
 const heroPhrases = [
   "a product designer",
@@ -65,10 +76,24 @@ const experienceItems = [
   },
 ];
 
-const skills = [
-  { label: "Tools", items: ["Figma", "Framer", "Adobe Illustrator"], accent: "#4CB3FF" },
-  { label: "Methods", items: ["User research", "Interaction design", "Information architecture", "Prototyping", "Design systems"], accent: "#B3FFCB" },
-  { label: "Development", items: ["React", "TypeScript", "Tailwind CSS"], accent: "#FF4949" },
+const toolLogos = [
+  { name: "Figma", Icon: FigmaIcon, color: "#F24E1E" },
+  { name: "Framer", Icon: FramerIcon, color: "#0055FF" },
+  { name: "Adobe Illustrator", Icon: IllustratorIcon, color: "#FF9A00" },
+  { name: "Adobe Lightroom", Icon: LightroomIcon, color: "#31A8FF" },
+  { name: "Ableton", Icon: AbletonIcon, color: "#FFB800" },
+  { name: "React", Icon: ReactIcon, color: "#61DAFB" },
+  { name: "TypeScript", Icon: TypeScriptIcon, color: "#3178C6" },
+  { name: "Tailwind CSS", Icon: TailwindIcon, color: "#38BDF8" },
+];
+
+const methods = [
+  { name: "User research", color: "#4CB3FF" },
+  { name: "Interaction design", color: "#B3FFCB" },
+  { name: "Information architecture", color: "#FFA100" },
+  { name: "Prototyping", color: "#B23386" },
+  { name: "Design systems", color: "#FF4949" },
+  { name: "Sound design", color: "#FF4B63" },
 ];
 
 export function HomePage() {
@@ -262,11 +287,11 @@ export function HomePage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/10 to-transparent" />
                         {/* Floating badges */}
                         <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
-                          <span className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-black/50 backdrop-blur-md px-2.5 py-1 text-[9px] uppercase tracking-[0.14em] text-zinc-200">
+                          <span className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-zinc-950/85 px-2.5 py-1 text-[9px] uppercase tracking-[0.14em] text-zinc-200">
                             <span className="h-1.5 w-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: project.accentColor }} />
                             {project.category}
                           </span>
-                          <span className="rounded-md border border-white/15 bg-black/50 backdrop-blur-md px-2 py-1 text-[9px] font-dmMono text-zinc-300">
+                          <span className="rounded-md border border-white/15 bg-zinc-950/85 px-2 py-1 text-[9px] font-dmMono text-zinc-300">
                             {project.year}
                           </span>
                         </div>
@@ -321,7 +346,7 @@ export function HomePage() {
             return (
               <div
                 key={project.slug}
-                className="group relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-900/60 backdrop-blur-sm hover:border-white/20 hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
+                className="group relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-900/60 hover:border-white/20 hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
                 onClick={() => navigate(`/projects/${project.slug}`)}
               >
                 <div className="relative h-52 overflow-hidden flex-shrink-0 bg-zinc-950">
@@ -330,7 +355,7 @@ export function HomePage() {
                       <img
                         src={previewImage.src}
                         alt={previewImage.alt}
-                        className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                        className="absolute -inset-px w-[calc(100%+2px)] h-[calc(100%+2px)] object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.04]"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/10 to-transparent" />
                     </>
@@ -341,11 +366,11 @@ export function HomePage() {
                   )}
                   {/* Floating badges */}
                   <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
-                    <span className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-black/50 backdrop-blur-md px-2.5 py-1 text-[9px] uppercase tracking-[0.14em] text-zinc-200">
+                    <span className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-zinc-950/85 px-2.5 py-1 text-[9px] uppercase tracking-[0.14em] text-zinc-200">
                       <span className="h-1.5 w-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: project.accentColor }} />
                       {project.category}
                     </span>
-                    <span className="rounded-md border border-white/15 bg-black/50 backdrop-blur-md px-2 py-1 text-[9px] font-dmMono text-zinc-300">
+                    <span className="rounded-md border border-white/15 bg-zinc-950/85 px-2 py-1 text-[9px] font-dmMono text-zinc-300">
                       {project.year}
                     </span>
                   </div>
@@ -522,34 +547,51 @@ export function HomePage() {
       </section>
 
       {/* Skills */}
-      <section id="skills" className="space-y-8">
+      <section id="skills" className="space-y-6">
         <div className="flex items-center justify-between gap-4 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
           <p>.skills</p>
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
-        <div className="grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/5 border border-white/5 rounded-xl overflow-hidden">
-          {skills.map(({ label, items, accent }) => (
-            <div key={label} className="p-5 space-y-4 bg-zinc-950/50">
-              <div className="flex items-center gap-2.5">
-                <span
-                  className="w-2 h-2 rounded-sm flex-shrink-0"
-                  style={{ backgroundColor: accent, boxShadow: `0 0 8px ${accent}88` }}
-                />
-                <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-dmMono">{label}</p>
+        {/* Multi-layered ticker: tools/frameworks scroll one way, methods scroll the other */}
+        <div
+          className="relative space-y-1 overflow-hidden py-2"
+          style={{
+            maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+            WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+          }}
+        >
+          {/* Row 1 — tools & frameworks, real brand marks */}
+          <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
+            {[...toolLogos, ...toolLogos].map(({ name, Icon, color }, i) => (
+              <div
+                key={`${name}-${i}`}
+                className="group/logo flex flex-shrink-0 items-center gap-3 px-8 py-3"
+                style={{ "--brand": color } as CSSProperties}
+              >
+                <Icon className="h-7 w-7 flex-shrink-0 text-zinc-600 transition-all duration-300 ease-out group-hover/logo:text-[var(--brand)] group-hover/logo:scale-110" />
+                <span className="whitespace-nowrap font-sfPro text-[12px] font-bold tracking-[0.06em] text-zinc-500 transition-colors duration-300 group-hover/logo:text-[var(--brand)]">
+                  {name}
+                </span>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {items.map((item) => (
-                  <span
-                    key={item}
-                    className="px-3 py-1 text-[11px] text-zinc-300 border border-white/10 bg-zinc-900/60 rounded-md hover:bg-white/10 hover:text-zinc-100 transition-all duration-200 cursor-default"
-                  >
-                    {item}
-                  </span>
-                ))}
+            ))}
+          </div>
+
+          {/* Row 2 — methods & practices, generic mark, opposite direction */}
+          <div className="flex w-max animate-marquee [animation-direction:reverse] hover:[animation-play-state:paused]">
+            {[...methods, ...methods].map(({ name, color }, i) => (
+              <div
+                key={`${name}-${i}`}
+                className="group/logo flex flex-shrink-0 items-center gap-3 px-8 py-3"
+                style={{ "--brand": color } as CSSProperties}
+              >
+                <SparkleIcon className="h-6 w-6 flex-shrink-0 text-zinc-700 transition-all duration-300 ease-out group-hover/logo:text-[var(--brand)] group-hover/logo:scale-110" />
+                <span className="whitespace-nowrap font-sfPro text-[12px] font-bold tracking-[0.06em] text-zinc-500 transition-colors duration-300 group-hover/logo:text-[var(--brand)]">
+                  {name}
+                </span>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 

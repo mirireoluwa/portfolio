@@ -63,14 +63,3 @@ Redeploy after setting env vars. Open `https://your-domain.com/admin` or your **
 4. After editing **`.env.local`**, restart **`vercel dev`** so API routes pick up changes (the app also loads `.env.local` from disk for Redis if the CLI doesn’t inject it).
 
 Plain **`npm run dev`** only serves the frontend; `/api/*` will not exist unless you proxy to a running API.
-
----
-
-## Now Listening (Last.fm + Apple Music) — optional
-
-If you use the Last.fm API route (`/api/now-playing`), set on Vercel:
-
-- `LAST_FM_API_KEY`
-- `LAST_FM_USER`
-
-Scrobble from Apple Music via Marvis Pro, Soor, or the Last.fm app.

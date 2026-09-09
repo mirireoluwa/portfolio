@@ -7,6 +7,20 @@ module.exports = {
         sans: ["Space Grotesk", "system-ui", "ui-sans-serif", "sans-serif"],
         spaceGrotesk: ["Space Grotesk", "system-ui", "ui-sans-serif", "sans-serif"],
         dmMono: ["DM Mono", "ui-monospace", "SF Mono", "Menlo", "monospace"],
+        // SF Pro is Apple's system font — can't be bundled as a webfont, so this
+        // resolves to real San Francisco on Mac/iOS via the system stack, with
+        // sane fallbacks elsewhere.
+        sfPro: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "SF Pro Text",
+          "SF Pro Display",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif",
+        ],
       },
       colors: {
         background: "#050509",
@@ -22,26 +36,13 @@ module.exports = {
         soft: "0 18px 60px rgba(0,0,0,0.55)",
       },
       keyframes: {
-        glitchX: {
-          '0%, 100%': { transform: 'translateX(0)' },
-          '20%, 60%': { transform: 'translateX(-10px)' },
-          '40%, 80%': { transform: 'translateX(10px)' },
-        },
-        glitchY: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '20%, 60%': { transform: 'translateY(-5px)' },
-          '40%, 80%': { transform: 'translateY(5px)' },
-        },
-        noiseFloat: {
-          '0%': { transform: 'translateX(10%) translateY(4%)' },
-          '50%': { transform: 'translateX(14%) translateY(6%)' },
-          '100%': { transform: 'translateX(18%) translateY(8%)' },
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
         },
       },
       animation: {
-        glitchX: 'glitchX 1s infinite linear alternate',
-        glitchY: 'glitchY 1s infinite linear alternate',
-        noiseFloat: 'noiseFloat 40s linear infinite alternate',
+        marquee: "marquee 28s linear infinite",
       },
     },
   },
