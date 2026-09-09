@@ -1,8 +1,9 @@
-import { useEffect, useState, useRef, useLayoutEffect, type CSSProperties } from "react";
+import { useState, useRef, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useProjects } from "../context/ProjectsContext";
 import { useResume } from "../context/ResumeContext";
+import { Hero } from "../components/Hero";
 import {
   FigmaIcon,
   FramerIcon,
@@ -14,22 +15,6 @@ import {
   LightroomIcon,
   AbletonIcon,
 } from "../components/LogoIcons";
-
-const heroPhrases = [
-  "a product designer",
-  "a sound designer",
-];
-
-const greetings = [
-  "hello",      // English
-  "hola",       // Spanish
-  "bonjour",    // French
-  "ciao",       // Italian
-  "こんにちは",   // Japanese
-  "bawo",       // Yoruba
-  "olá",        // Portuguese
-  "hallo",      // German
-];
 
 const experienceItems = [
   {
@@ -100,99 +85,17 @@ export function HomePage() {
   const { projects, loading: projectsLoading } = useProjects();
   const { resumeUrl } = useResume();
   const navigate = useNavigate();
-  const [activePhrase, setActivePhrase] = useState(0);
-  const [activeGreeting, setActiveGreeting] = useState(0);
-  const phraseHeightRef = useRef<number>(0);
-  const phraseContainerRef = useRef<HTMLDivElement>(null);
   const [mobileStackIndex, setMobileStackIndex] = useState(0);
   const [swipeDir, setSwipeDir] = useState(1);
   const isDraggingRef = useRef(false);
   const [openExpCard, setOpenExpCard] = useState<string | null>(null);
 
-  useLayoutEffect(() => {
-    if (phraseContainerRef.current) {
-      const firstPhrase = phraseContainerRef.current.querySelector('div');
-      if (firstPhrase) {
-        phraseHeightRef.current = (firstPhrase as HTMLElement).clientHeight;
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      setActivePhrase((current) => (current + 1) % heroPhrases.length);
-    }, 2600);
-
-    return () => window.clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const greetingInterval = window.setInterval(() => {
-      setActiveGreeting((current) => (current + 1) % greetings.length);
-    }, 3000);
-
-    return () => window.clearInterval(greetingInterval);
-  }, []);
-
   return (
     <div className="space-y-20">
-      {/* Hero */}
-      <section className="space-y-6 sm:space-y-5 pt-0">
-        {/* Top meta */}
-        <div className="flex items-center justify-between gap-6 text-[11px] text-zinc-400 font-dmMono tracking-[0.12em]">
-          <div className="flex-1 max-w-xs mx-4 ml-0 relative" style={{ minWidth: "48px", height: "1.2em" }}>
-            <motion.div
-              key={greetings[activeGreeting]}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
-              className="absolute left-0 top-0 whitespace-nowrap"
-            >
-              {greetings[activeGreeting]}
-            </motion.div>
-          </div>
-          <p className="text-right whitespace-nowrap">available for new projects</p>
-        </div>
-
-        {/* Hero Heading and Phrases */}
-        <div className="space-y-0 sm:space-y-0">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold leading-tight tracking-tight text-zinc-50 flex items-center gap-2">
-            <span className="flex items-center relative" style={{ width: "max-content" }}>
-              i&apos;m&nbsp;
-              <span className="relative font-semibold" style={{ color: "#f0f0f0" }}>
-                mirireoluwa
-              </span>
-              ,
-            </span>
-          </h1>
-
-          <div
-            id="phrase-container"
-            ref={phraseContainerRef}
-            className="relative overflow-visible select-none -mt-2 sm:mt-0"
-            style={{ height: phraseHeightRef.current ? `${phraseHeightRef.current * 1.5}px` : '2.4em', width: 'max-content', zIndex: 10 }}
-            aria-live="polite"
-          >
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={activePhrase}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.6 }}
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-zinc-50"
-                style={{ whiteSpace: "nowrap", display: "inline-block" }}
-              >
-                {heroPhrases[activePhrase]}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       {/* Projects */}
-      <section id="projects" className="space-y-8">
+      <section id="projects" className="space-y-8 !mt-10 scroll-mt-24">
         <div className="flex items-center justify-between gap-4 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
           <p>.projects</p>
           <div className="h-px flex-1 bg-zinc-800" />
