@@ -23,8 +23,20 @@ export function Header() {
       .filter((el): el is HTMLElement => el !== null);
     if (targets.length === 0) return;
 
+    const lastId = ids[ids.length - 1];
+    const atPageBottom = () =>
+      window.innerHeight + window.scrollY >=
+      document.documentElement.scrollHeight - 4;
+
     const observer = new IntersectionObserver(
       (entries) => {
+        // The last section (contact) is short and sits at the end of the page,
+        // so it can never reach the observer's centre band — force it active
+        // once the page is scrolled to the bottom.
+        if (atPageBottom()) {
+          setActiveSection(lastId);
+          return;
+        }
         entries.forEach((entry) => {
           if (entry.isIntersecting) setActiveSection(entry.target.id);
         });
@@ -32,7 +44,16 @@ export function Header() {
       { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
     );
     targets.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+
+    const onScroll = () => {
+      if (atPageBottom()) setActiveSection(lastId);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   const handleAnchorClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -42,6 +63,7 @@ export function Header() {
     if (el) {
       event.preventDefault();
       el.scrollIntoView({ behavior: "smooth", block: "start" });
+      setActiveSection(href.slice(1)); // immediate feedback, don't wait for scroll-spy
       setIsMenuOpen(false);
     }
   };
@@ -86,6 +108,7 @@ export function Header() {
               </a>
             );
           })}
+          <span className="h-3.5 w-px bg-white/15" aria-hidden />
           <a
             href={resumeUrl}
             target="_blank"

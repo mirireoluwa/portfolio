@@ -12,9 +12,12 @@
 
 html {
   scroll-behavior: smooth;
-  /* Lets full-bleed sections break the content column without adding a
-     horizontal scrollbar (scrollbar-width vs 100vw). `clip` — not `hidden` —
-     so it doesn't turn <html> into a scroll container and break sticky nav. */
+}
+
+/* Contain full-bleed sections' horizontal overflow WITHOUT touching <html>'s
+   overflow — `overflow-x` on the root element breaks programmatic scrolling
+   (scrollIntoView / anchor jumps) in Chromium. */
+body {
   overflow-x: clip;
 }
 

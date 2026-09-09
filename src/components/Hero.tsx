@@ -120,7 +120,7 @@ export function Hero() {
 
   const glowX = useTransform(sx, (v) => `${50 + v * 26}%`);
   const glowY = useTransform(sy, (v) => `${46 + v * 26}%`);
-  const glow = useMotionTemplate`radial-gradient(560px circle at ${glowX} ${glowY}, rgba(76,179,255,0.10), transparent 70%)`;
+  const glow = useMotionTemplate`radial-gradient(560px circle at ${glowX} ${glowY}, rgba(255,255,255,0.05), transparent 70%)`;
 
   const [greeting, setGreeting] = useState(0);
   const [role, setRole] = useState(0);

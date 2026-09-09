@@ -343,7 +343,7 @@ export function HomePage() {
           {/* Text + metadata */}
           <div className="space-y-6 md:pt-2">
             <p className="text-sm md:text-base text-zinc-200 leading-relaxed">
-              I'm a product designer who builds the things I design. I work at the intersection of user insight, visual craft, and product thinking—focused on experiences that are clear, considered, and actually useful. My background in Computer Science means I think about feasibility and implementation alongside aesthetics, which makes collaboration with engineering teams more direct. I also produce music as{" "}
+              I'm a product designer who works at the intersection of user insight, visual craft, and product thinking. I focus on building experiences that are clear, considered, and actually useful. My background in Computer Science means I think about feasibility and implementation alongside aesthetics, which makes collaboration with engineering teams more direct. I also produce music as{" "}
               <a
                 href="https://saintted.com"
                 target="_blank"
