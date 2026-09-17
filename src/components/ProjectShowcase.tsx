@@ -1,26 +1,65 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Project } from "../types/project";
+import { ProjectCardFace } from "./ProjectCardFace";
+
+const LIST_MAX_HEIGHT = 440;
 
 /**
  * Desktop project browser ("option B" from the card-redesign comparison) —
  * a title list on the left, a single preview panel on the right that
  * crossfades to whichever project is hovered/focused. Mobile keeps the
  * separate swipeable card stack in HomePage; the two don't share a mechanic
- * on purpose (hover doesn't exist on touch).
+ * on purpose (hover doesn't exist on touch), but both render the project
+ * face with the shared ProjectCardFace so they read as one card system.
+ *
+ * The list scrolls internally past ~4 projects instead of growing the
+ * section — the preview panel's height stays fixed regardless of how many
+ * projects exist.
  */
 export function ProjectShowcase({ projects }: { projects: Project[] }) {
   const navigate = useNavigate();
   const [activeSlug, setActiveSlug] = useState(projects[0]?.slug);
   const active = projects.find((p) => p.slug === activeSlug) ?? projects[0];
 
+  const listRef = useRef<HTMLDivElement>(null);
+  const [hasOverflow, setHasOverflow] = useState(false);
+  const [atBottom, setAtBottom] = useState(false);
+
+  // Only show a "scroll for more" hint once the list actually outgrows its
+  // box — with 4 projects (today) it never appears.
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const check = () => setHasOverflow(el.scrollHeight > el.clientHeight + 1);
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [projects.length]);
+
+  const handleListScroll = () => {
+    const el = listRef.current;
+    if (!el) return;
+    setAtBottom(el.scrollTop + el.clientHeight >= el.scrollHeight - 4);
+  };
+
   if (!active) return null;
 
   return (
     <div className="hidden lg:grid grid-cols-[300px_1fr] items-start gap-10">
-      {/* Title list */}
-      <div className="flex flex-col border-t border-white/10">
+      {/* Title list — scrolls on its own past a handful of projects */}
+      <div className="relative">
+        <div
+          ref={listRef}
+          onScroll={handleListScroll}
+          className="no-scrollbar flex flex-col overflow-y-auto border-t border-white/10"
+          style={{
+            maxHeight: LIST_MAX_HEIGHT,
+            maskImage: "linear-gradient(to bottom, black 90%, transparent)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 90%, transparent)",
+          }}
+        >
         {projects.map((project, i) => {
           const isActive = project.slug === activeSlug;
           return (
@@ -30,7 +69,7 @@ export function ProjectShowcase({ projects }: { projects: Project[] }) {
               onMouseEnter={() => setActiveSlug(project.slug)}
               onFocus={() => setActiveSlug(project.slug)}
               onClick={() => navigate(`/projects/${project.slug}`)}
-              className="group border-b border-white/10 py-5 pr-4 text-left"
+              className="group flex-shrink-0 border-b border-white/10 py-5 pr-4 text-left"
             >
               <div className="flex items-center justify-between gap-3">
                 <span
@@ -61,90 +100,33 @@ export function ProjectShowcase({ projects }: { projects: Project[] }) {
             </button>
           );
         })}
+        </div>
+
+        {hasOverflow && !atBottom && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-1">
+            <span className="motion-reduce:animate-none flex animate-bounce items-center gap-1.5 rounded-full border border-white/10 bg-zinc-950/85 px-3 py-1 font-dmMono text-[9px] uppercase tracking-[0.1em] text-zinc-400 backdrop-blur-sm">
+              scroll for more ↓
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Preview panel */}
+      {/* Preview panel — fixed height no matter how many projects exist */}
       <div
-        className="relative h-[440px] cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-zinc-950"
+        className="relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-zinc-950"
+        style={{ height: LIST_MAX_HEIGHT }}
         onClick={() => navigate(`/projects/${active.slug}`)}
       >
-        {projects.map((project) => {
-          const img = project.snapshots?.[0];
-          return (
-            <div
-              key={project.slug}
-              className="absolute inset-0 transition-opacity duration-500 ease-out"
-              style={{ opacity: project.slug === activeSlug ? 1 : 0 }}
-              aria-hidden={project.slug !== activeSlug}
-            >
-              {img ? (
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="h-full w-full object-cover object-top"
-                />
-              ) : (
-                <div
-                  className="absolute inset-0"
-                  style={{ backgroundColor: project.accentColor, opacity: 0.15 }}
-                />
-              )}
-            </div>
-          );
-        })}
-
-        {/* Persistent scrim — independent of which image is showing, so text
-            stays legible even over bright screenshots (e.g. chowdie's UI).
-            Solid through ~55% up (where the text block sits), then eases
-            out so the image still reads clearly near the top. Inline style,
-            not Tailwind's gradient-stop utilities — those don't compose
-            reliably with three custom stops. */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to top, #09090b 0%, #09090b 40%, rgba(9,9,11,0.78) 55%, transparent 92%)",
-          }}
-        />
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active.slug}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25 }}
-            className="absolute inset-x-0 bottom-0 flex flex-col items-start p-7"
+        {projects.map((project) => (
+          <div
+            key={project.slug}
+            className="absolute inset-0 transition-opacity duration-500 ease-out"
+            style={{ opacity: project.slug === activeSlug ? 1 : 0 }}
+            aria-hidden={project.slug !== activeSlug}
           >
-            <span className="mb-3 inline-flex items-center gap-1.5 font-dmMono text-[10px] uppercase tracking-[0.14em] text-zinc-300">
-              <span
-                className="h-1.5 w-1.5 flex-shrink-0 rounded-sm"
-                style={{ backgroundColor: active.accentColor }}
-              />
-              {active.category}
-            </span>
-            <h3 className="mb-2 text-3xl font-semibold lowercase text-zinc-50">
-              {active.title}
-            </h3>
-            <p className="mb-4 max-w-md text-sm leading-relaxed text-zinc-400">
-              {active.summary.split("\n\n")[0]}
-            </p>
-            <div className="mb-5 flex flex-wrap gap-2">
-              {active.tags.slice(0, 3).map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-zinc-400"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-            <span className="inline-flex items-center gap-2 text-sm font-medium text-zinc-100">
-              view case study
-              <span aria-hidden>→</span>
-            </span>
-          </motion.div>
-        </AnimatePresence>
+            <ProjectCardFace project={project} />
+          </div>
+        ))}
       </div>
     </div>
   );

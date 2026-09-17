@@ -141,4 +141,15 @@ input.admin-color-swatch[type="color"]::-moz-color-swatch {
   border-radius: 11px;
 }
 
+/* Hide scrollbars on internally-scrolling UI (e.g. the project list once it
+   outgrows a handful of items) — the mask-image fade is the affordance. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 

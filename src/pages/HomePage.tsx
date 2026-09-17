@@ -5,6 +5,7 @@ import { useProjects } from "../context/ProjectsContext";
 import { useResume } from "../context/ResumeContext";
 import { Hero } from "../components/Hero";
 import { ProjectShowcase } from "../components/ProjectShowcase";
+import { ProjectCardFace } from "../components/ProjectCardFace";
 import {
   FigmaIcon,
   FramerIcon,
@@ -171,47 +172,12 @@ export function HomePage() {
               >
                 {(() => {
                   const project = projects[mobileStackIndex];
-                  const previewImage = project.snapshots?.[0];
                   return (
                     <div
-                      className="flex flex-col h-full cursor-pointer bg-zinc-900"
+                      className="h-full cursor-pointer"
                       onClick={() => { if (!isDraggingRef.current) navigate(`/projects/${project.slug}`); }}
                     >
-                      <div className="relative flex-1 overflow-hidden bg-zinc-950">
-                        {previewImage ? (
-                          <img
-                            src={previewImage.src}
-                            alt={previewImage.alt}
-                            className="w-full h-full object-cover object-top"
-                          />
-                        ) : (
-                          <div className="absolute inset-0" style={{ backgroundColor: project.accentColor, opacity: 0.15 }} />
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/10 to-transparent" />
-                        {/* Floating badges */}
-                        <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
-                          <span className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-zinc-950/85 px-2.5 py-1 text-[9px] uppercase tracking-[0.14em] text-zinc-200">
-                            <span className="h-1.5 w-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: project.accentColor }} />
-                            {project.category}
-                          </span>
-                          <span className="rounded-md border border-white/15 bg-zinc-950/85 px-2 py-1 text-[9px] font-dmMono text-zinc-300">
-                            {project.year}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="relative p-4 pb-3.5 flex-shrink-0 border-t border-white/5">
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="min-w-0">
-                            <h3 className="text-lg font-medium lowercase text-zinc-50 truncate">{project.title}</h3>
-                            {project.tags?.[0] && (
-                              <p className="mt-0.5 text-[10px] text-zinc-500 truncate">{project.tags[0]}</p>
-                            )}
-                          </div>
-                          <span className="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 text-zinc-400">
-                            →
-                          </span>
-                        </div>
-                      </div>
+                      <ProjectCardFace project={project} compact />
                     </div>
                   );
                 })()}
