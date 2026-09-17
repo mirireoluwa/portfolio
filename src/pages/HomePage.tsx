@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useProjects } from "../context/ProjectsContext";
 import { useResume } from "../context/ResumeContext";
 import { Hero } from "../components/Hero";
+import { ProjectShowcase } from "../components/ProjectShowcase";
 import {
   FigmaIcon,
   FramerIcon,
@@ -105,10 +106,9 @@ export function HomePage() {
         {projectsLoading && (
           <>
             <div className="lg:hidden h-[400px] rounded-2xl border border-white/10 bg-zinc-900/60 animate-pulse" />
-            <div className="hidden lg:grid gap-6 lg:grid-cols-3">
-              {[0, 1, 2].map((i) => (
-                <div key={i} className="h-72 rounded-2xl border border-white/10 bg-zinc-900/60 animate-pulse" />
-              ))}
+            <div className="hidden lg:grid grid-cols-[300px_1fr] gap-10">
+              <div className="h-[300px] rounded-2xl border border-white/10 bg-zinc-900/60 animate-pulse" />
+              <div className="h-[440px] rounded-2xl border border-white/10 bg-zinc-900/60 animate-pulse" />
             </div>
           </>
         )}
@@ -241,80 +241,8 @@ export function HomePage() {
         </div>
         )}
 
-        {/* ── Desktop: grid ── */}
-        {!projectsLoading && (
-        <div className="hidden lg:grid gap-6 lg:grid-cols-3">
-          {projects.map((project) => {
-            const previewImage = project.snapshots?.[0];
-            return (
-              <div
-                key={project.slug}
-                className="group relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-900/60 hover:border-white/20 hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
-                onClick={() => navigate(`/projects/${project.slug}`)}
-              >
-                <div className="relative h-52 overflow-hidden flex-shrink-0 bg-zinc-950">
-                  {previewImage ? (
-                    <>
-                      <img
-                        src={previewImage.src}
-                        alt={previewImage.alt}
-                        className="absolute -inset-px w-[calc(100%+2px)] h-[calc(100%+2px)] object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/10 to-transparent" />
-                    </>
-                  ) : (
-                    <div className="absolute inset-0 bg-zinc-900">
-                      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_55%)]" />
-                    </div>
-                  )}
-                  {/* Floating badges */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
-                    <span className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-zinc-950/85 px-2.5 py-1 text-[9px] uppercase tracking-[0.14em] text-zinc-200">
-                      <span className="h-1.5 w-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: project.accentColor }} />
-                      {project.category}
-                    </span>
-                    <span className="rounded-md border border-white/15 bg-zinc-950/85 px-2 py-1 text-[9px] font-dmMono text-zinc-300">
-                      {project.year}
-                    </span>
-                  </div>
-                </div>
-                <div className="relative p-4 pb-4 flex-1 flex flex-col justify-between gap-3">
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-semibold lowercase text-zinc-50 group-hover:text-white transition-colors duration-200">
-                      {project.title}
-                    </h3>
-                    {project.tags && project.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5">
-                        {project.tags.slice(0, 2).map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-[9px] text-zinc-400"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-[11px] text-zinc-500 line-clamp-1 pr-2">
-                      {project.summary.split("\n\n")[0]}
-                    </p>
-                    <span className="flex-shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 text-zinc-400 group-hover:bg-white group-hover:text-zinc-950 group-hover:border-white transition-all duration-300">
-                      →
-                    </span>
-                  </div>
-                </div>
-                {/* Accent-tinted glow on hover */}
-                <div
-                  className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ boxShadow: `0 24px 60px -20px ${project.accentColor}66` }}
-                />
-              </div>
-            );
-          })}
-        </div>
-        )}
+        {/* ── Desktop: title list + crossfading preview ── */}
+        {!projectsLoading && <ProjectShowcase projects={projects} />}
       </section>
 
       {/* About */}
