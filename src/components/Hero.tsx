@@ -192,7 +192,16 @@ export function Hero() {
       {/* Column wrapper — mirrors the site's content column so the type lines up
           with the rest of the page even though the section is full-bleed */}
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-10">
-      {/* Floating chips — desktop only; mobile gets a compact static row below */}
+      {/* One small floating chip for mobile too — the only spot with real
+          breathing room is above the wordmark, next to the greeting. */}
+      <div className="pointer-events-none absolute inset-0 sm:hidden" aria-hidden>
+        <FloatChip mvX={sx} mvY={sy} depth={0} delay={0.5} floatDur={6.4} className="right-0 top-0">
+          <PulseDot />
+          available
+        </FloatChip>
+      </div>
+
+      {/* Floating chips — desktop only; mobile gets its own set below */}
       <div className="pointer-events-none absolute inset-0 hidden sm:block" aria-hidden>
         <FloatChip
           mvX={sx}
@@ -332,19 +341,28 @@ export function Hero() {
           </a>
         </div>
 
-        {/* Mobile-only compact status row (replaces floating chips) */}
+        {/* Mobile-only status chips — same glass/float treatment as the
+            desktop floaters, just laid out in-flow instead of absolute
+            (nowhere on a narrow screen to float them without overlapping
+            the text above). */}
         <div
-          className="hero-rise mt-8 flex flex-wrap gap-2 sm:hidden"
+          className="hero-rise mt-8 flex flex-wrap gap-2.5 sm:hidden"
           style={{ animationDelay: "0.85s" }}
         >
-          <span className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 font-dmMono text-[10px] tracking-[0.06em] text-zinc-400">
-            <PulseDot />
-            available for work
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 font-dmMono text-[10px] tracking-[0.06em] text-zinc-400">
+          <span
+            className="hero-chip-float inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl border border-white/10 bg-zinc-950/75 px-3 py-1.5 font-dmMono text-[10px] tracking-[0.06em] text-zinc-400 shadow-[0_16px_40px_-18px_rgba(0,0,0,0.7)] backdrop-blur-md"
+            style={{ "--float-dur": "7.5s" } as CSSProperties}
+          >
             lagos, ng
             <span className="text-zinc-600">·</span>
             <span className="tabular-nums">{lagosTime}</span>
+          </span>
+          <span
+            className="hero-chip-float inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl border border-white/10 bg-white/[0.04] px-3 py-1.5 font-dmMono text-[10px] tracking-[0.06em] text-zinc-400 shadow-[0_16px_40px_-18px_rgba(0,0,0,0.7)] backdrop-blur-md"
+            style={{ "--float-dur": "6.8s", animationDelay: "0.3s" } as CSSProperties}
+          >
+            <span className="text-zinc-500">↳</span>
+            producing as saintted
           </span>
         </div>
       </div>
