@@ -98,8 +98,8 @@ export function HomePage() {
 
       {/* Projects */}
       <section id="projects" className="space-y-8 !mt-10 scroll-mt-24">
-        <div className="flex items-center justify-between gap-4 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
-          <p>.projects</p>
+        <div className="flex items-center justify-between gap-4 text-[11px] uppercase tracking-[0.25em] text-zinc-400">
+          <h2>.projects</h2>
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
@@ -187,8 +187,8 @@ export function HomePage() {
 
           {/* Dot indicators */}
           <div className="flex items-center justify-between px-1">
-            <p className="text-[10px] text-zinc-600 font-dmMono tracking-[0.08em]">swipe to browse</p>
-            <div className="flex items-center gap-2">
+            <p className="text-[10px] text-zinc-400 font-dmMono tracking-[0.08em]">swipe to browse</p>
+            <div className="flex items-center">
               {projects.map((_, i) => (
                 <button
                   key={i}
@@ -196,11 +196,16 @@ export function HomePage() {
                     setSwipeDir(i > mobileStackIndex ? 1 : -1);
                     setMobileStackIndex(i);
                   }}
-                  className={`h-1.5 rounded-sm transition-all duration-300 ${
-                    i === mobileStackIndex ? "w-6 bg-zinc-200" : "w-1.5 bg-zinc-600 hover:bg-zinc-400"
-                  }`}
+                  className="group flex h-6 min-w-6 items-center justify-center"
                   aria-label={`Go to project ${i + 1}`}
-                />
+                  aria-current={i === mobileStackIndex ? "true" : undefined}
+                >
+                  <span
+                    className={`block h-1.5 rounded-sm transition-all duration-300 ${
+                      i === mobileStackIndex ? "w-6 bg-zinc-200" : "w-1.5 bg-zinc-500 group-hover:bg-zinc-300"
+                    }`}
+                  />
+                </button>
               ))}
             </div>
           </div>
@@ -213,8 +218,8 @@ export function HomePage() {
 
       {/* About */}
       <section id="about" className="space-y-6">
-        <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
-          <p>.about</p>
+        <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-400">
+          <h2>.about</h2>
           <div className="flex-1 h-px bg-zinc-800" />
         </div>
 
@@ -268,8 +273,8 @@ export function HomePage() {
 
       {/* Experience */}
       <section id="experience" className="space-y-8">
-        <div className="flex items-center justify-between gap-4 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
-          <p>.experience</p>
+        <div className="flex items-center justify-between gap-4 text-[11px] uppercase tracking-[0.25em] text-zinc-400">
+          <h2>.experience</h2>
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
@@ -299,14 +304,14 @@ export function HomePage() {
                   >
                     <div>
                       <p className="font-medium text-base leading-tight text-zinc-50">{item.title}</p>
-                      <p className="text-xs text-zinc-500 mt-1 font-dmMono tracking-[0.04em]">
+                      <p className="text-xs text-zinc-400 mt-1 font-dmMono tracking-[0.04em]">
                         {item.company} · {item.year}
                       </p>
                     </div>
                     <motion.span
                       animate={{ rotate: isOpen ? 45 : 0 }}
                       transition={{ duration: 0.2 }}
-                      className="flex-shrink-0 text-xl leading-none text-zinc-500"
+                      className="flex-shrink-0 text-xl leading-none text-zinc-400"
                     >
                       +
                     </motion.span>
@@ -326,7 +331,7 @@ export function HomePage() {
                           <ul className="space-y-2.5">
                             {item.bullets.map((bullet, i) => (
                               <li key={i} className="flex items-start gap-2 text-sm leading-relaxed text-zinc-400">
-                                <span className="mt-1.5 flex-shrink-0 text-[10px] text-zinc-600">•</span>
+                                <span className="mt-1.5 flex-shrink-0 text-[10px] text-zinc-400">•</span>
                                 <span>{bullet}</span>
                               </li>
                             ))}
@@ -345,8 +350,8 @@ export function HomePage() {
 
       {/* Skills */}
       <section id="skills" className="space-y-6">
-        <div className="flex items-center justify-between gap-4 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
-          <p>.skills</p>
+        <div className="flex items-center justify-between gap-4 text-[11px] uppercase tracking-[0.25em] text-zinc-400">
+          <h2>.skills</h2>
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
@@ -366,8 +371,8 @@ export function HomePage() {
                 className="group/logo flex flex-shrink-0 items-center gap-3 px-8 py-3"
                 style={{ "--brand": color } as CSSProperties}
               >
-                <Icon className="h-7 w-7 flex-shrink-0 text-zinc-600 transition-all duration-300 ease-out group-hover/logo:text-[var(--brand)] group-hover/logo:scale-110" />
-                <span className="whitespace-nowrap font-sfPro text-[12px] font-bold tracking-[0.06em] text-zinc-500 transition-colors duration-300 group-hover/logo:text-[var(--brand)]">
+                <Icon className="h-7 w-7 flex-shrink-0 text-zinc-400 transition-all duration-300 ease-out group-hover/logo:text-[var(--brand)] group-hover/logo:scale-110" />
+                <span className="whitespace-nowrap font-sfPro text-[12px] font-bold tracking-[0.06em] text-zinc-400 transition-colors duration-300 group-hover/logo:text-[var(--brand)]">
                   {name}
                 </span>
               </div>
@@ -383,7 +388,7 @@ export function HomePage() {
                 style={{ "--brand": color } as CSSProperties}
               >
                 <SparkleIcon className="h-6 w-6 flex-shrink-0 text-zinc-700 transition-all duration-300 ease-out group-hover/logo:text-[var(--brand)] group-hover/logo:scale-110" />
-                <span className="whitespace-nowrap font-sfPro text-[12px] font-bold tracking-[0.06em] text-zinc-500 transition-colors duration-300 group-hover/logo:text-[var(--brand)]">
+                <span className="whitespace-nowrap font-sfPro text-[12px] font-bold tracking-[0.06em] text-zinc-400 transition-colors duration-300 group-hover/logo:text-[var(--brand)]">
                   {name}
                 </span>
               </div>
@@ -394,8 +399,8 @@ export function HomePage() {
 
       {/* Call to action */}
       <section id="contact" className="space-y-6">
-        <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
-          <p>.say hello</p>
+        <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-400">
+          <h2>.say hello</h2>
           <div className="flex-1 h-px bg-zinc-800" />
         </div>
 
@@ -417,12 +422,12 @@ export function HomePage() {
               <div className="relative w-5 h-5">
                 <img
                   src="/mail-white.svg"
-                  alt="Email"
+                  alt=""
                   className="absolute inset-0 w-5 h-5 transition-opacity duration-200 group-hover:opacity-0"
                 />
                 <img
                   src="/mail-black.svg"
-                  alt="Email"
+                  alt=""
                   className="absolute inset-0 w-5 h-5 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                 />
               </div>
@@ -439,12 +444,12 @@ export function HomePage() {
               <div className="relative w-5 h-5">
                 <img
                   src="/linkedin-white.svg"
-                  alt="LinkedIn"
+                  alt=""
                   className="absolute inset-0 w-5 h-5 transition-opacity duration-200 group-hover:opacity-0"
                 />
                 <img
                   src="/linkedin.svg"
-                  alt="LinkedIn"
+                  alt=""
                   className="absolute inset-0 w-5 h-5 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                 />
               </div>
@@ -461,12 +466,12 @@ export function HomePage() {
               <div className="relative w-5 h-5">
                 <img
                   src="/github-white.svg"
-                  alt="GitHub"
+                  alt=""
                   className="absolute inset-0 w-5 h-5 transition-opacity duration-200 group-hover:opacity-0"
                 />
                 <img
                   src="/github-black.svg"
-                  alt="GitHub"
+                  alt=""
                   className="absolute inset-0 w-5 h-5 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                 />
               </div>

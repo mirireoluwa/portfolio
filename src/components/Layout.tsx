@@ -16,6 +16,12 @@ export function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col items-center py-6">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-zinc-50 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-zinc-950"
+      >
+        Skip to content
+      </a>
       {/* Header sits outside the padded content column entirely so it's genuinely
           full-bleed on every screen size — no viewport-calc hacks needed.
           Admin keeps its original constrained/padded look, since that's a
@@ -37,9 +43,9 @@ export function Layout({ children }: LayoutProps) {
       </div>
 
       <div className="w-full max-w-6xl flex flex-col gap-10 px-4 sm:px-6 lg:px-10">
-        <main className="mx-auto w-full max-w-5xl flex-1 pb-16">{children}</main>
+        <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 pb-16 focus:outline-none">{children}</main>
 
-        <footer className="font-dmMono mx-auto max-w-5xl pb-6 text-xs text-zinc-500 flex justify-between gap-4 flex-wrap">
+        <footer className="font-dmMono mx-auto max-w-5xl pb-6 text-xs text-zinc-400 flex justify-between gap-4 flex-wrap">
           {isAdmin ? (
             <>
               <span className="text-amber-500/50 uppercase tracking-[0.16em]">cms session</span>

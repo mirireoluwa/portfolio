@@ -59,7 +59,7 @@ export function ProjectCardFace({
           />
           {project.category}
           <span className="text-zinc-600">·</span>
-          <span className="text-zinc-500">{project.year}</span>
+          <span className="text-zinc-400">{project.year}</span>
         </span>
 
         <h3

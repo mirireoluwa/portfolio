@@ -59,7 +59,7 @@ function SnapshotImage({ src, alt }: { src: string; alt: string }) {
 
 function SectionLabel({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
+    <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-400">
       <p>.{label}</p>
       <div className="flex-1 h-px bg-zinc-800" />
     </div>
@@ -146,11 +146,11 @@ export function ProjectDetailsPage() {
         >
           <Link
             to="/#projects"
-            className="text-[11px] font-dmMono lowercase tracking-[0.12em] text-zinc-500 hover:text-zinc-300 transition-colors duration-200"
+            className="text-[11px] font-dmMono lowercase tracking-[0.12em] text-zinc-400 hover:text-zinc-300 transition-colors duration-200"
           >
             projects
           </Link>
-          <span className="text-zinc-600 [&_svg]:h-3 [&_svg]:w-3">
+          <span className="text-zinc-400 [&_svg]:h-3 [&_svg]:w-3">
             <ChevronRight />
           </span>
           <span className="truncate text-[11px] font-dmMono lowercase tracking-[0.12em] text-zinc-100">
@@ -197,7 +197,7 @@ export function ProjectDetailsPage() {
             <span className="h-1.5 w-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: project.accentColor }} />
             {project.category}
           </span>
-          <span className="text-[11px] font-dmMono text-zinc-500">{project.year}</span>
+          <span className="text-[11px] font-dmMono text-zinc-400">{project.year}</span>
         </div>
 
         <div className="relative flex items-start justify-between gap-4">
@@ -240,7 +240,7 @@ export function ProjectDetailsPage() {
           <div className="flex items-center justify-between">
             <SectionLabel label="snapshots" />
             {total > 1 && (
-              <p className="text-[10px] font-dmMono text-zinc-500 tracking-[0.12em] lowercase">
+              <p className="text-[10px] font-dmMono text-zinc-400 tracking-[0.12em] lowercase">
                 {safeSnapIndex + 1} / {total}
               </p>
             )}

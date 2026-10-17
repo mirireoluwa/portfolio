@@ -74,14 +74,14 @@ export function ProjectShowcase({ projects }: { projects: Project[] }) {
               <div className="flex items-center justify-between gap-3">
                 <span
                   className={`font-dmMono text-[11px] tracking-[0.08em] transition-colors duration-200 ${
-                    isActive ? "text-zinc-300" : "text-zinc-700"
+                    isActive ? "text-zinc-300" : "text-zinc-500"
                   }`}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span
                   className={`text-xs transition-all duration-200 ${
-                    isActive ? "translate-x-0.5 text-zinc-300" : "text-zinc-700"
+                    isActive ? "translate-x-0.5 text-zinc-300" : "text-zinc-500"
                   }`}
                 >
                   →
@@ -89,12 +89,12 @@ export function ProjectShowcase({ projects }: { projects: Project[] }) {
               </div>
               <h3
                 className={`mt-1 text-3xl font-semibold lowercase tracking-tight transition-colors duration-200 ${
-                  isActive ? "text-zinc-50" : "text-zinc-600 group-hover:text-zinc-300"
+                  isActive ? "text-zinc-50" : "text-zinc-400 group-hover:text-zinc-300"
                 }`}
               >
                 {project.title}
               </h3>
-              <p className="mt-1 font-dmMono text-[10px] uppercase tracking-[0.1em] text-zinc-600">
+              <p className="mt-1 font-dmMono text-[10px] uppercase tracking-[0.1em] text-zinc-400">
                 {project.category} · {project.year}
               </p>
             </button>

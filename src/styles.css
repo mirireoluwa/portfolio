@@ -153,3 +153,9 @@ input.admin-color-swatch[type="color"]::-moz-color-swatch {
 }
 
 
+
+/* Visible keyboard focus everywhere (mouse clicks don't trigger it) */
+:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.75);
+  outline-offset: 2px;
+}

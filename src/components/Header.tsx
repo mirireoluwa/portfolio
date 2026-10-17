@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useResume } from "../context/ResumeContext";
 
 const navItems = [
@@ -9,14 +9,24 @@ const navItems = [
   { label: "contact", href: "#contact" },
 ];
 
+const focusRing =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950";
+
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const { resumeUrl } = useResume();
+  const { pathname, hash } = useLocation();
+  const navigate = useNavigate();
+  const onHome = pathname === "/";
 
   // Scroll-spy: brightens whichever nav item matches the section in view
   // (home page only — other pages simply have no matching ids).
   useEffect(() => {
+    if (!onHome) {
+      setActiveSection(null);
+      return;
+    }
     const ids = navItems.map((item) => item.href.slice(1));
     const targets = ids
       .map((id) => document.getElementById(id))
@@ -54,18 +64,39 @@ export function Header() {
       observer.disconnect();
       window.removeEventListener("scroll", onScroll);
     };
-  }, []);
+  }, [onHome]);
+
+  // Arriving on home with a #hash (e.g. from a project page) — scroll to it
+  useEffect(() => {
+    if (!onHome || !hash) return;
+    const t = window.setTimeout(() => {
+      document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 80);
+    return () => window.clearTimeout(t);
+  }, [onHome, hash]);
+
+  // Close the mobile menu on Escape and when the route changes
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isMenuOpen]);
 
   const handleAnchorClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    const href = event.currentTarget.getAttribute("href");
-    if (!href?.startsWith("#")) return;
-    const el = document.getElementById(href.slice(1));
-    if (el) {
-      event.preventDefault();
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      setActiveSection(href.slice(1)); // immediate feedback, don't wait for scroll-spy
-      setIsMenuOpen(false);
+    const id = event.currentTarget.getAttribute("data-section");
+    if (!id) return;
+    event.preventDefault();
+    setIsMenuOpen(false);
+    if (!onHome) {
+      // On a project page the section doesn't exist — go home, then scroll
+      navigate({ pathname: "/", hash: `#${id}` });
+      return;
     }
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setActiveSection(id); // immediate feedback, don't wait for scroll-spy
   };
 
   return (
@@ -86,34 +117,36 @@ export function Header() {
         {/* Logo */}
         <NavLink
           to="/"
-          className="text-sm font-medium tracking-tight text-zinc-100 whitespace-nowrap"
+          className={`rounded-sm py-2 text-sm font-medium tracking-tight text-zinc-100 whitespace-nowrap ${focusRing}`}
         >
           <span className="mr-0.5">.mirireoluwa</span>
         </NavLink>
 
         {/* Desktop nav — plain text, no container */}
-        <nav className="hidden md:flex items-center gap-8 text-sm">
+        <nav aria-label="Primary" className="hidden md:flex items-center gap-8 text-sm">
           {navItems.map((item) => {
             const isActive = activeSection === item.href.slice(1);
             return (
               <a
                 key={item.label}
-                href={item.href}
+                href={`/${item.href}`}
+                data-section={item.href.slice(1)}
                 onClick={handleAnchorClick}
-                className={`transition-colors duration-200 ${
-                  isActive ? "text-zinc-50" : "text-zinc-500 hover:text-zinc-300"
+                aria-current={isActive ? "location" : undefined}
+                className={`rounded-sm py-2 transition-colors duration-200 ${focusRing} ${
+                  isActive ? "text-zinc-50" : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
                 {item.label}
               </a>
             );
           })}
-          <span className="h-3.5 w-px bg-white/15" aria-hidden />
+          <span className="h-3.5 w-px bg-white/20" aria-hidden />
           <a
             href={resumeUrl}
             target="_blank"
             rel="noreferrer"
-            className="text-zinc-500 hover:text-zinc-300 transition-colors duration-200"
+            className={`rounded-sm py-2 text-zinc-400 transition-colors duration-200 hover:text-zinc-200 ${focusRing}`}
           >
             résumé ↗
           </a>
@@ -123,8 +156,10 @@ export function Header() {
         <button
           type="button"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden inline-flex items-center justify-center text-zinc-300 hover:text-white transition-colors duration-150"
+          className={`md:hidden -mr-3 inline-flex h-11 w-11 items-center justify-center rounded-md text-zinc-300 transition-colors duration-150 hover:text-white ${focusRing}`}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isMenuOpen}
+          aria-controls="mobile-nav"
         >
           {isMenuOpen ? (
             /* X icon */
@@ -147,6 +182,8 @@ export function Header() {
         {isMenuOpen && (
           <motion.nav
             key="mobile-nav"
+            id="mobile-nav"
+            aria-label="Primary"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -154,15 +191,17 @@ export function Header() {
             className="relative md:hidden overflow-hidden"
           >
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
-              <div className="flex flex-col gap-5 pt-6">
+              <div className="flex flex-col pt-3">
                 {navItems.map((item) => {
                   const isActive = activeSection === item.href.slice(1);
                   return (
                     <a
                       key={item.label}
-                      href={item.href}
+                      href={`/${item.href}`}
+                      data-section={item.href.slice(1)}
                       onClick={handleAnchorClick}
-                      className={`text-base transition-colors ${
+                      aria-current={isActive ? "location" : undefined}
+                      className={`block rounded-sm py-3 text-base transition-colors ${focusRing} ${
                         isActive ? "text-zinc-50" : "text-zinc-400 hover:text-zinc-200"
                       }`}
                     >
@@ -175,7 +214,7 @@ export function Header() {
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-base text-zinc-400 hover:text-zinc-200 transition-colors"
+                  className={`block rounded-sm py-3 text-base text-zinc-400 transition-colors hover:text-zinc-200 ${focusRing}`}
                 >
                   résumé ↗
                 </a>
