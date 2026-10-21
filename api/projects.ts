@@ -1,6 +1,6 @@
 import { getRedis, PROJECTS_KEY } from "../server/lib-js/redis.js";
 import { getResumeInfo } from "../server/lib-js/resume.js";
-import type { ValidatedProject } from "./lib/validateProjects";
+import type { ValidatedProject } from "../server/lib/validateProjects";
 
 export default async function handler(
   req: { method?: string },
