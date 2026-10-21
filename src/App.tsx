@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/Layout";
+import { Tracker } from "./components/Tracker";
 import { isAdminHostname } from "./config/site";
 import { ProjectsProvider } from "./context/ProjectsContext";
 import { ResumeProvider } from "./context/ResumeContext";
@@ -14,6 +15,7 @@ function App() {
   return (
     <ProjectsProvider>
       <ResumeProvider>
+        <Tracker />
         <Layout>
           {adminHost ? (
             <Routes>

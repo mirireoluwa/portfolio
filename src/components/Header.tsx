@@ -144,6 +144,7 @@ export function Header() {
           <span className="h-3.5 w-px bg-white/20" aria-hidden />
           <a
             href={resumeUrl}
+            data-track="resume"
             target="_blank"
             rel="noreferrer"
             className={`rounded-sm py-2 text-zinc-400 transition-colors duration-200 hover:text-zinc-200 ${focusRing}`}
@@ -211,6 +212,7 @@ export function Header() {
                 })}
                 <a
                   href={resumeUrl}
+                  data-track="resume"
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => setIsMenuOpen(false)}

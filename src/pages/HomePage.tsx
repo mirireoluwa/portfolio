@@ -418,6 +418,7 @@ export function HomePage() {
               }}
               className="relative inline-flex items-center justify-center gap-2 px-4 py-2 border border-white/40 bg-transparent text-zinc-200 hover:bg-white hover:text-zinc-950 transition-colors duration-200 group"
               aria-label="Contact me via email"
+              data-track="contact_email"
             >
               <div className="relative w-5 h-5">
                 <img
@@ -440,6 +441,7 @@ export function HomePage() {
               rel="noopener noreferrer"
               className="relative inline-flex items-center justify-center gap-2 px-4 py-2 border border-white/40 bg-transparent text-zinc-200 hover:bg-white hover:text-zinc-950 transition-colors duration-200 group"
               aria-label="LinkedIn profile"
+              data-track="contact_linkedin"
             >
               <div className="relative w-5 h-5">
                 <img
@@ -462,6 +464,7 @@ export function HomePage() {
               rel="noopener noreferrer"
               className="relative inline-flex items-center justify-center gap-2 px-4 py-2 border border-white/40 bg-transparent text-zinc-200 hover:bg-white hover:text-zinc-950 transition-colors duration-200 group"
               aria-label="GitHub profile"
+              data-track="contact_github"
             >
               <div className="relative w-5 h-5">
                 <img
@@ -484,6 +487,7 @@ export function HomePage() {
               rel="noopener noreferrer"
               className="relative inline-flex items-center justify-center gap-2 px-4 py-2 border border-white/40 bg-transparent text-zinc-200 hover:bg-white hover:text-zinc-950 transition-colors duration-200 group"
               aria-label="Download résumé"
+              data-track="resume"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

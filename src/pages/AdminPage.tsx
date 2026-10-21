@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { AdminInsights } from "../components/AdminInsights";
+import { excludeThisBrowser } from "../lib/track";
 import { Spinner } from "../components/Spinner";
 import { getPublicSiteUrl } from "../config/site";
 import { useProjects } from "../context/ProjectsContext";
@@ -25,13 +27,13 @@ function emptyProject(): Project {
 }
 
 function inputClass(extra = "") {
-  return `w-full rounded-apple-sm border border-white/10 bg-surface/80 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-white/25 ${extra}`;
+  return `w-full rounded-apple-sm border border-white/10 bg-surface/80 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-white/25 ${extra}`;
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
-      <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-500">{label}</p>
+      <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-400">{label}</p>
       {children}
     </div>
   );
@@ -120,6 +122,9 @@ export function AdminPage() {
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loggingIn, setLoggingIn] = useState(false);
 
+  const [view, setView] = useState<"projects" | "insights">(() =>
+    typeof window !== "undefined" && window.location.hash === "#insights" ? "insights" : "projects"
+  );
   const [draft, setDraft] = useState<Project[]>([]);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -158,6 +163,16 @@ export function AdminPage() {
   useEffect(() => {
     void checkSession();
   }, [checkSession]);
+
+  // Keep the owner's own visits out of the analytics
+  useEffect(() => {
+    if (authenticated) excludeThisBrowser();
+  }, [authenticated]);
+
+  const switchView = (v: "projects" | "insights") => {
+    setView(v);
+    window.history.replaceState(null, "", v === "insights" ? "#insights" : window.location.pathname);
+  };
 
   const loadDraft = useCallback(async () => {
     setLoadError(null);
@@ -495,18 +510,17 @@ export function AdminPage() {
 
   if (!adminConfigured) {
     return (
-      <div className="pt-10 space-y-4 max-w-lg">
-        <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
-          <p>.admin</p>
-          <div className="flex-1 h-px bg-zinc-800" />
+      <div className="mx-auto max-w-md pt-10 space-y-4">
+        <div className="rounded-xl border border-white/10 bg-zinc-900/40 p-6 space-y-3">
+          <h1 className="text-xl font-semibold tracking-tight text-zinc-50 lowercase">not configured</h1>
+          <p className="text-sm leading-relaxed text-zinc-300">
+            Set <span className="font-dmMono text-zinc-100">ADMIN_PASSWORD</span> in Vercel environment variables,
+            redeploy, then return here.
+          </p>
         </div>
-        <p className="text-sm text-zinc-300">
-          Admin is not configured. Set <span className="font-dmMono text-zinc-200">ADMIN_PASSWORD</span> in
-          Vercel environment variables, redeploy, then return here.
-        </p>
         <a
           href={getPublicSiteUrl()}
-          className="inline-flex text-xs text-zinc-400 underline underline-offset-4 decoration-zinc-600 hover:text-zinc-200"
+          className="inline-flex text-xs text-zinc-300 underline underline-offset-4 decoration-zinc-500 hover:text-white"
         >
           ← Back home
         </a>
@@ -516,64 +530,96 @@ export function AdminPage() {
 
   if (!authenticated) {
     return (
-      <div className="pt-2 space-y-8 max-w-md mx-auto">
-        <div className="rounded-apple-lg border border-white/10 bg-surface/80 p-6 shadow-soft space-y-4">
-          <h1 className="text-xl font-semibold text-zinc-50 lowercase">portfolio cms</h1>
-          <p className="text-xs text-zinc-400 leading-relaxed">
-            Sign in to edit projects stored in Upstash Redis. The public site reads the same data after you save.
-          </p>
-          <form onSubmit={handleLogin} className="space-y-3">
-            <Field label="password">
+      <div className="mx-auto max-w-sm pt-10">
+        <form
+          onSubmit={handleLogin}
+          className="rounded-xl border border-white/10 bg-zinc-900/40 p-6 space-y-5"
+        >
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-50 lowercase">log in</h1>
+          <div className="space-y-2">
+            <label htmlFor="admin-password" className="block text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-300">
+              password
+            </label>
+            <div className="flex overflow-hidden rounded-lg border border-white/10 bg-zinc-950/80 focus-within:border-white/30">
               <input
+                id="admin-password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={inputClass()}
+                className="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm text-zinc-100 focus:outline-none"
                 autoComplete="current-password"
-                placeholder="••••••••"
+                autoFocus
               />
-            </Field>
-            {loginError && <p className="text-xs text-red-400 font-dmMono">{loginError}</p>}
-            <div className="flex gap-2 items-stretch">
-              <button
-                type="submit"
-                disabled={loggingIn}
-                className="flex-1 min-w-0 inline-flex items-center justify-center gap-2 rounded-apple-sm border border-white/70 bg-white px-4 py-2.5 text-[10px] font-dmMono uppercase tracking-[0.16em] text-zinc-950 hover:bg-white/90 transition-colors disabled:opacity-60 disabled:cursor-wait"
-              >
-                {loggingIn && <Spinner />}
-                {loggingIn ? "Signing in…" : "Sign in"}
-              </button>
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="shrink-0 w-12 inline-flex items-center justify-center rounded-apple-sm border border-white/15 bg-surface/90 text-zinc-400 hover:text-zinc-100 hover:border-white/25 hover:bg-white/5 transition-colors"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="shrink-0 border-l border-white/10 px-4 text-[10px] font-dmMono uppercase tracking-[0.16em] text-zinc-300 transition-colors hover:text-white"
                 aria-pressed={showPassword}
               >
-                {showPassword ? <IconEyeOff /> : <IconEye />}
+                {showPassword ? "hide" : "show"}
               </button>
             </div>
-          </form>
-        </div>
-        <a
-          href={getPublicSiteUrl()}
-          className="inline-flex text-xs text-zinc-400 underline underline-offset-4 decoration-zinc-600 hover:text-zinc-200"
-        >
-          ← Back home
-        </a>
+          </div>
+          {loginError && (
+            <p role="alert" className="text-xs text-red-400 font-dmMono">{loginError}</p>
+          )}
+          <button
+            type="submit"
+            disabled={loggingIn}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-adminAccent px-4 py-3 text-[10px] font-dmMono font-medium uppercase tracking-[0.2em] text-zinc-950 transition-opacity hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
+          >
+            {loggingIn && <Spinner />}
+            {loggingIn ? "signing in…" : "sign in"}
+          </button>
+        </form>
       </div>
     );
   }
 
   const current = activeIndex !== null ? draft[activeIndex] : null;
 
+  const tabBar = (
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <nav aria-label="Admin sections" className="flex gap-6 border-b border-white/10 sm:border-0">
+        {(["projects", "insights"] as const).map((v) => (
+          <button
+            key={v}
+            type="button"
+            onClick={() => switchView(v)}
+            aria-current={view === v ? "page" : undefined}
+            className={`-mb-px border-b-2 py-2.5 text-[11px] font-dmMono uppercase tracking-[0.2em] transition-colors ${
+              view === v
+                ? "border-adminAccent text-zinc-50"
+                : "border-transparent text-zinc-400 hover:text-zinc-100"
+            }`}
+          >
+            {v}
+          </button>
+        ))}
+      </nav>
+      <button
+        type="button"
+        onClick={() => void handleLogout()}
+        className="self-start rounded-lg border border-white/15 px-3 py-1.5 text-[10px] font-dmMono uppercase tracking-[0.14em] text-zinc-300 hover:bg-white/5 sm:self-auto"
+      >
+        log out
+      </button>
+    </div>
+  );
+
+  if (view === "insights") {
+    return (
+      <div className="space-y-8 pb-24">
+        {tabBar}
+        <AdminInsights />
+      </div>
+    );
+  }
+
   return (
-    <div className="pt-4 space-y-8 pb-24">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.25em] text-zinc-500">
-          <p>.admin</p>
-          <div className="flex-1 h-px bg-zinc-800 sm:hidden" />
-        </div>
+    <div className="space-y-8 pb-24">
+      {tabBar}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4">
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
@@ -589,22 +635,15 @@ export function AdminPage() {
           >
             Restore defaults
           </button>
-          <button
-            type="button"
-            onClick={() => void handleLogout()}
-            className="rounded-apple-sm border border-red-500/30 px-3 py-1.5 text-[10px] font-dmMono uppercase tracking-[0.12em] text-red-300 hover:bg-red-500/10"
-          >
-            Log out
-          </button>
         </div>
       </div>
 
-      {loadError && <p className="text-xs text-amber-400 font-dmMono">{loadError}</p>}
+      {loadError && <p className="text-xs text-red-300 font-dmMono">{loadError}</p>}
 
       <div className="rounded-apple-lg border border-white/10 bg-surface/80 p-5 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div className="space-y-1">
-            <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-500">résumé</p>
+            <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-400">résumé</p>
             <p className="text-xs text-zinc-400 leading-relaxed">
               Upload a PDF to update the résumé link in the header and contact section. Saves immediately to{" "}
               <span className="font-dmMono text-zinc-300">Vercel Blob</span> and{" "}
@@ -637,7 +676,7 @@ export function AdminPage() {
             />
           </label>
           {uploadingResume && <Spinner />}
-          <span className="text-[10px] font-dmMono text-zinc-500">
+          <span className="text-[10px] font-dmMono text-zinc-400">
             {resumeSource === "cms" ? "live (cms)" : "default (public/resume.pdf)"}
             {resumeUpdatedAt && (
               <> · updated {new Date(resumeUpdatedAt).toLocaleString()}</>
@@ -656,7 +695,7 @@ export function AdminPage() {
       <div className="grid gap-8 lg:grid-cols-[minmax(0,280px),minmax(0,1fr)] items-start">
         <aside className="space-y-3 rounded-apple-lg border border-white/10 bg-surface/80 p-4">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-500">projects</p>
+            <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-400">projects</p>
             <button
               type="button"
               onClick={addProject}
@@ -687,7 +726,7 @@ export function AdminPage() {
                       type="button"
                       aria-label="Move up"
                       onClick={() => moveProject(i, -1)}
-                      className="px-1 text-zinc-500 hover:text-zinc-200 text-[10px]"
+                      className="px-1 text-zinc-400 hover:text-zinc-200 text-[10px]"
                     >
                       ↑
                     </button>
@@ -695,7 +734,7 @@ export function AdminPage() {
                       type="button"
                       aria-label="Move down"
                       onClick={() => moveProject(i, 1)}
-                      className="px-1 text-zinc-500 hover:text-zinc-200 text-[10px]"
+                      className="px-1 text-zinc-400 hover:text-zinc-200 text-[10px]"
                     >
                       ↓
                     </button>
@@ -787,12 +826,12 @@ export function AdminPage() {
               {/* Case study fields */}
               <div className="space-y-4 rounded-apple-sm border border-white/5 bg-zinc-950/40 p-4">
                 <div className="flex items-center justify-between gap-3">
-                  <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-500">case study</p>
+                  <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-400">case study</p>
                   <button
                     type="button"
                     onClick={() => void generateCaseStudy()}
                     disabled={generatingCaseStudy}
-                    className="inline-flex items-center gap-1.5 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[10px] font-dmMono uppercase tracking-[0.14em] text-amber-300 hover:bg-amber-500/20 transition-colors duration-150 disabled:opacity-50 disabled:cursor-wait"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-adminAccent/30 bg-adminAccent/10 px-3 py-1 text-[10px] font-dmMono uppercase tracking-[0.14em] text-adminAccent hover:bg-adminAccent/20 transition-colors duration-150 disabled:opacity-50 disabled:cursor-wait"
                   >
                     {generatingCaseStudy && <Spinner className="h-3 w-3" />}
                     {generatingCaseStudy ? "generating…" : "✦ generate with ai"}
@@ -870,7 +909,7 @@ export function AdminPage() {
               </Field>
 
               <div className="space-y-2">
-                <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-500">primary link</p>
+                <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-400">primary link</p>
                 <div className="grid gap-2 sm:grid-cols-2">
                   <input
                     className={inputClass("text-xs")}
@@ -895,11 +934,11 @@ export function AdminPage() {
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-3 flex-wrap">
-                  <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-500">snapshots</p>
+                  <p className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-400">snapshots</p>
                   <button
                     type="button"
                     onClick={addSnapshot}
-                    className="shrink-0 rounded-apple-sm border border-amber-500/40 bg-amber-500/15 px-3 py-2 text-[10px] font-dmMono font-medium uppercase tracking-[0.14em] text-amber-100 shadow-sm hover:border-amber-400/60 hover:bg-amber-500/25 hover:text-white transition-colors"
+                    className="shrink-0 rounded-apple-sm border border-adminAccent/40 bg-adminAccent/15 px-3 py-2 text-[10px] font-dmMono font-medium uppercase tracking-[0.14em] text-adminAccent shadow-sm hover:border-adminAccent/60 hover:bg-adminAccent/25 hover:text-white transition-colors"
                   >
                     + add image
                   </button>
@@ -907,9 +946,9 @@ export function AdminPage() {
                 {uploadError && (
                   <div
                     role="alert"
-                    className="rounded-apple-sm border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-100/95 leading-relaxed"
+                    className="rounded-apple-sm border border-adminAccent/35 bg-adminAccent/10 px-3 py-2 text-xs text-zinc-100 leading-relaxed"
                   >
-                    <p className="font-dmMono text-[10px] uppercase tracking-[0.12em] text-amber-400/90 mb-1">
+                    <p className="font-dmMono text-[10px] uppercase tracking-[0.12em] text-adminAccent mb-1">
                       Upload blocked
                     </p>
                     <p>{uploadError}</p>
@@ -924,7 +963,7 @@ export function AdminPage() {
                     <button
                       type="button"
                       onClick={() => setUploadError(null)}
-                      className="mt-2 text-[10px] font-dmMono uppercase tracking-[0.12em] text-amber-300 hover:text-amber-200"
+                      className="mt-2 text-[10px] font-dmMono uppercase tracking-[0.12em] text-adminAccent hover:text-adminAccent"
                     >
                       Dismiss
                     </button>
@@ -948,7 +987,7 @@ export function AdminPage() {
                         }}
                       />
                       {uploadingIndex === si && (
-                        <span className="text-[10px] text-zinc-500 font-dmMono">uploading…</span>
+                        <span className="text-[10px] text-zinc-400 font-dmMono">uploading…</span>
                       )}
                     </div>
                     <input
@@ -975,7 +1014,7 @@ export function AdminPage() {
               </div>
             </div>
           ) : (
-            <p className="text-sm text-zinc-500">Select a project or add one.</p>
+            <p className="text-sm text-zinc-400">Select a project or add one.</p>
           )}
 
           <div className="rounded-apple-lg border border-white/15 bg-zinc-900/50 p-5 space-y-3">

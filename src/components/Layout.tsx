@@ -15,7 +15,7 @@ export function Layout({ children }: LayoutProps) {
   const isAdmin = onAdminHost || pathname === "/admin";
 
   return (
-    <div className="min-h-screen flex flex-col items-center py-6">
+    <div className={`min-h-screen flex flex-col items-center ${isAdmin ? "pb-6" : "py-6"}`}>
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-zinc-50 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-zinc-950"
@@ -28,28 +28,20 @@ export function Layout({ children }: LayoutProps) {
           separate CMS surface, not part of the public nav redesign. */}
       <div
         className={`sticky top-0 z-50 w-full ${
-          isAdmin ? "mx-auto max-w-6xl px-4 sm:px-6 lg:px-10" : ""
+          isAdmin ? "border-b border-white/10 bg-zinc-950/75 backdrop-blur-md" : ""
         }`}
       >
-        <div
-          className={
-            isAdmin
-              ? "backdrop-blur-sm border-b border-amber-500/20 bg-zinc-950/50"
-              : ""
-          }
-        >
-          {isAdmin ? <AdminHeader /> : <Header />}
-        </div>
+        {isAdmin ? <AdminHeader /> : <Header />}
       </div>
 
       <div className="w-full max-w-6xl flex flex-col gap-10 px-4 sm:px-6 lg:px-10">
-        <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 pb-16 focus:outline-none">{children}</main>
+        <main id="main" tabIndex={-1} className={`mx-auto w-full flex-1 pb-16 focus:outline-none ${isAdmin ? "max-w-6xl pt-8" : "max-w-5xl"}`}>{children}</main>
 
-        <footer className="font-dmMono mx-auto max-w-5xl pb-6 text-xs text-zinc-400 flex justify-between gap-4 flex-wrap">
+        <footer className="font-dmMono mx-auto w-full max-w-5xl pb-6 text-xs text-zinc-400 flex justify-between gap-4 flex-wrap">
           {isAdmin ? (
             <>
-              <span className="text-amber-500/50 uppercase tracking-[0.16em]">cms session</span>
-              <span className="text-zinc-600">not public navigation</span>
+              <span className="uppercase tracking-[0.16em]">cms session</span>
+              <span>not public navigation</span>
             </>
           ) : (
             <span>© {new Date().getFullYear()} Mirireoluwa</span>

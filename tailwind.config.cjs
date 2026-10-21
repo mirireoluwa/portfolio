@@ -25,6 +25,7 @@ module.exports = {
       colors: {
         background: "#050509",
         surface: "#0b0b12",
+        adminAccent: "#9DCFEF",
       },
       borderRadius: {
         // Apple-ish radii: small (8), medium (12), large (20), pill (9999)

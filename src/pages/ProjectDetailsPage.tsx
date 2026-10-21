@@ -207,6 +207,7 @@ export function ProjectDetailsPage() {
           {project.links && project.links.length > 0 && (
             <a
               href={project.links[0].href}
+              data-track="project_link"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center flex-shrink-0 gap-1.5 px-4 py-2 rounded-md text-[10px] uppercase tracking-[0.14em] font-bold transition-transform duration-150 hover:scale-[1.03] active:scale-[0.98]"
