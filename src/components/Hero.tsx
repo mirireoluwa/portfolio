@@ -228,18 +228,6 @@ export function Hero() {
           <span className="text-zinc-600">·</span>
           <span className="tabular-nums text-zinc-400">{lagosTime}</span>
         </FloatChip>
-
-        <FloatChip
-          mvX={sx}
-          mvY={sy}
-          depth={38}
-          delay={0.95}
-          floatDur={6.8}
-          className="bottom-[7%] right-[16%] lg:right-[22%]"
-        >
-          <span className="text-zinc-500">↳</span>
-          producing as saintted
-        </FloatChip>
       </div>
 
       {/* ── Type block ── */}
@@ -356,13 +344,6 @@ export function Hero() {
             lagos, ng
             <span className="text-zinc-600">·</span>
             <span className="tabular-nums">{lagosTime}</span>
-          </span>
-          <span
-            className="hero-chip-float inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl border border-white/10 bg-white/[0.04] px-3 py-1.5 font-dmMono text-[10px] tracking-[0.06em] text-zinc-400 shadow-[0_16px_40px_-18px_rgba(0,0,0,0.7)] backdrop-blur-md"
-            style={{ "--float-dur": "6.8s", animationDelay: "0.3s" } as CSSProperties}
-          >
-            <span className="text-zinc-500">↳</span>
-            producing as saintted
           </span>
         </div>
       </div>
