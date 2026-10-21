@@ -172,9 +172,11 @@ export async function readInsights(days: number): Promise<Insights | null> {
   const cur = rows.slice(days);
 
   // Unique visitors over a range = HLL union, not a sum of daily uniques
+  const uvKeys = (rows: typeof cur) =>
+    rows.map((r) => `pa:uv:${r.date}`) as [string, ...string[]];
   const [curUv, prevUv] = await Promise.all([
-    redis.pfcount(...cur.map((r) => `pa:uv:${r.date}`)),
-    redis.pfcount(...prev.map((r) => `pa:uv:${r.date}`)),
+    redis.pfcount(...uvKeys(cur)),
+    redis.pfcount(...uvKeys(prev)),
   ]);
 
   const agg = aggregate(cur);
