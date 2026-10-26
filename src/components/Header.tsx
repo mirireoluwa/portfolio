@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useResume } from "../context/ResumeContext";
 
 const navItems = [
   { label: "projects", href: "#projects" },
@@ -15,7 +14,6 @@ const focusRing =
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const { resumeUrl } = useResume();
   const { pathname, hash } = useLocation();
   const navigate = useNavigate();
   const onHome = pathname === "/";
@@ -112,7 +110,7 @@ export function Header() {
         aria-hidden
       />
       {/* Content stays exactly where it was — same max-width + padding as before,
-          so the logo/links/résumé don't shift even though the bar now bleeds edge to edge */}
+          so the logo/links don't shift even though the bar now bleeds edge to edge */}
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 flex items-center justify-between gap-6">
         {/* Logo */}
         <NavLink
@@ -141,16 +139,6 @@ export function Header() {
               </a>
             );
           })}
-          <span className="h-3.5 w-px bg-white/20" aria-hidden />
-          <a
-            href={resumeUrl}
-            data-track="resume"
-            target="_blank"
-            rel="noreferrer"
-            className={`rounded-sm py-2 text-zinc-400 transition-colors duration-200 hover:text-zinc-200 ${focusRing}`}
-          >
-            résumé ↗
-          </a>
         </nav>
 
         {/* Mobile menu toggle — plain icon, no box */}
@@ -210,16 +198,6 @@ export function Header() {
                     </a>
                   );
                 })}
-                <a
-                  href={resumeUrl}
-                  data-track="resume"
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`block rounded-sm py-3 text-base text-zinc-400 transition-colors hover:text-zinc-200 ${focusRing}`}
-                >
-                  résumé ↗
-                </a>
               </div>
             </div>
           </motion.nav>
