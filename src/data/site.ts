@@ -2,6 +2,7 @@ import type { SiteContent } from "../types/site";
 
 /** Bundled fallback — used until the CMS (Redis) has saved site content. */
 export const defaultSite: SiteContent = {
+  hero: { roles: ["a product designer", "a sound designer"] },
   about: {
     photoUrl: "/about-photo-new.jpg",
     photoAlt: "Portrait of Mirireoluwa",

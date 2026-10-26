@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -103,8 +103,8 @@ body {
 
 body {
   margin: 0;
-  font-family: theme("fontFamily.spaceGrotesk");
-  background: radial-gradient(circle at top, #18181f 0, #050509 55%, #020206 100%);
+  font-family: theme("fontFamily.sans");
+  background: radial-gradient(circle at top, #0d0d12 0, #050509 55%, #020206 100%);
   color: #f9fafb;
   /* Scale the whole UI up slightly — px-based sizing means a global zoom
      is more faithful than bumping the root font size. */

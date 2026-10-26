@@ -8,6 +8,7 @@ export type SiteExperience = {
   bullets: string[];
 };
 export type SiteContent = {
+  hero?: { roles: string[] };
   about: { photoUrl: string; photoAlt: string; body: string; chips: SiteChip[] };
   experience: SiteExperience[];
 };

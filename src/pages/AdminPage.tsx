@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { AdminInsights } from "../components/AdminInsights";
-import { AboutEditor, ExperienceEditor } from "../components/AdminSite";
+import { AboutEditor, ExperienceEditor, HeroEditor } from "../components/AdminSite";
 import { ProjectEditorPanel, projectIssues } from "../components/ProjectEditorPanel";
 import { excludeThisBrowser } from "../lib/track";
 import { Spinner } from "../components/Spinner";
@@ -12,7 +12,7 @@ import { defaultSite } from "../data/site";
 import type { SiteContent } from "../types/site";
 import type { Project } from "../types/project";
 
-const VIEWS = ["projects", "about", "experience", "insights"] as const;
+const VIEWS = ["projects", "hero", "about", "experience", "insights"] as const;
 type View = (typeof VIEWS)[number];
 
 function emptyProject(): Project {
@@ -578,11 +578,11 @@ export function AdminPage() {
     onPublish: () => void saveSite(),
   };
 
-  if (view === "about" || view === "experience") {
+  if (view === "hero" || view === "about" || view === "experience") {
     return (
       <div className="space-y-8">
         {tabBar}
-        {view === "about" ? <AboutEditor {...siteProps} /> : <ExperienceEditor {...siteProps} />}
+        {view === "hero" ? <HeroEditor {...siteProps} /> : view === "about" ? <AboutEditor {...siteProps} /> : <ExperienceEditor {...siteProps} />}
       </div>
     );
   }

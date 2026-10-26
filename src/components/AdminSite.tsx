@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import type { SiteContent, SiteExperience } from "../types/site";
+import { defaultSite } from "../data/site";
 import { ColorField, Field, inputClass } from "./adminFields";
 import { Spinner } from "./Spinner";
 
 export function siteIssues(site: SiteContent): string[] {
   const out: string[] = [];
   if (!site.about.body.trim()) out.push("About text is empty");
+  if (site.hero && !site.hero.roles.some((r) => r.trim())) out.push("Add at least one role");
   site.experience.forEach((e, i) => {
     if (!e.title.trim() || !e.company.trim() || !e.period.trim()) out.push(`Job ${i + 1} is missing a title, company or period`);
   });
@@ -76,6 +78,76 @@ function Header({ title, blurb, s }: { title: string; blurb: string; s: Shared }
         {s.status ? <p className="text-zinc-200">{s.status}</p> : issues.length ? <p className="text-red-300">{issues[0]}</p> : s.dirty ? <p className="text-zinc-300">You have unpublished changes.</p> : null}
       </div>
     </>
+  );
+}
+
+/* ───────────────────────── Hero ───────────────────────── */
+
+export function HeroEditor(s: Shared) {
+  const { site, setSite } = s;
+  const roles = site.hero?.roles ?? defaultSite.hero!.roles;
+  const set = (next: string[]) => setSite({ ...site, hero: { roles: next } });
+  const move = (i: number, dir: -1 | 1) => {
+    const j = i + dir;
+    if (j < 0 || j >= roles.length) return;
+    const next = [...roles];
+    [next[i], next[j]] = [next[j], next[i]];
+    set(next);
+  };
+  const shown = roles.filter((r) => r.trim());
+
+  return (
+    <div className="space-y-8 pb-24">
+      <Header title="hero" blurb="The role lines under your name at the top of the site." s={s} />
+
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <section className="space-y-4 rounded-xl border border-white/10 bg-zinc-900/40 p-4 sm:p-5">
+          <div>
+            <h2 className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-300">role lines</h2>
+            <p className="mt-1.5 text-[11px] leading-relaxed text-zinc-400">
+              They take turns in one line under your name, switching on their own every few seconds. Up to 6.
+            </p>
+          </div>
+          <ul className="space-y-2">
+            {roles.map((r, i) => (
+              <li key={i} className="flex items-center gap-2">
+                <span className="w-5 shrink-0 text-center font-dmMono text-[10px] text-zinc-400">{i + 1}</span>
+                <input
+                  aria-label={`Role line ${i + 1}`}
+                  className={inputClass("min-w-0 flex-1")}
+                  value={r}
+                  maxLength={60}
+                  placeholder="a product designer"
+                  onChange={(e) => set(roles.map((x, j) => (j === i ? e.target.value : x)))}
+                />
+                <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label={`Move role ${i + 1} up`} className="h-9 w-9 shrink-0 rounded-lg text-zinc-300 hover:bg-white/5 disabled:opacity-25">↑</button>
+                <button type="button" onClick={() => move(i, 1)} disabled={i === roles.length - 1} aria-label={`Move role ${i + 1} down`} className="h-9 w-9 shrink-0 rounded-lg text-zinc-300 hover:bg-white/5 disabled:opacity-25">↓</button>
+                <button type="button" onClick={() => set(roles.filter((_, j) => j !== i))} disabled={roles.length <= 1} aria-label={`Remove role ${i + 1}`} className="h-9 w-9 shrink-0 rounded-lg text-zinc-300 hover:bg-white/5 disabled:opacity-25">×</button>
+              </li>
+            ))}
+          </ul>
+          <button
+            type="button"
+            disabled={roles.length >= 6}
+            onClick={() => set([...roles, ""])}
+            className="rounded-lg border border-dashed border-white/20 px-4 py-2 text-[10px] font-dmMono uppercase tracking-[0.16em] text-zinc-200 hover:bg-white/5 disabled:opacity-40"
+          >
+            + add role
+          </button>
+        </section>
+
+        <section className="rounded-xl border border-white/10 bg-zinc-900/40 p-4 sm:p-5">
+          <h2 className="text-[10px] font-dmMono uppercase tracking-[0.2em] text-zinc-300">preview</h2>
+          <div className="mt-4 rounded-lg bg-zinc-950 p-5">
+            <p className="text-3xl font-semibold tracking-tight text-zinc-50">mirireoluwa</p>
+            <div className="mt-4 flex items-center gap-3">
+              <span className="shrink-0 text-sm text-zinc-500" aria-hidden>→</span>
+              <span className="truncate text-base font-semibold text-zinc-100">{shown[0] ?? "no roles yet"}</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
   );
 }
 

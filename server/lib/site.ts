@@ -12,6 +12,7 @@ export type SiteExperience = {
   bullets: string[];
 };
 export type SiteContent = {
+  hero?: { roles: string[] };
   about: { photoUrl: string; photoAlt: string; body: string; chips: SiteChip[] };
   experience: SiteExperience[];
 };
@@ -57,9 +58,18 @@ export function validateSite(input: unknown): { ok: true; site: SiteContent } | 
     experience.push({ id, title, company, period, accentColor, bullets });
   }
 
+  let hero: { roles: string[] } | undefined;
+  const h = o.hero as { roles?: unknown } | undefined;
+  if (h && Array.isArray(h.roles)) {
+    const roles = h.roles.map((r) => str(r, 60)).filter(Boolean).slice(0, 6);
+    if (roles.length === 0) return { ok: false, message: "Hero: add at least one role" };
+    hero = { roles };
+  }
+
   return {
     ok: true,
     site: {
+      ...(hero ? { hero } : {}),
       about: { photoUrl: str(a.photoUrl, 600), photoAlt: str(a.photoAlt, 200), body, chips },
       experience,
     },

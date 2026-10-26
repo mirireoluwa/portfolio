@@ -4,8 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Space Grotesk", "system-ui", "ui-sans-serif", "sans-serif"],
-        spaceGrotesk: ["Space Grotesk", "system-ui", "ui-sans-serif", "sans-serif"],
+        sans: ["Instrument Sans", "system-ui", "ui-sans-serif", "sans-serif"],
         dmMono: ["DM Mono", "ui-monospace", "SF Mono", "Menlo", "monospace"],
         // SF Pro is Apple's system font — can't be bundled as a webfont, so this
         // resolves to real San Francisco on Mac/iOS via the system stack, with
