@@ -23,6 +23,9 @@ const RESUME_BLOB_PATHNAME = "portfolio/resume.pdf";
 
 function blobErrorMessage(e: unknown, fallback: string): string {
   const raw = e instanceof Error ? e.message : String(e);
+  if (/already exists|allowOverwrite/i.test(raw)) {
+    return "A file with that name already exists and couldn't be replaced. Try again in a moment.";
+  }
   if (/token|unauthori|forbidden|401|403|invalid/i.test(raw)) {
     return `Blob auth failed: ${raw.slice(0, 160)}. Regenerate the read-write token in Vercel Storage → Blob → connect env, redeploy.`;
   }
@@ -72,9 +75,14 @@ async function uploadResume(
   }
 
   try {
+    // Fixed pathname so the public link never changes — which means every
+    // upload after the first is an overwrite and must opt in explicitly.
+    // Short cache so a new PDF shows up promptly instead of after ~a month.
     const blob = await put(RESUME_BLOB_PATHNAME, buf, {
       access: "public",
       addRandomSuffix: false,
+      allowOverwrite: true,
+      cacheControlMaxAge: 60,
       token: process.env.BLOB_READ_WRITE_TOKEN,
     });
 
