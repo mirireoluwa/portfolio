@@ -37,6 +37,29 @@ function IconBriefcase() {
 }
 
 
+/** Natural width/height of each snapshot, so the frame can take the image's own shape. */
+function useSnapshotRatios(srcs: string[]) {
+  const key = srcs.join("|");
+  const [ratios, setRatios] = useState<Record<string, number>>({});
+  useEffect(() => {
+    let alive = true;
+    srcs.forEach((src) => {
+      const img = new Image();
+      img.onload = () => {
+        if (alive && img.naturalWidth && img.naturalHeight) {
+          setRatios((r) => (r[src] ? r : { ...r, [src]: img.naturalWidth / img.naturalHeight }));
+        }
+      };
+      img.src = src;
+    });
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+  return ratios;
+}
+
 /** Image with a shimmer placeholder until it finishes loading */
 function SnapshotImage({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false);
@@ -87,6 +110,11 @@ export function ProjectDetailsPage() {
   const total = snapshots.length;
   // Guard against a stale index from a project with more snapshots
   const safeSnapIndex = total > 0 ? Math.min(snapIndex, total - 1) : 0;
+  const ratios = useSnapshotRatios(snapshots.map((x) => x.src));
+  // Frame takes the current image's own shape (so no bars, no crop); very tall
+  // or very wide images are limited so the page doesn't become a scroll trap.
+  const frameRatio = Math.min(2.2, Math.max(0.75, ratios[snapshots[safeSnapIndex]?.src ?? ""] ?? 16 / 10));
+  const frameStyle = { aspectRatio: String(frameRatio), transition: "aspect-ratio 0.3s ease" } as const;
 
   function goToSnap(dir: 1 | -1) {
     setSnapDir(dir);
@@ -251,16 +279,14 @@ export function ProjectDetailsPage() {
             /* Single image — no swiper needed */
             <figure
               className="relative overflow-hidden rounded-2xl border border-white/5 bg-zinc-900/60 shadow-soft"
-              style={{ aspectRatio: "16/9" }}
+              style={frameStyle}
             >
               <SnapshotImage src={snapshots[0].src} alt={snapshots[0].alt} />
             </figure>
           ) : (
             /* Multi-image swiper */
             <div className="space-y-3">
-              <div className="group/snap relative w-full overflow-hidden rounded-2xl border border-white/5 bg-zinc-900/60 shadow-soft"
-                style={{ aspectRatio: "16/9" }}
-              >
+              <div className="group/snap relative w-full overflow-hidden rounded-2xl border border-white/5 bg-zinc-900/60 shadow-soft" style={frameStyle}>
                 <AnimatePresence mode="sync" initial={false}>
                   <motion.figure
                     key={`${project.slug}-${safeSnapIndex}`}
