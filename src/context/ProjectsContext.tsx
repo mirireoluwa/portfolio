@@ -7,12 +7,15 @@ import {
   type ReactNode,
 } from "react";
 import { defaultProjects } from "../data/projects";
+import { defaultSite } from "../data/site";
 import type { Project } from "../types/project";
+import type { SiteContent } from "../types/site";
 
 type Source = "pending" | "default" | "cms";
 
 type ProjectsContextValue = {
   projects: Project[];
+  site: SiteContent;
   loading: boolean;
   source: Source;
   error: string | null;
@@ -23,6 +26,7 @@ const ProjectsContext = createContext<ProjectsContextValue | null>(null);
 
 export function ProjectsProvider({ children }: { children: ReactNode }) {
   const [projects, setProjects] = useState<Project[]>(defaultProjects);
+  const [site, setSite] = useState<SiteContent>(defaultSite);
   const [loading, setLoading] = useState(true);
   const [source, setSource] = useState<Source>("pending");
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +40,9 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
         ok?: boolean;
         source?: string;
         projects?: Project[] | null;
+        site?: SiteContent | null;
       };
+      setSite(data.ok && data.site ? data.site : defaultSite);
       if (data.ok && Array.isArray(data.projects) && data.projects.length > 0) {
         // Merge case study fields from defaultProjects for any CMS project that
         // predates those fields being added (CMS data wins if it has its own values).
@@ -70,7 +76,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
   }, [load]);
 
   return (
-    <ProjectsContext.Provider value={{ projects, loading, source, error, refresh: load }}>
+    <ProjectsContext.Provider value={{ projects, site, loading, source, error, refresh: load }}>
       {children}
     </ProjectsContext.Provider>
   );

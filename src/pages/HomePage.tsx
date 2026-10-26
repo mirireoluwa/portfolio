@@ -5,6 +5,8 @@ import { useProjects } from "../context/ProjectsContext";
 import { Hero } from "../components/Hero";
 import { ProjectShowcase } from "../components/ProjectShowcase";
 import { ProjectCardFace } from "../components/ProjectCardFace";
+import { ExperienceSection } from "../components/ExperienceSection";
+import { RichText } from "../components/RichText";
 import {
   FigmaIcon,
   FramerIcon,
@@ -16,51 +18,6 @@ import {
   LightroomIcon,
   AbletonIcon,
 } from "../components/LogoIcons";
-
-const experienceItems = [
-  {
-    id: "airtel",
-    title: "Product Design & IT Intern",
-    company: "Airtel Nigeria",
-    year: "2025",
-    accentColor: "#FF4949",
-    textColor: "#FFFFFF",
-    bullets: [
-      "Designed and developed a project & task management application with features for projects, tasks, checklists, and dependencies, enabling potential use across multiple Airtel Nigeria departments.",
-      "Contributed to the design and implementation of a new USSD service, improving connectivity and user experience for millions of daily users.",
-      "Assisted in troubleshooting USSD service issues, improving service reliability and customer experience.",
-      "Built a Python application that organizes raw data dumps into structured files, improving data readability and accessibility across teams.",
-    ],
-  },
-  {
-    id: "product-studio",
-    title: "UI/UX Design & Frontend Intern",
-    company: "Product Studio HQ",
-    year: "2024",
-    accentColor: "#FFFFFF",
-    textColor: "#000000",
-    bullets: [
-      "Designed intuitive user interfaces for a non-profit organization's website, enhancing its online presence and user engagement through Figma prototypes.",
-      "Conceptualized and created UI designs and interactive prototypes in Figma for a wealth management application tailored to high-net-worth individuals.",
-      "Developed and deployed responsive websites using React, TypeScript, and Tailwind CSS via Vercel, bridging design handoff and implementation.",
-    ],
-  },
-  {
-    id: "city-church",
-    title: "Media & Creative Intern",
-    company: "City Church Lagos",
-    year: "2023",
-    accentColor: "#65DB61",
-    textColor: "#153314",
-    bullets: [
-      "Designed promotional graphics and visual content for the organization's social media platforms using Adobe Illustrator, maintaining brand consistency across all materials.",
-      "Shot and edited photography for events and services, producing polished visual assets for print and digital use.",
-      "Edited video content for recaps, highlights, and promotional materials distributed across social channels.",
-      "Provided creative direction for media productions, coordinating visual style and ensuring cohesive storytelling across formats.",
-      "Managed live streaming operations for services and events, overseeing technical setup and real-time broadcast quality.",
-    ],
-  },
-];
 
 const toolLogos = [
   { name: "Figma", Icon: FigmaIcon, color: "#F24E1E" },
@@ -83,12 +40,11 @@ const methods = [
 ];
 
 export function HomePage() {
-  const { projects, loading: projectsLoading } = useProjects();
+  const { projects, site, loading: projectsLoading } = useProjects();
   const navigate = useNavigate();
   const [mobileStackIndex, setMobileStackIndex] = useState(0);
   const [swipeDir, setSwipeDir] = useState(1);
   const isDraggingRef = useRef(false);
-  const [openExpCard, setOpenExpCard] = useState<string | null>(null);
 
   return (
     <div className="space-y-20">
@@ -225,8 +181,8 @@ export function HomePage() {
           {/* Photo — first on mobile via order */}
           <div className="order-first md:order-first relative w-full max-w-sm mx-auto md:mx-0 aspect-[4/5] rounded-xl overflow-hidden border border-white/10 bg-zinc-900">
             <img
-              src="/about-photo-new.jpg"
-              alt="Portrait of Mirireoluwa"
+              src={site.about.photoUrl || "/about-photo-new.jpg"}
+              alt={site.about.photoAlt}
               width={768}
               height={1024}
               className="h-full w-full object-cover"
@@ -239,32 +195,23 @@ export function HomePage() {
 
           {/* Text + metadata */}
           <div className="space-y-6 md:pt-2">
-            <p className="text-sm md:text-base text-zinc-200 leading-relaxed">
-              I'm a product designer who works at the intersection of user insight, visual craft, and product thinking. I focus on building experiences that are clear, considered, and actually useful. My background in Computer Science means I think about feasibility and implementation alongside aesthetics, which makes collaboration with engineering teams more direct. I also produce music as{" "}
-              <a
-                href="https://saintted.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium hover:underline"
-                style={{ color: "#FF4B63" }}
-              >
-                Saintted
-              </a>
-              , where I explore similar questions of form, emotion, and clarity—just through sound.
-            </p>
-
-            <div className="flex flex-wrap gap-2 pt-1 border-t border-white/5">
-              <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] text-zinc-400 font-dmMono tracking-[0.08em]">
-                <span className="w-1.5 h-1.5 rounded-sm bg-[#00ff77] flex-shrink-0" />
-                available for work
-              </span>
-              <span className="inline-flex items-center rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] text-zinc-400 font-dmMono tracking-[0.08em]">
-                CS student
-              </span>
-              <span className="inline-flex items-center rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] text-zinc-400 font-dmMono tracking-[0.08em]">
-                Lagos, NG
-              </span>
+            <div className="space-y-4">
+              <RichText text={site.about.body} className="text-sm md:text-base text-zinc-200 leading-relaxed" />
             </div>
+
+            {site.about.chips.length > 0 && (
+              <ul className="flex flex-wrap gap-2 pt-1 border-t border-white/5">
+                {site.about.chips.map((c) => (
+                  <li
+                    key={c.label}
+                    className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] text-zinc-400 font-dmMono tracking-[0.08em]"
+                  >
+                    {c.live && <span className="w-1.5 h-1.5 rounded-sm bg-[#00ff77] flex-shrink-0" aria-hidden />}
+                    {c.label}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </section>
@@ -275,75 +222,7 @@ export function HomePage() {
           <h2>.experience</h2>
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
-
-        {/* Timeline */}
-        <div className="relative space-y-4">
-          {/* Connecting line */}
-          <div className="absolute left-[7px] top-3 bottom-3 w-px bg-gradient-to-b from-white/15 via-white/10 to-transparent" />
-
-          {experienceItems.map((item) => {
-            const isOpen = openExpCard === item.id;
-            return (
-              <div key={item.id} className="relative pl-8">
-                {/* Node marker */}
-                <span
-                  className="absolute left-0 top-[18px] h-3.5 w-3.5 rounded-sm border-2 bg-zinc-950 transition-shadow duration-300"
-                  style={{
-                    borderColor: item.accentColor,
-                    boxShadow: isOpen ? `0 0 0 4px ${item.accentColor}26` : "none",
-                  }}
-                />
-
-                <div className="rounded-2xl overflow-hidden border border-white/10 bg-zinc-900/60 transition-colors duration-200 hover:border-white/20">
-                  <button
-                    type="button"
-                    className="w-full flex items-center justify-between gap-4 p-4 text-left"
-                    onClick={() => setOpenExpCard(isOpen ? null : item.id)}
-                  >
-                    <div>
-                      <p className="font-medium text-base leading-tight text-zinc-50">{item.title}</p>
-                      <p className="text-xs text-zinc-400 mt-1 font-dmMono tracking-[0.04em]">
-                        {item.company} · {item.year}
-                      </p>
-                    </div>
-                    <motion.span
-                      animate={{ rotate: isOpen ? 45 : 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="flex-shrink-0 text-xl leading-none text-zinc-400"
-                    >
-                      +
-                    </motion.span>
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        key="content"
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.25, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-4 pb-4">
-                          <div className="h-px bg-white/5 mb-3" />
-                          <ul className="space-y-2.5">
-                            {item.bullets.map((bullet, i) => (
-                              <li key={i} className="flex items-start gap-2 text-sm leading-relaxed text-zinc-400">
-                                <span className="mt-1.5 flex-shrink-0 text-[10px] text-zinc-400">•</span>
-                                <span>{bullet}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
+        <ExperienceSection items={site.experience} />
       </section>
 
       {/* Skills */}

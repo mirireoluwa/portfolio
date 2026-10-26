@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { AdminInsights } from "../components/AdminInsights";
+import { AboutEditor, ExperienceEditor } from "../components/AdminSite";
 import { ProjectEditorPanel, projectIssues } from "../components/ProjectEditorPanel";
 import { excludeThisBrowser } from "../lib/track";
 import { Spinner } from "../components/Spinner";
@@ -7,7 +8,12 @@ import { getPublicSiteUrl } from "../config/site";
 import { useProjects } from "../context/ProjectsContext";
 import { useResume } from "../context/ResumeContext";
 import { defaultProjects } from "../data/projects";
+import { defaultSite } from "../data/site";
+import type { SiteContent } from "../types/site";
 import type { Project } from "../types/project";
+
+const VIEWS = ["projects", "about", "experience", "insights"] as const;
+type View = (typeof VIEWS)[number];
 
 function emptyProject(): Project {
   return {
@@ -36,11 +42,16 @@ export function AdminPage() {
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loggingIn, setLoggingIn] = useState(false);
 
-  const [view, setView] = useState<"projects" | "insights">(() =>
-    typeof window !== "undefined" && window.location.hash === "#insights" ? "insights" : "projects"
-  );
+  const [view, setView] = useState<View>(() => {
+    const h = typeof window !== "undefined" ? window.location.hash.slice(1) : "";
+    return (VIEWS as readonly string[]).includes(h) ? (h as View) : "projects";
+  });
   const [draft, setDraft] = useState<Project[]>([]);
   const [baseline, setBaseline] = useState("[]");
+  const [site, setSite] = useState<SiteContent>(defaultSite);
+  const [siteBaseline, setSiteBaseline] = useState(JSON.stringify(defaultSite));
+  const [siteSaving, setSiteSaving] = useState(false);
+  const [siteStatus, setSiteStatus] = useState<string | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
@@ -84,16 +95,19 @@ export function AdminPage() {
     if (authenticated) excludeThisBrowser();
   }, [authenticated]);
 
-  const switchView = (v: "projects" | "insights") => {
+  const switchView = (v: View) => {
     setView(v);
-    window.history.replaceState(null, "", v === "insights" ? "#insights" : window.location.pathname);
+    window.history.replaceState(null, "", v === "projects" ? window.location.pathname : `#${v}`);
   };
 
   const loadDraft = useCallback(async () => {
     setLoadError(null);
     try {
       const r = await fetch("/api/projects", { credentials: "include", cache: "no-store" });
-      const data = (await r.json()) as { ok?: boolean; projects?: Project[] | null };
+      const data = (await r.json()) as { ok?: boolean; projects?: Project[] | null; site?: SiteContent | null };
+      const loadedSite = data.ok && data.site ? data.site : defaultSite;
+      setSite(structuredClone(loadedSite));
+      setSiteBaseline(JSON.stringify(loadedSite));
       if (data.ok && Array.isArray(data.projects) && data.projects.length > 0) {
         setDraft(structuredClone(data.projects));
         setBaseline(JSON.stringify(data.projects));
@@ -147,16 +161,17 @@ export function AdminPage() {
   }, [activeIndex]);
 
   // Warn before leaving with unpublished edits
+  const siteDirty = JSON.stringify(site) !== siteBaseline;
   const dirty = JSON.stringify(draft) !== baseline;
   useEffect(() => {
-    if (!dirty) return;
+    if (!dirty && !siteDirty) return;
     const warn = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = "";
     };
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
-  }, [dirty]);
+  }, [dirty, siteDirty]);
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -412,6 +427,31 @@ export function AdminPage() {
     }
   };
 
+  const saveSite = async () => {
+    setSiteSaving(true);
+    setSiteStatus(null);
+    try {
+      const r = await fetch("/api/admin/site", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ site }),
+      });
+      const data = (await r.json()) as { ok?: boolean; message?: string };
+      if (!r.ok || !data.ok) {
+        setSiteStatus(data.message || "Save failed");
+        return;
+      }
+      await refreshPublicProjects();
+      setSiteBaseline(JSON.stringify(site));
+      setSiteStatus("Published. The live site is updated.");
+    } catch {
+      setSiteStatus("Network error while saving.");
+    } finally {
+      setSiteSaving(false);
+    }
+  };
+
   const restoreDefaults = () => {
     if (!confirm("Replace your draft with the default projects from the code? Nothing goes live until you publish.")) return;
     setDraft(structuredClone(defaultProjects));
@@ -499,14 +539,14 @@ export function AdminPage() {
 
   const tabBar = (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <nav aria-label="Admin sections" className="flex gap-6 border-b border-white/10 sm:border-0">
-        {(["projects", "insights"] as const).map((v) => (
+      <nav aria-label="Admin sections" className="flex gap-5 overflow-x-auto border-b border-white/10 sm:gap-6 sm:border-0">
+        {VIEWS.map((v) => (
           <button
             key={v}
             type="button"
             onClick={() => switchView(v)}
             aria-current={view === v ? "page" : undefined}
-            className={`-mb-px border-b-2 py-2.5 text-[11px] font-dmMono uppercase tracking-[0.2em] transition-colors ${
+            className={`-mb-px shrink-0 border-b-2 py-2.5 text-[11px] font-dmMono uppercase tracking-[0.2em] transition-colors ${
               view === v
                 ? "border-adminAccent text-zinc-50"
                 : "border-transparent text-zinc-400 hover:text-zinc-100"
@@ -525,6 +565,27 @@ export function AdminPage() {
       </button>
     </div>
   );
+
+  const siteProps = {
+    site,
+    setSite: (next: SiteContent) => {
+      setSiteStatus(null);
+      setSite(next);
+    },
+    dirty: siteDirty,
+    saving: siteSaving,
+    status: siteStatus,
+    onPublish: () => void saveSite(),
+  };
+
+  if (view === "about" || view === "experience") {
+    return (
+      <div className="space-y-8">
+        {tabBar}
+        {view === "about" ? <AboutEditor {...siteProps} /> : <ExperienceEditor {...siteProps} />}
+      </div>
+    );
+  }
 
   if (view === "insights") {
     return (
